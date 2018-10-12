@@ -3,42 +3,42 @@ include_guard(GLOBAL)
 # These are macros because they just wrap existing builtin commands
 
 macro (fatal)
-  message(FATAL_ERROR ${ARGN})
+  message(FATAL_ERROR "${ARGN}")
 endmacro ()
 
 macro (error)
-  message(SEND_ERROR ${ARGN})
+  message(SEND_ERROR "${ARGN}")
 endmacro()
 
 macro (warning)
-  message(WARNING ${ARGN})
+  message(WARNING "${ARGN}")
 endmacro ()
 
 macro (author)
-  message(AUTHOR_WARNING ${ARGN})
+  message(AUTHOR_WARNING "${ARGN}")
 endmacro()
 
 macro (status)
-  message(STATUS ${ARGN})
+  message(STATUS "${ARGN}")
 endmacro()
 
 macro (deprecated)
-  message(DEPRECATION ${ARGN})
+  message(DEPRECATION "${ARGN}")
 endmacro ()
 
 # Alias macros
 macro (note)
-  message(STATUS "NOTE: " ${ARGN})
+  message(STATUS "NOTE: ${ARGN}")
 endmacro()
 
 macro (info)
-  message(STATUS ${ARGN})
+  message(STATUS "${ARGN}")
 endmacro()
 
 macro (print)
-  message(STATUS ${ARGN})
+  message(STATUS "${ARGN}")
 endmacro()
 
 macro (warn)
-  message(WARNING ${ARGN})
+  message(WARNING "${ARGN}")
 endmacro()

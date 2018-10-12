@@ -1,4 +1,4 @@
-include(FindPackageHandleStandardArgs)
+include(CheckFindPackage)
 include(ImportProgram)
 include(PushFindState)
 include(Breakout)
@@ -11,7 +11,8 @@ pop_find_state()
 find_package_handle_standard_args(IWYU
   REQUIRED_VARS IWYU_EXECUTABLE)
 
-breakout(IWYU_EXECUTABLE)
-import_program(iwyu LOCATION ${IWYU_EXECUTABLE} GLOBAL)
+check_find_package(IWYU EXECUTABLE)
+halt_unless(IWYU EXECUTABLE)
 hide(IWYU EXECUTABLE)
+import_program(iwyu LOCATION ${IWYU_EXECUTABLE} GLOBAL)
 

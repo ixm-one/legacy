@@ -1,0 +1,12 @@
+include_guard(GLOBAL)
+include(Print)
+
+function (dump)
+  foreach (var IN LISTS ARGN)
+    if (DEFINED ${var})
+      print("${var}=${${var}}")
+    else()
+      print("${var}=$<UNDEFINED>")
+    endif()
+  endforeach()
+endfunction ()
