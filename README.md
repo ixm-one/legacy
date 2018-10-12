@@ -27,26 +27,27 @@ project's `CMakeLists.txt`.
 
 ## FetchContent
 
-IXM provides a [git.io] shortcut to reduce the complexity having to remember
-the exact git repo. To reach it, simply click [here]. 
-
 The following code snippet can be copied directly into a `CMakeLists.txt` file.
-It should be placed *immediately* after the call to `project()` and before
-anything else. While this might look weird in a well organized
-`CMakeLists.txt`, it will handle acquisition of the modules, as well as
-inclusion to the current environment. If a future version of CMake provides a
-wrapper around `FetchContent` that does the following operation, this snippet
-can be simplified.
 
 ```cmake
 include(FetchContent)
-FetchContent_Declare(ixm GIT_REPOSITORY https://git.io/ixm.git GIT_TAG HEAD)
+FetchContent_Declare(ixm GIT_REPOSITORY https://github.com/slurps-mad-rips/ixm.git)
 FetchContent_GetProperties(ixm)
 if(NOT ixm_POPULATED)
   FetchContent_Populate(ixm)
   add_subdirectory(${ixm_SOURCE_DIR})
 endif()
 ```
+It should be placed *immediately* after the call to `project()` and before
+anything else, except appending to `CMAKE_MODULES_PATH`. While this might look
+weird in a well organized `CMakeLists.txt`, it will handle acquisition of the
+modules, as well as inclusion to the current environment. If a future version
+of CMake provides a wrapper around `FetchContent` that does the following
+operation, this snippet can be simplified.
+
+IXM provides a [git.io] shortcut to reduce the complexity having to remember
+the exact git repo. To reach it, simply click [here]. 
+
 Additionally, supporting both the `git` and `FetchContent` forms is
 fairly easy. Relying on the `FetchContent` mechanisms, one simply must pass
 `-DFETCHCONTENT_SOURCE_DIR_IXM=<path/to/ixm>` when configuring CMake. This will
