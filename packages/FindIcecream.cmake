@@ -1,0 +1,15 @@
+include(CheckFindPackage)
+include(ImportProgram)
+include(PushFindState)
+include(Halt)
+include(Hide)
+
+push_find_state(Icecream)
+find_program(Icecream_EXECUTABLE NAMES icecc ${FIND_OPTIONS})
+pop_find_state()
+
+check_find_package(Icecream EXECUTABLE)
+halt_unless(Icecream EXECUTABLE)
+hide(Icecream EXECUTABLE)
+import_program(icecc LOCATION ${Icecream_EXECUTABLE} GLOBAL)
+add_executable(icecream ALIAS icecc)
