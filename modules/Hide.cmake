@@ -1,0 +1,10 @@
+include_guard(GLOBAL)
+
+function (hide package)
+  if (NOT ${package}_FOUND)
+    return()
+  endif()
+  foreach (entry IN LISTS ${ARGN})
+    mark_as_advanced(${package}_${entry})
+  endforeach ()
+endfunction ()
