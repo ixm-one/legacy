@@ -1,7 +1,6 @@
 include_guard(GLOBAL)
 
 include(PushModulePath)
-include(TargetProperty)
 include(Algorithm)
 
 find_package(Sphinx REQUIRED)
@@ -38,6 +37,7 @@ function (add_sphinx_target name type)
   endif()
   set(defines $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>)
   set(options $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_OPTIONS>)
+  set(sources $<TARGET_PROPERTY:${name},INTERFACE_SOURCES>)
   set(SOURCEDIR $<TARGET_PROPERTY:${name},INTERFACE_SOURCE_DIR>)
   set(BUILDDIR $<TARGET_PROPERTY:${name},INTERFACE_BINARY_DIR>)
   set(OUTPUTS $<TARGET_PROPERTY:${name},INTERFACE_SPHINX_${type}_OUTPUTS>)
@@ -51,7 +51,7 @@ function (add_sphinx_target name type)
       ${SOURCEDIR}
       ${BUILDDIR}
     MAIN_DEPENDENCY $<TARGET_PROPERTY:${name},INTERFACE_SPHINX_CONFIG>
-    DEPENDS $<TARGET_PROPERTY:${name},INTERFACE_SOURCES>
+    DEPENDS $<$<BOOL:${sources}>:${sources}>
     OUTPUT ${OUTPUTS}
     MAIN_DEPENDENCY 
     COMMAND_EXPAND_LISTS
@@ -62,6 +62,7 @@ function (add_sphinx_target name type)
     SOURCES $<TARGET_PROPERTY:${name},INTERFACE_SOURCES>)
 endfunction ()
 
+# Currently wraps target_sources
 function (target_documents name)
 endfunction ()
 

@@ -11,11 +11,11 @@ Additionally, it is intended for CMake 3.12 and newer.
 
 IXM is intended to be installed in one of the following forms:
 
-Method          |
-------          |
-git submodule   |
-git worktree    |
-`FetchContent`  |
+|    Method      |
+|----------------|
+| git submodule  |
+| git worktree   |
+| `FetchContent` |
 
 Of these, `FetchContent` is the one that is most recommended for flexibility,
 as CMake provides a variety of hooks to modify `FetchContent` with nothing more
@@ -38,12 +38,17 @@ if(NOT ixm_POPULATED)
   add_subdirectory(${ixm_SOURCE_DIR})
 endif()
 ```
-It should be placed *immediately* after the call to `project()` and before
-anything else, except appending to `CMAKE_MODULES_PATH`. While this might look
-weird in a well organized `CMakeLists.txt`, it will handle acquisition of the
-modules, as well as inclusion to the current environment. If a future version
-of CMake provides a wrapper around `FetchContent` that does the following
-operation, this snippet can be simplified.
+
+To enable support for the additional programming language support IXM provides,
+this code should be placed before the first call to `project()`, but after the
+call to `cmake_minimum_required`. If this support is not needed in the initial
+call to `project()`, it should be placed *immediately* after the call to
+`project()` and before anything else, except appending to `CMAKE_MODULES_PATH`.
+While this might look weird in a well organized `CMakeLists.txt`, it will
+handle acquisition of the modules, as well as inclusion to the current
+environment. If a future version of CMake provides a wrapper around
+`FetchContent` that does the following operation, this snippet can be
+simplified.
 
 IXM provides a [git.io] shortcut to reduce the complexity having to remember
 the exact git repo. To reach it, simply click [here]. 

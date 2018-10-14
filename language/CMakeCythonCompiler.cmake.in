@@ -1,0 +1,1 @@
+set(CMAKE_Cython_COMPILER "@CMAKE_Cython_COMPILER@")
