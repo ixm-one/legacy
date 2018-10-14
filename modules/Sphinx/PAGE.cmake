@@ -1,5 +1,3 @@
 include_guard(GLOBAL)
 
-include(TargetSetting)
-
-setting(PAGE_SIDEBARS)
+sphinx_property(PAGE_SIDEBARS)
