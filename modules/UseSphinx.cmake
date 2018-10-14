@@ -28,18 +28,32 @@ function (add_sphinx_target name type)
 
   set_target_properties(${name}
     PROPERTIES
-      INTERFACE_DOCTREES_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/doctrees/${type}
+      INTERFACE_SPHINX_DOCTREES_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/doctrees/${type}
+      INTERFACE_SPHINX_BUILDER_TYPE ${type}
       INTERFACE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
       INTERFACE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/${type})
 
   if (NOT BUILD_DOCS)
     return()
   endif()
+  set(defines $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>)
+  set(options $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_OPTIONS>)
+  set(SOURCEDIR $<TARGET_PROPERTY:${name},INTERFACE_SOURCE_DIR>)
+  set(BUILDDIR $<TARGET_PROPERTY:${name},INTERFACE_BINARY_DIR>)
+  set(OUTPUTS $<TARGET_PROPERTY:${name},INTERFACE_SPHINX_${type}_OUTPUTS>)
 
   add_custom_command(
-    OUTPUT $<GENEX_EVAL:$<TARGET_PROPERTY:${name},INTERFACE_SPHINX_${type}_OUTPUTS>>
-    BYPRODUCTS $<GENEX_EVAL:$<TARGET_PROPERTY:${name},
-    MAIN_DEPENDENCY $<TARGET_PRPOERTY:${name},${type}_CONFIG>
+    COMMAND Python::Sphinx
+    -b $<LOWER_CASE:${type}>
+    -d $<TARGET_PROPERTY:${name},INTERFACE_SPHINX_DOCTREES_DIR>
+      $<$<BOOL:${defines}>:-D$<JOIN:${defines},$<SEMICOLON>-D>>
+      $<$<BOOL:${options}>:$<JOIN:${options},$<SEMICOLON>>>
+      ${SOURCEDIR}
+      ${BUILDDIR}
+    MAIN_DEPENDENCY $<TARGET_PROPERTY:${name},INTERFACE_SPHINX_CONFIG>
+    DEPENDS $<TARGET_PROPERTY:${name},INTERFACE_SOURCES>
+    OUTPUT ${OUTPUTS}
+    MAIN_DEPENDENCY 
     COMMAND_EXPAND_LISTS
     USES_TERMINAL
     VERBATIM)
@@ -65,13 +79,11 @@ include(LATEX)
 include(HTML)
 include(EPUB)
 include(MAN)
-
-include(APPLE)
-include(INFO)
-include(PAGE)
-include(CHM)
-include(QT)
+include(XML)
 pop_module_path()
+
+sphinx_property(CONFIG)
+sphinx_property(DOCTREES_DIR)
 
 sphinx_property(LATEX_OUTPUTS)
 sphinx_property(HTML_OUTPUTS)
@@ -80,10 +92,3 @@ sphinx_property(MAN_OUTPUTS)
 
 sphinx_property(JSON_OUTPUTS)
 sphinx_property(XML_OUTPUTS)
-
-sphinx_property(APPLE_OUTPUTS)
-sphinx_property(GNOME_OUTPUTS)
-sphinx_property(INFO_OUTPUTS)
-sphinx_property(PAGE_OUTPUTS)
-sphinx_property(CHM_OUTPUTS)
-sphinx_property(QT_OUTPUTS)
