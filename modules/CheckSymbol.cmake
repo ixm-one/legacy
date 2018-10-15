@@ -6,7 +6,7 @@ include(CheckSymbolExists)
 include(ParentScope)
 include(Print)
 
-function (check_symbol_exists symbol variable)
+function (check_symbol symbol variable)
   set(option QUIET)
   set(single LANGUAGE)
   set(multi FLAGS DEFINITIONS INCLUDES LIBRARIES HEADERS)
