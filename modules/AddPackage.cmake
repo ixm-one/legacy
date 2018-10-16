@@ -1,0 +1,21 @@
+include_guard(GLOBAL)
+
+include(ParentScope)
+
+function (__check_add_package output src)
+  get_property(subdirs DIRECTORY ${src} PROPERTY SUBDIRECTORIES)
+  foreach (subdir IN LISTS subdirs)
+    __check_add_package(${output} ${subdir})
+    list(APPEND ${output} ${subdir})
+  endforeach()
+  list(APPEND ${output} ${src})
+  list(REMOVE_DUPLICATES ${output})
+  parent_scope(${output})
+endfunction()
+
+function (add_package src)
+  __check_add_package(processed ${CMAKE_SOURCE_DIR})
+  if (NOT src IN_LIST processed)
+    add_subdirectory(${src} ${ARGN})
+  endif()
+endfunction()

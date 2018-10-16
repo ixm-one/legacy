@@ -5,7 +5,7 @@ function (override var type)
   set(${var} ${ARGN} CACHE ${type} "${docs}" FORCE)
 endfunction ()
 
-function (bool var value)
+function (boolean var value)
   override(${var} BOOL ${value})
 endfunction ()
 
