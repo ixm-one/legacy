@@ -1,8 +1,4 @@
-include(CheckFindPackage)
-include(ImportLibrary)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(FindPackage)
 
 push_find_state(Realtime)
 find_library(Realtime_LIBRARY rt)
