@@ -4,6 +4,8 @@ include(ParentScope)
 include(AddPackage)
 include(Git)
 
+deprecated("This module is slated for removal. `include(Git)` instead")
+
 function (add_git_subproject name path tag)
   git(${name} ${path} ${tag})
   add_package(${${name}_SOURCE_DIR} ${${name}_BINARY_DIR} EXCLUDE_FROM_ALL)

@@ -2,6 +2,12 @@ include_guard(GLOBAL)
 
 # These are macros because they just wrap existing builtin commands
 
+function (message)
+  if (NOT IXM_MESSAGE_QUIET)
+    _message(${ARGN})
+  endif()
+endfunction()
+
 macro (fatal)
   message(FATAL_ERROR "${ARGN}")
 endmacro ()
