@@ -3,13 +3,12 @@ include_guard(GLOBAL)
 include(CMakePushCheckState)
 include(CheckTypeSize)
 include(ParentScope)
+include(ArgParse)
 
 function (check_type_exists type variable)
-  set(option QUIET BUILTIN_ONLY)
-  set(single LANGUAGE)
-  set(multi FLAGS DEFINITIONS INCLUDES LIBRARIES HEADERS)
-  cmake_parse_arguments(ARG "${option}" "${single}" "${multi}" ${ARGN})
-
+  argparse(OPTIONS QUIET BUILTIN
+    VALUES LANGUAGE
+    GROUPS FLAGS DEFINITIONS INCLUDES LIBRARIES HEADERS)
   cmake_push_check_state()
   set(CMAKE_REQUIRED_DEFINITIONS ${ARG_DEFINITIONS})
   set(CMAKE_REQUIRED_LIBRARIES ${ARG_LIBRARIES})
@@ -26,4 +25,4 @@ function (check_type_exists type variable)
   check_type_size(${type} ${variable} ${ARG_BUILTIN} LANGUAGE ${ARG_LANGUAGE})
   cmake_pop_check_state()
   parent_scope(${variable})
-endfunction ()
+endfunction()
