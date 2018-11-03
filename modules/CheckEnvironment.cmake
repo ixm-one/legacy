@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-include(PushModulePath)
+include(PushState)
 
 push_module_path(CheckEnvironment)
 include(CompilerFlagExists)
