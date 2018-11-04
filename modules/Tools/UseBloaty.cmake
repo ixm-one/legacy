@@ -1,3 +1,6 @@
 include_guard(GLOBAL)
 
-find_package(Bloaty REQUIRED)
+include(IXM)
+find_package(Bloaty)
+
+halt_unless(Bloaty FOUND)

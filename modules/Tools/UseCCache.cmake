@@ -1,7 +1,12 @@
 include_guard(GLOBAL)
-include(TargetCompilerLauncher)
 
-find_package(CCache REQUIRED)
+include(IXM)
+
+find_package(CCache)
+
+halt_unless(CCache FOUND)
+
+
 set_property(GLOBAL APPEND PROPERTY IXM_COMPILER_LAUNCHERS ccache)
 
 # TODO: define_property for each CCache configuration setting

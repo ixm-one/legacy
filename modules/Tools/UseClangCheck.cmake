@@ -1,3 +1,6 @@
 include_guard(GLOBAL)
 
-find_package(ClangCheck REQUIRED)
+include(IXM)
+
+find_package(ClangCheck)
+halt_unless(ClangCheck FOUND)
