@@ -5,6 +5,21 @@ include(Algorithm)
 
 find_package(Sphinx REQUIRED)
 
+push_module_path(Sphinx)
+include(General)
+include(Project)
+include(i18n)
+include(Math)
+
+include(CXX)
+
+include(LATEX)
+include(HTML)
+include(EPUB)
+include(MAN)
+include(XML)
+pop_module_path()
+
 option(BUILD_DOCS "Build documentation with Sphinx Documentation Generator")
 
 function (sphinx_property name)
@@ -68,21 +83,6 @@ endfunction ()
 
 # All Sphinx properties
 # XXX: some may not work due to CMake's lack of dictionary
-push_module_path(Sphinx)
-include(General)
-include(Project)
-include(i18n)
-include(Math)
-
-include(CXX)
-
-include(LATEX)
-include(HTML)
-include(EPUB)
-include(MAN)
-include(XML)
-pop_module_path()
-
 sphinx_property(CONFIG)
 sphinx_property(DOCTREES_DIR)
 
