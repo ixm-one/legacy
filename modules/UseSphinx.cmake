@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-include(PushModulePath)
+include(PushState)
 include(Algorithm)
 
 find_package(Sphinx REQUIRED)
