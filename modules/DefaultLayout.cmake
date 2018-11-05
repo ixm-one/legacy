@@ -22,15 +22,18 @@
 #  11) Automatically sets certain values based on the system to improve build
 #      times
 
-include(DefaultLayout/Executables.cmake)
-include(DefaultLayout/Benchmarks.cmake)
-include(DefaultLayout/Examples.cmake)
-include(DefaultLayout/Tests.cmake)
-
-include(DefaultLayout/Options.cmake)
-include(DefaultLayout/Docs.cmake)
-
+include(PushState)
 include(CTest)
+
+push_module_path(DefaultLayout)
+include(Executables)
+include(Benchmarks)
+include(Examples)
+include(Tests)
+include(Options)
+include(Docs)
+pop_module_path()
+
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
