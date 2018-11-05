@@ -2,8 +2,6 @@ include_guard(GLOBAL)
 
 include(CMakePushCheckState)
 include(CheckTypeSize)
-include(ParentScope)
-include(ArgParse)
 
 function (check_type_exists type variable)
   argparse(OPTIONS QUIET BUILTIN

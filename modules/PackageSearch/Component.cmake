@@ -1,7 +1,5 @@
 include_guard(GLOBAL)
 
-include(ParentScope)
-
 function (check_component package component)
   set(found ON)
   foreach (item IN LISTS ${ARGN})

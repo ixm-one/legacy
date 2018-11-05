@@ -1,8 +1,5 @@
-include(CheckFindPackage)
-include(ImportProgram)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(PackageSearch)
+include(IXM)
 
 push_find_state(ClangCheck)
 find_program(ClangCheck_EXECUTABLE NAMES clang-check ${FIND_OPTIONS})

@@ -1,8 +1,4 @@
-include(CheckFindPackage)
-include(ImportProgram)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(PackageSearch)
 
 push_find_state(DistCC)
 find_program(DistCC_EXECUTABLE NAMES distcc ${FIND_OPTIONS})

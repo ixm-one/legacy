@@ -1,10 +1,6 @@
 include_guard(GLOBAL)
 
 include(FindPackageHandleStandardArgs)
-include(ParentScope)
-include(Algorithm)
-include(Print)
-include(Dump)
 
 function (check_find_package package)
   set(option COMPONENTS)

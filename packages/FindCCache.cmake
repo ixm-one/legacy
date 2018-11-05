@@ -1,8 +1,4 @@
-include(CheckFindPackage)
-include(ImportProgram)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(PackageSearch)
 
 push_find_state(CCache)
 find_program(CCache_EXECUTABLE NAMES ccache ${FIND_OPTIONS})

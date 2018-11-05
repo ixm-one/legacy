@@ -4,10 +4,6 @@ include(CMakePushCheckState)
 include(CheckCXXSymbolExists)
 include(CheckSymbolExists)
 
-include(ParentScope)
-include(ArgParse)
-include(Print)
-
 function (check_symbol_exists symbol variable)
   argparse(OPTIONS QUIET
     VALUES LANGUAGE

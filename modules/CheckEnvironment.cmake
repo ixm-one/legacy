@@ -1,6 +1,7 @@
 include_guard(GLOBAL)
 
 include(PushState)
+include(IXM)
 
 push_module_path(CheckEnvironment)
 include(CompilerFlagExists)

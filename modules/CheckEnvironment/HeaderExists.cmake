@@ -2,8 +2,6 @@ include_guard(GLOBAL)
 
 include(CMakePushCheckState)
 include(CheckIncludeFiles)
-include(ParentScope)
-include(ArgParse)
 
 function (check_header header variable)
   argparse(OPTIONS QUIET

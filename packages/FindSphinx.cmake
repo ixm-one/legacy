@@ -1,8 +1,6 @@
-include(CheckFindPackage)
-include(ImportProgram)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(PackageSearch)
+include(PushState)
+include(IXM)
 
 find_package(Python COMPONENTS Interpreter QUIET REQUIRED)
 

@@ -3,8 +3,6 @@ include_guard(GLOBAL)
 include(CMakePushCheckState)
 include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
-include(ParentScope)
-include(ArgParse)
 
 function (check_compiler_flag flag variable)
   argparse(OPTIONS QUIET VALUES LANGUAGE ${ARGN})

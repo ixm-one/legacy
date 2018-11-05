@@ -1,32 +1,16 @@
 include_guard(GLOBAL)
 
-include(PushState)
-include(Algorithm)
+include(IXM)
 
 find_package(Sphinx REQUIRED)
-
-push_module_path(Sphinx)
-include(General)
-include(Project)
-include(i18n)
-include(Math)
-
-include(CXX)
-
-include(LATEX)
-include(HTML)
-include(EPUB)
-include(MAN)
-include(XML)
-pop_module_path()
 
 option(BUILD_DOCS "Build documentation with Sphinx Documentation Generator")
 
 function (sphinx_property name)
   define_property(TARGET
     PROPERTY INTERFACE_SPHINX_${name}
-    BRIEF_DOCS "${ARGV1}"
-    FULL_DOCS "${ARGV2}")
+    BRIEF_DOCS "*${ARGV1}*"
+    FULL_DOCS "*${ARGV2}*")
 endfunction()
 
 function (add_sphinx_target name type)
@@ -80,6 +64,22 @@ endfunction ()
 # Currently wraps target_sources
 function (target_documents name)
 endfunction ()
+
+push_module_path(Sphinx)
+include(General)
+include(Project)
+include(i18n)
+include(Math)
+
+include(CXX)
+
+include(LATEX)
+include(HTML)
+include(EPUB)
+include(MAN)
+include(XML)
+pop_module_path()
+
 
 # All Sphinx properties
 # XXX: some may not work due to CMake's lack of dictionary
