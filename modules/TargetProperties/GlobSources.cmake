@@ -1,10 +1,8 @@
 include_guard(GLOBAL)
 
-include(Algorithm)
-include(ArgParse)
-
 function (target_glob_sources target)
   argparse(
+    ARGS ${ARGN}
     OPTIONS RECURSE
     LISTS INTERFACE PUBLIC PRIVATE)
 

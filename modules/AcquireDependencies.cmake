@@ -1,12 +1,12 @@
 include_guard(GLOBAL)
 
-include(ParentScope)
-include(AddPackage)
-include(Fetch)
-include(Print)
+include(PushState)
+include(IXM)
 
-include(AcquireDependencies/Args)
-include(AcquireDependencies/Git)
+push_module_path(AcquireDependencies)
+include(Args)
+include(Git)
+pop_module_path()
 
 # Settings specific to this module
 # These can be overridden as cache variables
@@ -36,19 +36,30 @@ function (githttps pkg)
 
   __git_name(${pkg})
   __set_alias(${name})
-  __set_options()
+  if (ARG_OPTIONS)
+    __set_options()
+  endif()
   __set_install()
   __push_quiet()
   # This is the one line that differs between githttps and gitssh
   info("Acquiring - ${pkg}")
   __git_acquire(${alias} ${ARG_DOMAIN}/${repository} ${tag})
-  # TODO: Don't *always* add_package. Only if there's a CMakeLists.txt in the
   # ${alias}_SOURCE_DIR directory. Otherwise, additional steps are needed.
+  # TODO: Perform "patch" first if possible
+
   if (EXISTS "${${alias}_SOURCE_DIR}/CMakeLists.txt")
     info("Adding - ${alias} from ${pkg}")
-    add_package(${${alias}_SOURCE_DIR} ${${alias}_SOURCE_DIR} ${ADD_PACKAGE_ARGS})
+    add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
+  elseif (EXISTS "${PROJECT_SOURCE_DIR}/cmake/patch/${alias}.cmake")
+    info("Patching - ${alias} from ${pkg}")
+    set(source "${PROJECT_SOURCE_DIR}/cmake/patch/${alias}.cmake")
+    set(binary ${${alias}_SOURCE_DIR}/CMakeLists.txt)
+    configure_file(${source} ${binary} @ONLY)
+    info("Adding - ${alias} from ${pkg}")
+    add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
   else()
-    error("Not Yet Implemented")
+    include(${PROJECT_SOURCE_DIR}/${alias}.cmake)
+    #error("Not Yet Implemented")
   endif()
   __pop_quiet()
   # XXX: We still do not support multiple targets at this time...
@@ -63,6 +74,42 @@ endfunction()
 function (gitssh pkg)
   __git_args(${ARGN})
   __argparse(${ARGN})
+  __verify_args()
+
+  __git_name(${pkg})
+  __set_alias(${name})
+  if (ARG_OPTIONS)
+    __set_options()
+  endif()
+  __set_install()
+  __push_quiet()
+  # This is the one line that differs between githttps and gitssh
+  info("Acquiring - ${pkg}")
+  __git_acquire(${alias} ${ARG_DOMAIN}:${repository} ${tag})
+  # ${alias}_SOURCE_DIR directory. Otherwise, additional steps are needed.
+  # TODO: Perform "patch" first if possible
+
+  if (EXISTS "${${alias}_SOURCE_DIR}/CMakeLists.txt")
+    info("Adding - ${alias} from ${pkg}")
+    add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
+  elseif (EXISTS "${PROJECT_SOURCE_DIR}/cmake/patch/${alias}.cmake")
+    info("Patching - ${alias} from ${pkg}")
+    set(source "${PROJECT_SOURCE_DIR}/cmake/patch/${alias}.cmake")
+    set(binary ${${alias}_SOURCE_DIR}/CMakeLists.txt)
+    configure_file(${source} ${binary} @ONLY)
+    info("Adding - ${alias} from ${pkg}")
+    add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
+  else()
+    include(${PROJECT_SOURCE_DIR}/${alias}.cmake)
+    #error("Not Yet Implemented")
+  endif()
+  __pop_quiet()
+  # XXX: We still do not support multiple targets at this time...
+  __set_target(${name})
+  if (NOT TARGET ${alias}::${alias})
+    add_library(${alias}::${alias} ALIAS ${target})
+  endif()
+  parent_scope(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 
 # Useful for libraries like nlohmann::json

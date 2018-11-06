@@ -1,4 +1,4 @@
-include(FindPackage)
+include(PackageSearch)
 
 push_find_state(Realtime)
 find_library(Realtime_LIBRARY rt)

@@ -1,10 +1,5 @@
 include_guard(GLOBAL)
 
-include(ParentScope)
-include(AddPackage)
-include(Fetch)
-include(Print)
-
 find_package(Git REQUIRED)
 
 #[=[ SYNOPSIS

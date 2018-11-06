@@ -1,7 +1,5 @@
 include_guard(GLOBAL)
 
-include(ParentScope)
-
 find_package(Git REQUIRED)
 
 macro (__git_args)
@@ -11,9 +9,13 @@ endmacro()
 
 function(__git_name recipe)
   string(REPLACE "@" ";" result ${recipe})
-  list(GET ${result} 0 repository)
-  list(GET ${result} 1 tag)
+  list(APPEND result HEAD) # Small trick to make sure we safely get this
+  list(GET result 0 repository)
+  list(GET result 1 tag)
   get_filename_component(name ${repository} NAME)
+  if (NOT repository)
+    set(repository ${recipe})
+  endif()
   if (NOT tag)
     set(tag HEAD)
   endif()

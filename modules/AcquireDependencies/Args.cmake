@@ -11,7 +11,7 @@ Most functions in AcquireDependencies will accept these as arguments.
 ]]
 macro (__common_args)
   __minimal_args()
-  list(APPEND single ALIAS TARGET)
+  list(APPEND single TARGET)
   list(APPEND multi POLICIES TARGETS OPTIONS)
 endmacro()
 
@@ -28,8 +28,16 @@ macro (__minimal_args)
   list(APPEND single ALIAS)
 endmacro()
 
+#[[ Solves a small problem with duplicate keywords for options ]]
+macro (__unique_args)
+  list(REMOVE_DUPLICATES option)
+  list(REMOVE_DUPLICATES single)
+  list(REMOVE_DUPLICATES multi)
+endmacro()
+
 #[[ Run one of the __XXX_args(${ARGN}) functions before running this ]]
 macro (__argparse)
+  __unique_args()
   cmake_parse_arguments(ARG "${option}" "${single}" "${multi}" ${ARGN})
 endmacro()
 
@@ -58,6 +66,7 @@ endmacro()
 #[[ sets all options in a key-value pair system ]]
 macro (__set_options)
   list(LENGTH ARG_OPTIONS length)
+  math(EXPR length "${length} - 1")
   foreach (begin RANGE 0 ${length} 2)
     list(SUBLIST ARG_OPTIONS ${begin} 2 kv)
     list(GET kv 0 key)
