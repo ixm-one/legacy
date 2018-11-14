@@ -11,10 +11,6 @@ include(Header)
 include(Git)
 pop_module_path()
 
-# Settings specific to this module
-# These can be overridden as cache variables
-set(IXM_HEADER_DIR header)
-
 #[[ Acquire a package from github. This is a macro around githttps ]]
 macro (github pkg)
   githttps(${pkg} DOMAIN github.com ${ARGN})
