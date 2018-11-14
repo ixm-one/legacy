@@ -5,10 +5,10 @@ include_guard(GLOBAL)
 # TODO: Support importing Object File libraries
 
 function (import_library name)
-  set(option GLOBAL)
-  set(single LOCATION)
-  set(multi INCLUDES DEFINITIONS FLAGS FEATURES LIBRARIES)
-  cmake_parse_arguments(ARG "${option}" "${single}" "${multi}" ${ARGN})
+  argparse(ARGS ${ARGN}
+    SETTINGS GLOBAL
+    VALUES LOCATION
+    LISTS INCLUDES DEFINITIONS FLAGS FEATURES LIBRARIES)
 
   list(APPEND properties IMPORTED_LOCATION ${ARG_LOCATION})
 

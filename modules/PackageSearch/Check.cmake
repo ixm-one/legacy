@@ -3,10 +3,9 @@ include_guard(GLOBAL)
 include(FindPackageHandleStandardArgs)
 
 function (check_find_package package)
-  set(option COMPONENTS)
-  set(single VERSION)
-  set(multi)
-  cmake_parse_arguments(ARG "${option}" "${single}" "${multi}" ${ARGN})
+  argparse(ARGS ${ARGN}
+    SETTINGS COMPONENTS
+    VALUES VERSION)
 
   any_of(args DEFINED ARG_COMPONENTS ARG_VERSION ARG_UNPARSED_ARGUMENTS)
   if (NOT args)

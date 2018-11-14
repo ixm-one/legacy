@@ -7,10 +7,21 @@ find_package(Sphinx REQUIRED)
 option(BUILD_DOCS "Build documentation with Sphinx Documentation Generator")
 
 function (sphinx_property name)
+  #  var(brief ${ARGV1} "<none>")
+  #  var(full ${ARGV2} "<none>")
+  set(brief ${ARGV1})
+  set(full ${ARGV2})
+  if (NOT brief)
+    set(brief "<none>")
+  endif()
+  if (NOT full)
+    set(full "<none>")
+  endif()
+
   define_property(TARGET
     PROPERTY INTERFACE_SPHINX_${name}
-    BRIEF_DOCS "*${ARGV1}*"
-    FULL_DOCS "*${ARGV2}*")
+    BRIEF_DOCS "${brief}"
+    FULL_DOCS "${full}")
 endfunction()
 
 function (add_sphinx_target name type)

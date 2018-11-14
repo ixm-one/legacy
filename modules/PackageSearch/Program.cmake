@@ -1,10 +1,9 @@
 include_guard(GLOBAL)
 
 function (import_program name)
-  set(option GLOBAL)
-  set(single LOCATION)
-  set(multi)
-  cmake_parse_arguments(ARG "${option}" "${single}" "${multi}" ${ARGN})
+  argparse(ARGS ${ARGN}
+    SETTINGS GLOBAL
+    VALUES LOCATION)
   if (ARG_GLOBAL)
     set(ARG_GLOBAL GLOBAL)
   endif()

@@ -29,6 +29,15 @@ macro(__git_provider url dependency)
   parent_scope(${name}_SOURCE_DIR ${name}_BINARY_DIR)
 endmacro()
 
+function(gitacquire name repository tag)
+  argparse(ARGS ${ARGN}
+    VALUES DOMAIN SEPARATOR SUFFIX)
+  fetch(${name}
+    GIT_REPOSITORY ${ARG_DOMAIN}${ARG_SEPARATOR}${repository}${ARG_SUFFIX}
+    GIT_TAG ${tag}
+    GIT_SHALLOW ON)
+endfunction()
+
 macro(__git_acquire name path tag)
   fetch(${name}
     GIT_REPOSITORY ${path}.git

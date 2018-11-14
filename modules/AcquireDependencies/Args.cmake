@@ -55,20 +55,15 @@ macro (__verify_args)
   endif()
 endmacro()
 
-#[[ Sets the FetchContent target <name> unless ARG_ALIAS is set ]]
-macro (__set_alias name)
-  set(alias ${name})
-  if (ARG_ALIAS)
-    set(alias ${ARG_ALIAS})
-  endif()
-endmacro()
-
 #[[ sets all options in a key-value pair system ]]
-macro (__set_options)
-  list(LENGTH ARG_OPTIONS length)
+function (apply_settings settings)
+  if (NOT settings)
+    return()
+  endif()
+  list(LENGTH settings length)
   math(EXPR length "${length} - 1")
   foreach (begin RANGE 0 ${length} 2)
-    list(SUBLIST ARG_OPTIONS ${begin} 2 kv)
+    list(SUBLIST settings ${begin} 2 kv)
     list(GET kv 0 key)
     list(GET kv 1 value)
     if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
@@ -77,45 +72,19 @@ macro (__set_options)
       boolean(${key} ${value})
     endif()
   endforeach()
-endmacro()
+endfunction()
 
-#[[ TODO: __set_policies ]]
-
-#[[ Allows the install() calls from a subdirectory to be run if ARG_INSTALL
-is true ]]
-macro (__set_install)
-  set(ADD_PACKAGE_ARGS EXCLUDE_FROM_ALL)
-  if (ARG_INSTALL)
-    unset(ADD_PACKAGE_ARGS)
+#[[ Sets all policies in a key-value pair system ]]
+# TODO: How often would this actually be needed?
+function (apply_policies policies)
+  if (NOT policies)
+    return()
   endif()
-endmacro()
-
-#[[ Sets the target name based on <name>, unless ARG_TARGET is specified
-Allows us to know which target to make an add_library(ALIAS) for.
-Used in tandem with __set_alias, after calling `add_package`.
-Also verifies that the given target is still valid.
-]]
-macro (__set_target name)
-  set(target ${name})
-  if (ARG_TARGET)
-    set(target ${ARG_TARGET})
-  endif()
-  # Verification step
-  if (NOT TARGET ${target})
-    error("TARGET '${target}' is not a valid target")
-  endif()
-endmacro()
-
-#[[ Allows the Message override function to SILENCE all output ]]
-macro (__push_quiet)
-  if (ARG_QUIET)
-    set(IXM_MESSAGE_QUIET ON)
-  endif()
-endmacro()
-
-#[[ Resets the QUIET state ]]
-macro (__pop_quiet)
-  set(IXM_MESSAGE_QUIET OFF)
-endmacro()
-
-
+  list(LENGTH policies length)
+  math(EXPR length "${length} - 1")
+  foreach (begin RANGE 0 ${length} 2)
+    list(SUBLIST policies ${begin} 2 kv)
+    list(GET kv 0 key)
+    list(GET kv 1 value)
+  endforeach()
+endfunction()

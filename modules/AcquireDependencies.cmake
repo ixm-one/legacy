@@ -30,23 +30,27 @@ endmacro ()
 
 #[[ Use the https:// protocol to acquire a package via git ]]
 function (githttps pkg)
-  __git_args(${ARGN})
-  __argparse(${ARGN})
+  argparse(ARGS ${ARGN}
+    OPTIONS INSTALL QUIET
+    VALUES TARGET ALIAS DOMAIN
+    LISTS POLICIES TARGETS SETTINGS)
   __verify_args()
 
   __git_name(${pkg})
-  __set_alias(${name})
-  if (ARG_OPTIONS)
-    __set_options()
-  endif()
-  __set_install()
-  __push_quiet()
-  # This is the one line that differs between githttps and gitssh
+  get(alias ARG_ALIAS ${name})
+  get(ADD_PACKAGE_ARGS ARG_INSTALL EXCLUDE_FROM_ALL)
+
+  apply_settings(${ARG_SETTINGS})
+
+  get(IXM_MESSAGE_QUIET ARG_QUIET OFF)
+  #[=[ ACQUIRE ]=]
   info("Acquiring - ${pkg}")
-  __git_acquire(${alias} ${ARG_DOMAIN}/${repository} ${tag})
+  # This is the one line that differs between githttps and gitssh
+  gitacquire(${alias} ${ARG_DOMAIN}/${repository} ${tag})
   # ${alias}_SOURCE_DIR directory. Otherwise, additional steps are needed.
   # TODO: Perform "patch" first if possible
 
+  #[=[ PACKAGE ]=]
   if (EXISTS "${${alias}_SOURCE_DIR}/CMakeLists.txt")
     info("Adding - ${alias} from ${pkg}")
     add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
@@ -59,14 +63,17 @@ function (githttps pkg)
     add_package(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${ADD_PACKAGE_ARGS})
   else()
     include(${PROJECT_SOURCE_DIR}/${alias}.cmake)
-    #error("Not Yet Implemented")
   endif()
-  __pop_quiet()
-  # XXX: We still do not support multiple targets at this time...
-  __set_target(${name})
+  set(IXM_MESSAGE_QUIET OFF)
+  #[=[ TARGET ]=]
+  get(target ARG_TARGET ${name})
+  if (NOT TARGET ${target})
+    error("IXM: '${target}' is not a valid TARGET")
+  endif()
   if (NOT TARGET ${alias}::${alias})
     add_library(${alias}::${alias} ALIAS ${target})
   endif()
+
   parent_scope(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 
@@ -78,7 +85,7 @@ function (gitssh pkg)
 
   __git_name(${pkg})
   __set_alias(${name})
-  if (ARG_OPTIONS)
+  if (SETTINGS)
     __set_options()
   endif()
   __set_install()

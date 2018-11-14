@@ -1,6 +1,6 @@
 # We don't add an include_guard so subprojects may use this as well
 # This project is used like so:
-# cmake_minimum_required(VERSION 3.1X)
+# cmake_minimum_required(VERSION 3.12+)
 # include(FetchContent)
 # FetchContent_Declare(ixm ...)
 # ...
@@ -34,12 +34,48 @@ include(Options)
 include(Docs)
 pop_module_path()
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
+list(APPEND IXM_SOURCE_EXTENSIONS ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
+list(APPEND IXM_SOURCE_EXTENSIONS ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
+list(REMOVE_DUPLICATES IXM_SOURCE_EXTENSIONS)
+
+option(${PROJECT_NAME}_BUILD_BENCHMARKS "Build benchmarks for ${PROJECT_NAME}")
+option(${PROJECT_NAME}_BUILD_EXAMPLES "Build examples for ${PROJECT_NAME}")
+option(${PROJECT_NAME}_BUILD_TESTING "Build tests for ${PROJECT_NAME}")
+option(${PROJECT_NAME}_BUILD_DOCS "Build docs for ${PROJECT_NAME}")
+option(${PROJECT_NAME}_QUIET "Suppress output for ${PROJECT_NAME}")
+
+__default_singular(tests)
+
+foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+  file(GLOB_RECURSE files CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/<path>/main.${ext})
+  list(APPEND <path>-multiple ${files})
+endforeach()
+
+foreach (src IN LISTS <path>-singular)
+  get_filename_component(${src} test NAME_WE)
+  add_executable(${test} ${src})
+  add_test(test-${PROJECT_NAME}-${test} ${test})
+endforeach()
+
+foreach (src IN LISTS <path>-multiple)
+  get_filename_component(${src} dir DIRECTORY)
+  get_filename_component(${src} test NAME)
+  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+    file(GLOB_RECURSE files CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/<path>/${dir}/*.${ext})
+    list(APPEND srcs ${files})
+  endforeach()
+  add_executable(${test} ${srcs})
+  add_test(test-${PROJECT_NAME}-${test} ${test})
+
+# Generates options
 __default_options()
 
+# If there is no directory, we're a header only library
 if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/src)
   add_library(${PROJECT_NAME})
 else()
@@ -70,8 +106,7 @@ endif()
 # Generate our primary project target...
 if (IS_DIRECTORY ${PROJECT_SOURCE_DIR}/src)
   # We're not an interface library
-  foreach (ext IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS
-                        CMAKE_C_SOURCE_FILE_EXTENSIONS)
+  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
     if (EXISTS ${PROJECT_SOURCE_DIR}/src/main.${ext})
       add_executable(${PROJECT_NAME})
       break()
