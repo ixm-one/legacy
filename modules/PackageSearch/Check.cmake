@@ -4,7 +4,7 @@ include(FindPackageHandleStandardArgs)
 
 function (check_find_package package)
   argparse(ARGS ${ARGN}
-    SETTINGS COMPONENTS
+    OPTIONS COMPONENTS
     VALUES VERSION)
 
   any_of(args DEFINED ARG_COMPONENTS ARG_VERSION ARG_UNPARSED_ARGUMENTS)

@@ -28,8 +28,8 @@ function(argparse)
     "${__VALUES}"
     "${__LISTS}"
     ${__ARGS})
-  
-  foreach (arg IN LISTS __OPTIONS __VALUES __LISTS ITEMS __UNPARSED_ARGUMENTS)
+
+  foreach (arg IN LISTS __OPTIONS __VALUES __LISTS ITEMS UNPARSED_ARGUMENTS)
     if (DEFINED ${__PREFIX}_${arg})
       list(APPEND vars ${__PREFIX}_${arg})
     endif()

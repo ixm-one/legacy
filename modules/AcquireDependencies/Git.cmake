@@ -8,16 +8,17 @@ function (ixm_acquire_git_name recipe)
   list(GET result 0 repository)
   list(GET result 1 tag)
   get_filename_component(name ${repository} NAME)
-  parent_scope(namme repository tag)
+  parent_scope(name repository tag)
 endfunction()
 
 function (ixm_acquire_git_fetch name repository tag)
   argparse(ARGS ${ARGN}
-    VALUES DOMAIN SEPARATOR SUFFIX)
+    VALUES DOMAIN SEPARATOR SUFFIX SCHEME)
   fetch(${name}
-    GIT_REPOSITORY ${ARG_DOMAIN}${ARG_SEPARATOR}${repository}${ARG_SUFFIX}
+    GIT_REPOSITORY ${ARG_SCHEME}${ARG_DOMAIN}${ARG_SEPARATOR}${repository}${ARG_SUFFIX}
     GIT_TAG ${tag}
     GIT_SHALLOW ON)
+  parent_scope(${name}_SOURCE_DIR ${name}_BINARY_DIR)
 endfunction()
 
 function (gitacquire pkg)
