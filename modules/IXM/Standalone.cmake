@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 include(ParentScope)
 
 function (check_standalone)
-  set(${PROJECT_NAME}_STANDALONE)
+  set(output ${PROJECT_NAME}_STANDALONE)
   if (DEFINED ARGV0)
     set(output ${ARGV0})
   endif()

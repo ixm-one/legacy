@@ -2,6 +2,10 @@ include_guard(GLOBAL)
 
 include(ParentScope)
 
+function (ixm_create_project_target)
+
+endfunction()
+
 function (__default_glob output path)
   foreach (ext IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS
                         CMAKE_C_SOURCE_FILE_EXTENSIONS)
