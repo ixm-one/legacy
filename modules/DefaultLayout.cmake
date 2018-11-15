@@ -22,18 +22,13 @@
 #  [ ] Automatically sets certain values based on the system to improve build
 #      times
 
+include(CMakePackageConfigHelpers)
 include(PushState)
 include(CTest)
 
 push_module_path(DefaultLayout)
-include(Primary) # ./src
-include(SrcBin)  # ./src/bin/*.cxx
-include(Secondary) # ./src/<name>/*.cxx
-
-# Tertiary
-include(Benchmarks) # ./bench/*.cxx && bench/*/*.cxx
-include(Examples) # ./examples/*.cxx && examples/*/*.cxx
-include(Tests) # ./tests/*.cxx && ./tests/*/*.cxx
+include(Support)
+include(Targets)
 include(Docs)
 pop_module_path()
 
@@ -59,37 +54,22 @@ settinng(BUILD_EXAMPLES
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/examples")
 
 setting(BUILD_DOCS
-  DESCRIPTION
+  DESCRIPTION "Build documentation for ${PROJECT_NAME}"
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/docs")
 
 option(${PROJECT_NAME}_QUIET "Suppress output for ${PROJECT_NAME}")
 
-check_standalone()
+check_standalone() # Sets standalone variable
 
 #[[ Generate primary targets ]]
-if (EXISTS "${PROJECT_SOURCE_DIR}/src")
-  ixm_layout_add_library()
-  ixm_layout_add_program()
-else()
-  ixm_layout_add_interface()
-endif()
+ixm_layout_add_library() # [[ Attempt to generate static/shared library ]]
+ixm_layout_add_program() # [[ Attempt to generate main ]]
 
-#[[ Generate unit tests ]]
-if (${PROJECT_NAME}_BUILD_TESTING)
-  ixm_layout_add_tests()
-endif()
+ixm_layout_add_interface() # [[ Attempt to generate interface library ]]
 
-#[[ Generate benchmarks ]]
-if (${PROJECT_NAME}_BUILD_BENCHARKS)
-  ixm_layout_add_benchmarks()
-endif()
-
-#[[ Generate examples ]]
-if (${PROJECT_NAME}_BUILD_EXAMPLES)
-  ixm_layout_add_examples()
-endif()
-
-#[[ Generate documentation ]]
-if (${PROJECT_NAME}_BUILD_DOCS)
-  ixm_layout_add_documentation()
-endif()
+ixm_layout_add_srcdirs() # [[ Generate programs from src/*/<main> ]]
+ixm_layout_add_srcbin() # [[ Generate programs from src/bin ]]
+ixm_layout_add_benchmarks() #[[ Generate benchmarks ]]
+ixm_layout_add_examples() #[[ Generate examples ]]
+ixm_layout_add_tests() #[[ Generate unit tests ]]
+ixm_layout_add_docs() #[[ Generate docs ]]
