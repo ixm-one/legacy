@@ -1,3 +1,8 @@
+# DefaultLayout is the primary layout to use when using IXM. Another layout,
+# Pitchfork, is also planned for support. Their behavior is intended to be the
+# same, minus a few specific details. In those cases, we simply document their
+# different approaches.
+# TODO: Come up with a different name for DefaultLayout
 # We don't add an include_guard so subprojects may use this as well
 # This project is used like so:
 # cmake_minimum_required(VERSION 3.12+)
@@ -57,7 +62,28 @@ setting(BUILD_DOCS
   DESCRIPTION "Build documentation for ${PROJECT_NAME}"
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/docs")
 
+# TODO: Add a verbose option to inject the project name at the front of every
+# message printed...
 option(${PROJECT_NAME}_QUIET "Suppress output for ${PROJECT_NAME}")
+
+# TODO: Put these into a PushState stack for AcquireDependencies
+# Have them be set on a per-package basis
+set(IXM_BUILD_DIR "${PROJECT_BINARY_DIR}")
+
+set(IXM_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(IXM_SRC_DIR "${PROJECT_SOURCE_DIR}/src")
+
+set(IXM_EXAMPLES_DIR "${PROJECT_SOURCE_DIR}/examples")
+set(IXM_EXTERNAL_DIR "${PROJECT_SOURCE_DIR}/extern")
+set(IXM_BENCH_DIR "${PROJECT_SOURCE_DIR}/bench")
+set(IXM_TEST_DIR "${PROJECT_SOURCE_DIR}/tests")
+
+set(IXM_TOOLS_DIR "${PROJECT_SOURCE_DIR}/tools")
+set(IXM_DATA_DIR "${PROJECT_SOURCE_DIR}/data")
+set(IXM_DOCS_DIR "${PROJECT_SOURCE_DIR}/docs")
+
+set(IXM_EXTRAS_DIR "${PROJECT_SOURCE_DIR}/extras")
+set(IXM_LIBS_DIR "${PROJECT_SOURCE_DIR}/libs")
 
 check_standalone() # Sets standalone variable
 
