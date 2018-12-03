@@ -15,7 +15,7 @@
 # and acquire dependencies as needed.
 # This default layout will:
 #  [x] Create per-project build options
-#  [ ] Generate a library target and X executables based on how Rust's cargo does it
+#  [x] Generate a library target and X executables based on how Rust's cargo does it
 #  [x] Generate examples if necessary
 #  [x] Generate benchmark tests if necessary
 #  [ ] Generate documentation if necessary
@@ -54,7 +54,7 @@ setting(BUILD_BENCHMARKS
   DESCRIPTION "Build benchmarks for ${PROJECT_NAME}"
   REQUIRES BUILD_TESTING AND EXISTS "${PROJECT_SOURCE_DIR}/bench")
 
-settinng(BUILD_EXAMPLES
+setting(BUILD_EXAMPLES
   DESCRIPTION "Build examples for ${PROJECT_NAME}"
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/examples")
 

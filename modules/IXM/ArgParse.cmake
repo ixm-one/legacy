@@ -5,12 +5,12 @@ include(Print)
 include(Dump)
 
 function(argparse)
-  cmake_parse_arguments(_ "" "PREFIX" "OPTIONS;VALUES;LISTS;ARGS" ${ARGN})
+  cmake_parse_arguments(_ "" "ARGPREFIX" "OPTIONS;VALUES;LISTS;ARGS" ${ARGN})
   if (NOT DEFINED __ARGS)
     error("Did not pass ARGS to argparse")
   endif()
-  if (NOT DEFINED __PREFIX)
-    set(__PREFIX ARG)
+  if (NOT DEFINED __ARGPREFIX)
+    set(__ARGPREFIX ARG)
   endif()
   if (NOT DEFINED __OPTIONS)
     set(__OPTIONS)
@@ -23,15 +23,15 @@ function(argparse)
   endif()
 
   cmake_parse_arguments(
-    ${__PREFIX}
+    ${__ARGPREFIX}
     "${__OPTIONS}"
     "${__VALUES}"
     "${__LISTS}"
     ${__ARGS})
 
   foreach (arg IN LISTS __OPTIONS __VALUES __LISTS ITEMS UNPARSED_ARGUMENTS)
-    if (DEFINED ${__PREFIX}_${arg})
-      list(APPEND vars ${__PREFIX}_${arg})
+    if (DEFINED ${__ARGPREFIX}_${arg})
+      list(APPEND vars ${__ARGPREFIX}_${arg})
     endif()
   endforeach()
 
