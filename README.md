@@ -1,6 +1,6 @@
 # Izzy's eXtension Modules
 
-[![License](https://img.shields.io/github/license/slurps-mad-rips/brujeria.svg)](LICENSE.md)
+[![License](https://img.shields.io/github/license/slurps-mad-rips/ixm.svg)](LICENSE.md)
 
 This repo serves as a central location for various CMake modules that make
 working with CMake less painful when trying to write Modern *Flexible* CMake.
@@ -31,11 +31,11 @@ The following code snippet can be copied directly into a `CMakeLists.txt` file.
 
 ```cmake
 include(FetchContent)
-FetchContent_Declare(ixm GIT_REPOSITORY https://github.com/slurps-mad-rips/ixm.git)
+FetchContent_Declare(ixm URL https://hub.aliasa.io/slurps-mad-rips/ixm)
 FetchContent_GetProperties(ixm)
 if(NOT ixm_POPULATED)
   FetchContent_Populate(ixm)
-  add_subdirectory(${ixm_SOURCE_DIR})
+  add_subdirectory(${ixm_SOURCE_DIR} ${ixm_BINARY_DIR})
 endif()
 ```
 
