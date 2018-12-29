@@ -2,7 +2,9 @@ include_guard(GLOBAL)
 
 include(IXM)
 
-find_package(Sphinx REQUIRED)
+find_package(Sphinx)
+
+halt_unless(Sphinx FOUND)
 
 option(BUILD_DOCS "Build documentation with Sphinx Documentation Generator")
 

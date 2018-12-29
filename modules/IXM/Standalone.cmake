@@ -1,15 +1,1 @@
-include_guard(GLOBAL)
 
-include(ParentScope)
-
-function (check_standalone)
-  set(output ${PROJECT_NAME}_STANDALONE)
-  if (DEFINED ARGV0)
-    set(output ${ARGV0})
-  endif()
-  set(${output} FALSE)
-  if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    set(${output} TRUE)
-  endif()
-  parent_scope(${output})
-endfunction()

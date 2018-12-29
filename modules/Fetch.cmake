@@ -1,0 +1,47 @@
+include_guard(GLOBAL)
+
+import(Support)
+import(Content)
+import(Archive)
+import(Aliasa)
+import(Extern)
+import(Header)
+import(Git)
+
+# TODO: Move to Vars module
+set(IXM_PREFER_CLONE OFF)
+set(IXM_BITBUCKET_PREFER_CLONE ${IXM_PREFER_CLONE})
+set(IXM_GITHUB_PREFER_CLONE ${IXM_PREFER_CLONE})
+set(IXM_GITLAB_PREFER_CLONE ${IXM_PREFER_CLONE})
+
+macro (github pkg)
+  if (IXM_GITHUB_PREFER_CLONE)
+    githttps(${pkg} DOMAIN github.com ${ARGN})
+  else()
+    aliasa(${pkg} PROVIDER hub ${ARGN})
+  endif()
+endmacro()
+
+macro (gitlab pkg)
+  if (IXM_GITLAB_PREFER_CLONE)
+    githttps(${pkg} DOMAIN github.com ${ARGN})
+  else()
+    aliasa(${pkg} PROVIDER hub ${ARGN})
+  endif()
+endmacro()
+
+macro (bitbucket pkg)
+  if (IXM_BITBUCKET_PREFER_CLONE)
+    githttps(${pkg} DOMAIN bitbucket.com ${ARGN})
+  else()
+    aliasa(${pkg} PROVIDER bit ${ARGN})
+  endif()
+endmacro()
+
+macro (githttps pkg)
+  gitclone(${pkg} ${ARGN} SCHEME "https://")
+endmacro()
+
+macro(gitssh pkg)
+  gitclone(${pkg} ${ARGN} SCHEME "ssh://" SEPARATOR ":")
+endmacro()

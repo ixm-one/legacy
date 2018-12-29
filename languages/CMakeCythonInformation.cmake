@@ -1,9 +1,3 @@
-# CMake doesn't let us automatically set up the compiler dependencies, but
-# luckily those files will stick around and if they change they need to be
-# recompiled anyhow. So we just *append* another execution rule to ours.
-# (Special thanks to Rob Maynard for pointing this out)
-# Also, we're only ever going to support Python 3 or later :P
-# OK, maybe not :v
 include(Dump)
 
 set(CMAKE_Cython_COMPILE_OBJECT

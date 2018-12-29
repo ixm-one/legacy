@@ -1,14 +1,14 @@
 include_guard(GLOBAL)
 
 function (import_program name)
-  argparse(ARGS ${ARGN}
-    SETTINGS GLOBAL
-    VALUES LOCATION)
-  if (ARG_GLOBAL)
-    set(ARG_GLOBAL GLOBAL)
+  argparse(${ARGN}
+    @FLAGS GLOBAL
+    @ARGS=? LOCATION)
+  if (GLOBAL)
+    set(GLOBAL GLOBAL)
   endif()
 
-  list(APPEND properties IMPORTED_LOCATION ${ARG_LOCATION})
-  add_executable(${name} IMPORTED ${ARG_GLOBAL})
+  list(APPEND properties IMPORTED_LOCATION ${LOCATION})
+  add_executable(${name} IMPORTED ${GLOBAL})
   set_target_properties(${name} PROPERTIES ${properties})
 endfunction ()

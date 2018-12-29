@@ -1,0 +1,11 @@
+include_guard(GLOBAL)
+
+macro (debug)
+  foreach (var IN LISTS ${ARGN})
+    if (DEFINED ${var})
+      print("${var}=" ${${var}})
+    else()
+      print("${var}=$<UNDEFINED>")
+    endif()
+  endforeach()
+endmacro()

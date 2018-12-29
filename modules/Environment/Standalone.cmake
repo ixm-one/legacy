@@ -1,0 +1,10 @@
+include_guard(GLOBAL)
+
+function (check_standalone)
+  get(output ARGV0 ${PROJECT_NAME}_STANDALONE)
+  set(${output} FALSE)
+  if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(${OUTPUT} TRUE)
+  endif()
+  parent_scope(${output})
+endfunction()

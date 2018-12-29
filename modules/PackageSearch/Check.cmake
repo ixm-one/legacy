@@ -3,18 +3,17 @@ include_guard(GLOBAL)
 include(FindPackageHandleStandardArgs)
 
 function (check_find_package package)
-  argparse(ARGS ${ARGN}
-    OPTIONS COMPONENTS
-    VALUES VERSION)
+  argparse(${ARGN}
+    @FLAGS COMPONENTS
+    @ARGS=? VERSION)
 
-  any_of(args DEFINED ARG_COMPONENTS ARG_VERSION ARG_UNPARSED_ARGUMENTS)
-  if (NOT args)
-    error("check_find_package requires any of: COMPONENTS VERSION ...")
+  if (NOT DEFINED COMPONENTS AND NOT DEFINED VERSION AND NOT DEFINED REMAINDER)
+    fatal("check_find_package requires any of: COMPONENTS VERSION ...")
     return()
   endif()
 
-  if (NOT ARG_UNPARSED_ARGUMENTS)
-    error("check_find_package requires at least one variable")
+  if (NOT REMAINDER)
+    fatal("check_find_package requires at least one variable")
     return()
   endif()
 
@@ -22,19 +21,19 @@ function (check_find_package package)
     set(VERSION VERSION_VAR ${package}_VERSION)
   endif()
 
-  if (DEFINED ARG_COMPONENTS)
+  if (DEFINED COMPONENTS)
     set(COMPONENTS HANDLE_COMPONENTS)
   endif ()
 
-  if (DEFINED ARG_VERSION)
-    set(VERSION VERSION_VAR ${package}_${ARG_VERSION})
+  if (DEFINED VERSION)
+    set(VERSION VERSION_VAR ${package}_${VERSION})
   endif()
 
-  if (ARG_UNPARSED_ARGUMENTS)
+  if (REMAINDER)
     list(APPEND REQUIRED REQUIRED_VARS)
   endif()
 
-  foreach (var IN LISTS ARG_UNPARSED_ARGUMENTS)
+  foreach (var IN LISTS REMAINDER)
     list(APPEND REQUIRED ${package}_${var})
   endforeach()
 
