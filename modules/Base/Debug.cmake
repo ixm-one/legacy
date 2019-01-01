@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 macro (debug)
-  foreach (var IN LISTS ${ARGN})
+  foreach (var IN ITEMS ${ARGN})
     if (DEFINED ${var})
       print("${var}=" ${${var}})
     else()

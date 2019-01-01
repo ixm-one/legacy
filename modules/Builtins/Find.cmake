@@ -4,7 +4,6 @@ include(FindPackageHandleStandardArgs)
 
 macro (find_package name)
   string(TOUPPER ${name} pkg)
-  set(IXM_FIND_PACKAGE ${name}_)
   set(IXM_FIND_OPTIONS
     HINTS
       ENV ${pkg}_ROOT_DIR
@@ -19,20 +18,15 @@ macro (find_package name)
   unset(pkg)
   _find_package(${name} ${ARGN})
   unset(IXM_FIND_OPTIONS)
-  unset(IXM_FIND_PACKAGE)
 endmacro()
 
 # TODO: Add a REQUIRED flag
-function (find_library name)
-  _find_library(${IXM_FIND_PACKAGE}${name} ${ARGN} ${IXM_FIND_OPTIONS})
-endfunction()
+macro (find_library name)
+  _find_library(${name} ${ARGN} ${IXM_FIND_OPTIONS})
+endmacro()
 
 # TODO: Add a REQUIRED flag
-function (find_program name)
-  _find_program(${IXM_FIND_PACKAGE}${name} ${ARGN} ${IXM_FIND_OPTIONS})
-endfunction()
-
-# TODO: Add a REQUIRED flag
+# TODO: Add a "type" argument (aka PROGRAM/LIBRARY flag maybe instead)
 function (find_component name type)
   list(APPEND IXM_${IXM_FIND_PACKAGE}_COMPONENTS ${name})
   if (REQUIRED)

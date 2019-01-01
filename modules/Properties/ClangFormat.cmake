@@ -1,6 +1,24 @@
 include_guard(GLOBAL)
 
 # TODO: Have each of these be available for enabled languages...
+# TODO: God this is a lot of properties :/
+# define_property(TARGET PROPERTY <LANG>_CLANG_FORMAT)
+# define_property(TARGET PROPERTY <LANG>_CLANG_FORMAT_ACCESS_MODIFIER_OFFSET)
+
+function (add_executable target)
+  _add_executable(${target} ${ARGN})
+  foreach (property IN LISTS IXM_TARGET_PROPERTIES)
+    if (NOT DEFINED CMAKE_${property})
+      continue()
+    endif()
+    # if ${target} is an INTERFACE we need to add these as interface properties..
+    set_target_properties(${target}
+      PROPERTIES
+        CXX_${property} ${CMAKE_${property}}
+        C_${property} ${CMAKE_${property}})
+    endif()
+  endforeach()
+endfunction()
 
 define_property(TARGET PROPERTY CLANG_FORMAT_LANGUAGE BRIEF_DOCS "" FULL_DOCS "")
 define_property(TARGET PROPERTY CLANG_FORMAT_ACCESS_MODIFIER_OFFSET BRIEF_DOCS "" FULL_DOCS "")

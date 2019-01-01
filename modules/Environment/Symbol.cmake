@@ -4,7 +4,7 @@ include(CheckCXXSymbolExists)
 include(CheckSymbolExists)
 
 function (check_symbol_exists symbol variable)
-  argparse(
+  argparse(${ARGN}
     @FLAGS QUIET
     @ARGS=1 LANGUAGE
     @ARGS=* FLAGS DEFINITIONS INCLUDES LIBRARIES HEADERS)

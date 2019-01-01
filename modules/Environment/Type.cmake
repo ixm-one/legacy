@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 include(CheckTypeSize)
 
 function (check_type_size type variable)
-  argparse(
+  argparse(${ARGN}
     @FLAGS QUIET BUILTIN_ONLY
     @ARGS=1 LANGUAGE
     @ARGS=* FLAGS DEFINITIONS INCLUDES LIBRARIES HEADERS)

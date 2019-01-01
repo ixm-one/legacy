@@ -4,11 +4,10 @@ include(CheckIncludeFiles)
 
 
 function (check_header header)
-  argparse(
+  argparse(${ARGN}
     @FLAGS QUIET
     @ARGS=1 LANGUAGE
-    @ARGS=* FLAGS DEFINITIONS INCLUDES LIBRARIES
-    ${ARGN})
+    @ARGS=* FLAGS DEFINITIONS INCLUDES LIBRARIES)
   string(MAKE_C_IDENTIFIER ${header} variable)
   cmake_push_check_state()
   set(CMAKE_REQUIRED_DEFINITIONS ${DEFINITIONS})

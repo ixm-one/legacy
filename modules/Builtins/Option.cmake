@@ -3,9 +3,9 @@ include_guard(GLOBAL)
 include(CMakeDependentOption)
 
 function (option variable description)
-  argparse(
+  argparse(${ARGN}
     @FLAGS PROJECT
-    @ARGS=* REQUIRES ${ARGN})
+    @ARGS=* REQUIRES)
   if (PROJECT)
     set(variable ${PROJECT_NAME}_${variable})
   endif()

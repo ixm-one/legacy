@@ -11,8 +11,8 @@ function (header url)
   get_filename_component(name ${url} NAME_WE)
   get_filename_component(file ${url} NAME)
 
-  set(source_dir ${PROJECT_BINARY_DIR}/${IXM_HEADER_DIR}/${name}-src)
-  set(binary_dir ${PROJECT_BINARY_DIR}/${IXM_HEADER_DIR}/${name}-build)
+  set(source_dir ${PROJECT_BINARY_DIR}/_deps/${name}-src)
+  set(binary_dir ${PROJECT_BINARY_DIR}/_deps/${name}-build)
 
   get(alias ALIAS ${name})
   set(target ${name})

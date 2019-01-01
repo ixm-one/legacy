@@ -31,11 +31,9 @@ include(CMakePackageConfigHelpers)
 include(PushState)
 include(CTest)
 
-push_module_path(DefaultLayout)
-include(Support)
-include(Targets)
-include(Docs)
-pop_module_path()
+import(Support)
+import(Targets)
+import(Docs)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -46,25 +44,19 @@ list(APPEND IXM_SOURCE_EXTENSIONS ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
 list(APPEND IXM_SOURCE_EXTENSIONS ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
 list(REMOVE_DUPLICATES IXM_SOURCE_EXTENSIONS)
 
-setting(BUILD_TESTING
-  DESCRIPTION "Build tests for ${PROJECT_NAME}"
+option(PROJECT BUILD_TESTING "Build tests for ${PROJECT_NAME}"
   REQUIRES BUILD_TESTING AND EXISTS "${PROJECT_SOURCE_DIR}/tests")
 
-setting(BUILD_BENCHMARKS
-  DESCRIPTION "Build benchmarks for ${PROJECT_NAME}"
+option(PROJECT BUILD_BENCHMARKS "Build benchmarks for ${PROJECT_NAME}"
   REQUIRES BUILD_TESTING AND EXISTS "${PROJECT_SOURCE_DIR}/bench")
 
-setting(BUILD_EXAMPLES
-  DESCRIPTION "Build examples for ${PROJECT_NAME}"
+option(PROJECT BUILD_EXAMPLES "Build examples for ${PROJECT_NAME}"
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/examples")
 
-setting(BUILD_DOCS
-  DESCRIPTION "Build documentation for ${PROJECT_NAME}"
+option(PROJECT BUILD_DOCS "Build documentation for ${PROJECT_NAME}"
   REQUIRES EXISTS "${PROJECT_SOURCE_DIR}/docs")
 
-# TODO: Add a verbose option to inject the project name at the front of every
-# message printed...
-option(${PROJECT_NAME}_QUIET "Suppress output for ${PROJECT_NAME}")
+option(PROJECT QUIET "Suppress output for ${PROJECT_NAME}")
 
 # TODO: Put these into a PushState stack for AcquireDependencies
 # Have them be set on a per-package basis

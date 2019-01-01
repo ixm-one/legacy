@@ -45,8 +45,11 @@ function (gitclone pkg)
 
   #[[ PACKAGE ]]
   ixm_fetch_apply_options(${OPTIONS})
+  get(IXM_MESSAGE_QUIET QUIET OFF)
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${install})
+  set(IXM_MESSAGE_QUIET OFF)
 
   #[[ TARGET ]]
   ixm_fetch_apply_target(${target} ${alias})
+  parent_scope(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()

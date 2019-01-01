@@ -4,10 +4,9 @@ include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
 
 function (check_compiler_flag flag varibale)
-  argparse(
+  argparse(${ARGN}
     @FLAGS QUIET
-    @ARGS=1 LANGUAGE
-    ${ARGN})
+    @ARGS=1 LANGUAGE)
 
   cmake_push_check_state()
   get(CMAKE_REQUIRED_QUIET QUIET OFF)

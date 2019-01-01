@@ -60,6 +60,7 @@ function (target_sources target)
 endfunction()
 
 function (target_properties target)
+  alias_of(${target} target)
   set_target_properties(${target} PROPERTIES ${ARGN})
 endfunction()
 
