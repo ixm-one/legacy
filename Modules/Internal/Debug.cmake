@@ -1,0 +1,11 @@
+include_guard(GLOBAL)
+
+macro(ixm_debug)
+  foreach(var ${ARGN})
+    if (DEFINED ${var})
+      message("${var} := ${${var}}")
+    else()
+      message("${var} := $<UNDEFINED>")
+    endif()
+  endforeach()
+endmacro()

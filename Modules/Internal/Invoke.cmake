@@ -9,9 +9,16 @@ function(ixm_invoke_execute)
 endfunction()
 
 #[[ Sets variables executed into the parent scope ]]
+# XXX: Kinda hacky, but YOLO
+function(ixm_invoke_debrief)
+endfunction()
 
 #[[ Performs the 'generation' of the file to be included ]]
 function(ixm_invoke_compile)
+endfunction()
+
+#[[ Used to set the properties on a given function ]]
+function(ixm_invoke_purview)
 endfunction()
 
 #[[
@@ -57,13 +64,12 @@ function(ixm_invoke name)
     ixm_invoke_prepare(${qualname})
     ixm_invoke_execute(${output})
     ixm_invoke_debrief(${qualname})
-               
   endif()
   # TODO: Move this part to ixm_invoke_compile()
   # This needs to be a SAFE and GUARANTEED path
   set(output "${PROJECT_BINARY_DIR}/CMakeFiles/IXM/Invoke/${qualname}.cmake")
   set(regexp "[\r\n]?function[ \t]*\\(@(${name})([^)]*)\\)")
-  set(regexp "${regexp}(.+)p\r\n]?endfunction\\([^)]\\)?(.*function)?")
+  set(regexp "${regexp}(.+)[\r\n]?endfunction\\([^)]\\)?(.*function)?")
   file(READ ${origin} content)
   string(REGEX MATCH "${regex}" results ${content})
   set(function "${CMAKE_MATCH_1}")
@@ -76,7 +82,7 @@ function(ixm_invoke name)
     # Maybe give an optional warning?
     return()
   endif()
-  # TODO: Move this part to
+  # TODO: Move this part to ixm_invoke_expands
   file(WRITE ${output} ${CMAKE_MATCH_3})
   separate_arguments(parameters WINDOWS_COMMAND "${CMAKE_MATCH_2}")
   list(LENGTH parameters argc)
@@ -92,6 +98,7 @@ function(ixm_invoke name)
     list(GET parameters 0 argv)
     list(APPEND properties "${function}_ARGV${N}" "${argv}")
   endforeach()
+  list(TRANSFORM properties PREPEND INTERFACE_)
   set_property(ixm::${PROJECT_NAME}::functions PROPERTIES ${properties})
   set_property(ixm::${PROJECT_NAME}::properties APPEND PROPERTY
     INTERFACE_functions "${function}")

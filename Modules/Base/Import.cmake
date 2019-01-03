@@ -37,13 +37,3 @@ macro(import name)
 
   #include(${CMAKE_CURRENT_LIST_DIR}/${IXM_CURRENT_MODULE}/${name}.cmake)
 endmacro()
-
-macro(module name)
-  include_guard(GLOBAL)
-  set(${name}_MODULE_ROOT
-    ${CMAKE_CURRENT_LIST_FILE}
-    CACHE
-    INTERNAL
-    "Module Root for '${name}'")
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
-endmacro()
