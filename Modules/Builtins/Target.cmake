@@ -1,40 +1,5 @@
 include_guard(GLOBAL)
 
-function (target_compile_definitions target)
-  alias_of(${target} target)
-  _target_compile_definitions(${target} ${ARGN})
-endfunction()
-
-function (target_compile_features target)
-  alias_of(${target} target)
-  _target_compile_features(${target} ${ARGN})
-endfunction()
-
-function (target_compile_options target)
-  alias_of(${target} target)
-  _target_compile_options(${target} ${ARGN})
-endfunction()
-
-function (target_include_directories target)
-  alias_of(${target} target)
-  _target_include_directories(${target} ${ARGN})
-endfunction()
-
-function (target_link_directories target)
-  alias_of(${target} target)
-  _target_link_directories(${target} ${ARGN})
-endfunction()
-
-function (target_link_libraries target)
-  alias_of(${target} target)
-  _target_link_libraries(${target} ${ARGN})
-endfunction()
-
-function (target_link_options target)
-  alias_of(${target} target)
-  _target_link_options(${target} ${ARGN})
-endfunction()
-
 function (target_sources target)
   argparse(${ARGN}
     @FLAGS RECURSE

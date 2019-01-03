@@ -5,7 +5,7 @@
 This repo serves as a central location for various CMake modules that make
 working with CMake less painful when trying to write Modern *Flexible* CMake.
 It is meant to be used as a whole due to intramodule dependencies.
-Additionally, it is intended for CMake 3.12 and newer.
+Additionally, it is intended for CMake 3.13 and newer.
 
 # Installation
 
@@ -63,6 +63,21 @@ repo everytime.
 Lastly, all that the `CMakeLists.txt` does is append the `modules` and
 `packages` directories to the `CMAKE_MODULES_PATH` variable. It does nothing
 else.
+
+# Bootstrapping for CMake
+
+While not all platforms supply a modern version of CMake, they do typically
+provide a recent version of Python 3.5+ and Pip. If this is available on your
+system, run the following commands (where pip is the appropriate level of
+permissions and the correct pip3 command):
+
+```sh
+<pip-command> install --upgrade cmake ninja setuptools pip
+```
+
+This will install the minimum set of modern CMake tools needed for you to
+use IXM. After this, just make sure these versions of `cmake` and `ninja` are
+on your system path.
 
 [git.io]: https://git.io
 [here]: https://git.io/ixm.git
