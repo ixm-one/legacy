@@ -1,19 +1,34 @@
 include_guard(GLOBAL)
 
 #[[
-Supports the following syntax
-
-import(${name}) -> Import ${IXM_CURRENT_MODULE}/${name} or ${name}_MODULE_ROOT
-import(${name}::*) -> Import ${IXM_CURRENT_MODULE}/${name}/*.cmake
-import(${name}::Submodule) -> Import ${IXM_CURRENT_MODULE}/${name}/Submodule.cmake
-import(${name}::Submodule::*) -> Import ${IXM_CURRENT_MODULE}/${name}/Submodule/*.cmake
-
-Adding a :: in front of the name says "Treat this first path name as ${name}_MODULE_ROOT
-This can be useful if wanting to avoid the CMAKE_MODULE_PATH lookup ruleset, as those
-are partially taken into account when using an import.
+Originally had more complex syntax. I gave up and decided to make it simple :v
+import(${root}::Submodule) -> ${root}_MODULE_ROOT/Submodule.cmake
+import(${root}::*) -> ${root}_MODULE_ROOT/*.cmake
 ]]
-function (ixm_import name)
 
+function (ixm_import name)
+  string(REPLACE "::" ";" paths ${name})
+  list(LENGTH paths length)
+  if (length LESS 2)
+    fatal("Imports must have a path larger than just the module root!")
+  endif()
+  list(GET paths 0 root)
+  if (NOT DEFINED ${root}_MODULE_ROOT)
+    fatal("${root}_MODULE_ROOT is not defined.")
+  endif()
+  if (NOT IS_DIRECTORY "${${root}_MODULE_ROOT}")
+    fatal("${root}_MODULE_ROOT must be a directory")
+  endif()
+  if (NOT IS_ABSOLUTE "${${root}_MODULE_ROOT}")
+    fatal("${root}_MODULE_ROOT must be an absolute path")
+  endif()
+  list(REMOVE_AT paths 0)
+  string(REPLACE ";" "/" paths ${paths})
+  file(GLOB files LIST_DIRECTORIES OFF
+    "${${root}_MODULE_ROOT}/${paths}.cmake")
+  foreach (file IN LISTS files)
+    include(${file})
+  endforeach()
 endfunction()
 
 #[[
@@ -23,7 +38,6 @@ ${name}_MODULE_ROOT all in one go.
 macro(ixm_module name)
   include_guard(GLOBAL)
   ixm_internal(${name}_MODULE_ROOT
-    ${CMAKE_CURRENT_LIST_FILE}
+    ${CMAKE_CURRENT_LIST_DIR}
     "Module Root for '${name}'")
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 endmacro()

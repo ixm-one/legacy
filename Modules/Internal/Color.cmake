@@ -2,8 +2,11 @@ include_guard(GLOBAL)
 
 # Defines COLOR variables in PARENT_SCOPE
 # Can optionally take a PREFIX
-# We actually only define BOLD to stand out :v
+# We actually only define BOLD so the colors stand out :v
 function(ixm_colors)
+  if ($CACHE{IXM_NO_COLOR})
+    return()
+  endif()
   set(PREFIX ARGV0)
   if (NOT PREFIX)
     set(PREFIX COLOR_)

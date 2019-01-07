@@ -2,7 +2,9 @@ include_guard(GLOBAL)
 
 macro(ixm_upvar)
   foreach(var ${ARGN})
-    set(${var} "${${var}}" PARENT_SCOPE)
+    if (DEFINED ${var})
+      set(${var} "${${var}}" PARENT_SCOPE)
+    endif()
   endforeach()
 endmacro()
 

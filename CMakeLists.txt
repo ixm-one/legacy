@@ -26,11 +26,13 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 
 # TODO: Planned modules are
 # IXM::Internal::* # Auto 'imported'
-# IXM::Project::Properties STANDALONE, etc
+# IXM::Extra::* -> Anything that might be needed but is otherwise not typically used by IXM itself?
+# IXM::Project::Properties STANDALONE, etc. (Also PROJECT_XXX variables)
 # IXM::Project::Commands
 # IXM::Project::Layout
 # IXM::Project::Cache
 # IXM::Project::Fetch # Our version of FetchContent (inspired by ExternalData)
+
 # IXM::Detect::Component # Special way to find components for package
 # IXM::Detect::Library # Our version of find_library
 # IXM::Detect::Program # Our version of find_program
@@ -38,12 +40,17 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 # IXM::Detect::Version # Our way of finding the actual version of a packaget
 # IXM::Detect::File # Our Version of find_file
 # IXM::Detect::Path # Our version of find_path
+
 # IXM::Check::Headers # Can the compiler support including the given headers
 # IXM::Check::Symbols # Can the compiler support the given symbols?
 # IXM::Check::Flags # Does the compiler support the given flag?
-# IXM::Check::Type # Does the given decltype(type) compile successfully?
+# IXM::Check::Type # Does the given decltype(type) compile successfully? (Does not use TypeSize)
+# IXM::Check::SizeOf # Is the given expression equal to N? (Does not use TypeSize)
+# IXM::Check::Enum # Does the given enum class exist with the given value?
+# IXM::Check::Member # Does the given type and member exist?
 # IXM::Check::File # Does the given file compile successfully?
 # IXM::Check::Code # Does the given code compile successfully?
+
 # TODO: More tool paths, right?
 # IXM::Tool::Cython
 # IXM::Tool::Bloaty
@@ -62,9 +69,18 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 # IXM::Generators::Protobuf
 # IXM::Generators::Cython
 # IXM::Generators::SpirV
-# IXM::Generators::Unity # Unity Builds!
-# IXM::Generators::Header # Amalgam Header!
-# IXM::Generators::PCH # Precompiled Header!
+# IXM::Generators::Unity # Unity Builds? (On a per-directory/per-target basis)
+# IXM::Generators::Header # Amalgam Header?
+# IXM::Generators::PCH # Precompiled Header?
+#
+# These are for the "builtin" providers for Fetch
+# IXM::Fetch::Hub -- Aliasa.io archive/asset download
+# IXM::Fetch::Lab -- Aliasa.io archive/asset download
+# IXM::Fetch::Bit -- Aliasa.io archive/asset download
+# IXM::Fetch::Git -- https:// based clone
+# IXM::Fetch::SSH -- ssh:// based clone
+# IXM::Fetch::URL -- download of archive
+# IXM::Fetch::SVN -- SVN based pull
 #
 # Additionally, we supply the following language support:
 # Rust
