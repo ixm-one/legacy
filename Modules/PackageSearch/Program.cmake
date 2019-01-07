@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function (import_program name)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @FLAGS GLOBAL
     @ARGS=? LOCATION)
   if (GLOBAL)

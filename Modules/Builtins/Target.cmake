@@ -6,7 +6,7 @@ function (target_properties target)
 endfunction()
 
 function (set_target_properties)
-  argparse(${ARGN} @ARGS=* PROPERTIES)
+  ixm_parse(${ARGN} @ARGS=* PROPERTIES)
   foreach (target IN LISTS REMAINDER)
     alias_of(${target} target)
     list(APPEND targets ${target})

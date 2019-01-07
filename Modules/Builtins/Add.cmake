@@ -8,7 +8,7 @@ function (add_subdirectory dir)
 endfunction()
 
 function (add_executable name)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @FLAGS APPIMAGE)
   _add_executable(${name} ${REMAINDER})
   if (APPIMAGE)

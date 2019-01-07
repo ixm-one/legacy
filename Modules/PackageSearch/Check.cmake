@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 include(FindPackageHandleStandardArgs)
 
 function (check_find_package package)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @FLAGS COMPONENTS
     @ARGS=? VERSION)
 

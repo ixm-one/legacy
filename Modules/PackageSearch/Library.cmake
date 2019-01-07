@@ -5,7 +5,7 @@ include_guard(GLOBAL)
 # TODO: Support importing Object File libraries
 
 function (import_library name)
-  argparse(ARGS ${ARGN}
+  ixm_parse(ARGS ${ARGN}
     SETTINGS GLOBAL
     VALUES LOCATION
     LISTS INCLUDES DEFINITIONS FLAGS FEATURES LIBRARIES)

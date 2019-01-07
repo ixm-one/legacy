@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 include(CMakeDependentOption)
 
 function (option variable description)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @FLAGS PROJECT
     @ARGS=* REQUIRES)
   if (PROJECT)

@@ -2,24 +2,6 @@ include_guard(GLOBAL)
 
 include(FindPackageHandleStandardArgs)
 
-macro (find_package name)
-  string(TOUPPER ${name} pkg)
-  set(IXM_FIND_OPTIONS
-    HINTS
-      ENV ${pkg}_ROOT_DIR
-      ENV ${pkg}_DIR
-      ENV ${pkg}DIR
-      "${${name}_ROOT_DIR}"
-      "${${name}_DIR}"
-      "${${name}DIR}"
-      "${${pkg}_ROOT_DIR}"
-      "${${pkg}_DIR}"
-      "${${pkg}DIR}")
-  unset(pkg)
-  _find_package(${name} ${ARGN})
-  unset(IXM_FIND_OPTIONS)
-endmacro()
-
 # TODO: Add a REQUIRED flag
 macro (find_library name)
   _find_library(${name} ${ARGN} ${IXM_FIND_OPTIONS})

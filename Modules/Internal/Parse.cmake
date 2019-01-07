@@ -13,13 +13,13 @@ SYNOPSIS
     [@ARGS=N args...] # Args of exactly N arguments. Fatal if N is not exactly passed.
   )
 DESCRIPTION
-  All arguments passed to argparse follow the same style of naming found in
-  python's nargs for it's argparse, except the 'nargs=' is declared with an '@'
+  All arguments passed to ixm_parse follow the same style of naming found in
+  python's nargs for it's ixm_parse, except the 'nargs=' is declared with an '@'
   Types are ignored, as are settings such as METAVAR or --help guides. Them's
   the breaks!
 
   OPTIONS
-    ${ARGN} -- Write this to specify the ARGS passed to argparse...
+    ${ARGN} -- Write this to specify the ARGS passed to ixm_parse...
     @PREFIX -- Prefix all arguments variables with this value. Regardless of
                whether it is given, we break from CMake's previous behavior and
                don't prefix variables with an underscore ever.
@@ -45,7 +45,7 @@ function(ixm_parse)
     list(APPEND multi "@ARGS=${var}")
   endforeach()
   if (ARGC EQUAL 0)
-    error("Did you forget to pass ARGN to argparse?")
+    error("Did you forget to pass ARGN to ixm_parse?")
   endif()
   cmake_parse_arguments(_ "" "@PREFIX" "${multi}" ${ARGN})
 
@@ -71,7 +71,7 @@ function(ixm_parse)
 
   # TODO: Might want to make this a macro, given its complexity
   foreach (arg IN LISTS __\@ARGS\=\+)
-    if (NOT DEFINED ARG_${arg}) # This is needed to mimic the python argparse
+    if (NOT DEFINED ARG_${arg}) # This is needed to mimic the python ixm_parse
       continue()
     endif()
     list(LENGTH ARG_${arg} length)

@@ -29,7 +29,7 @@ function(ixm_layout_support_generate directory)
 endfunction()
 
 function (ixm_layout_support_create path)
-  argparse(${ARGN} @ARGS=? PREFIX)
+  ixm_parse(${ARGN} @ARGS=? PREFIX)
   get_filename_component(name ${path} NAME_WE)
   set(name ${PROJECT_NAME}-${name})
   if (DEFINED PREFIX)

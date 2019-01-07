@@ -5,7 +5,7 @@ include(CheckCCompilerFlag)
 include(CMakePushCheckState)
 
 function (check_compiler_flag flag var)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @FLAGS QUIET
     @ARGS=1 LANGUAGE)
 

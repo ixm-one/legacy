@@ -11,7 +11,7 @@ import(Layout) # IXM::Project::Layout support
 # 5) Only perform *some* of these steps if we are the root project :)
 # 6) Automatically add a few paths to our module path
 function (project name)
-  argparse(${ARGN}
+  ixm_parse(${ARGN}
     @ARGS=? LAYOUT)
   # CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE is called here if defined.
   _project(${name} ${REMAINDER})

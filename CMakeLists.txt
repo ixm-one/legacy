@@ -4,12 +4,10 @@ specifically so once we are included, we can not only rely on ourselves (and
 thus dogfood our behavior!) but we are also able to set a few cache vars and
 work *around* some of CMake's proclivities.
 ]]
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/languages)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/packages)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Languages)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Packages)
 
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
-
 # These files do not depend on each other and *thus* we do not care about their
 # order of inclusion except as to make them look nice.
 # Additonally, each function inside *is* now namespace with the exception of
@@ -20,14 +18,29 @@ set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
 include("${IXM_ROOT}/Modules/Internal/Import.cmake")
 include("${IXM_ROOT}/Modules/Internal/Invoke.cmake")
 include("${IXM_ROOT}/Modules/Internal/Enable.cmake")
+include("${IXM_ROOT}/Modules/Internal/Color.cmake")
+include("${IXM_ROOT}/Modules/Internal/Print.cmake")
+include("${IXM_ROOT}/Modules/Internal/Debug.cmake")
 include("${IXM_ROOT}/Modules/Internal/Parse.cmake") # The "new" ArgParse
 include("${IXM_ROOT}/Modules/Internal/Scope.cmake") # DONE (for now~)
 include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 
+ixm_internal(IXM_MODULE_ROOT
+  "${CMAKE_CURRENT_LIST_DIR}/Modules"
+  "Root module for the IXM library")
+
+if (NOT IXM_SOURCE_EXTENSIONS)
+  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
+  list(APPEND exts ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
+  list(REMOVE_DUPLICATES exts)
+  set(IXM_SOURCE_EXTENSIONS ${exts} CACHE INTERNAL "IXM Source Extensions")
+  unset(exts)
+endif()
+
 # TODO: Planned modules are
 # IXM::Internal::* # Auto 'imported'
 # IXM::Extra::* -> Anything that might be needed but is otherwise not typically used by IXM itself?
-# IXM::Project::Properties # Prject specific properties STANDALONE, etc
+# IXM::Project::Properties # Project specific properties STANDALONE, etc
 # IXM::Project::Commands # Project focused commands
 # IXM::Project::Layout # Support for loading an automatic layout on project()
 # IXM::Project::Cache # Project specific cache variables
@@ -51,6 +64,9 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 # IXM::Check::Member # Does the given type and member exist?
 # IXM::Check::File # Does the given file compile successfully?
 # IXM::Check::Code # Does the given code compile successfully?
+
+# Tools are placed under the IXM::Use module, as this implies a detect_package
+# find_package call will be made.
 
 # TODO: More tool paths, right?
 # IXM::Tool::Cython
@@ -93,9 +109,4 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 
 # Now we can start using them "safely".
 # We do our DAMNDEST to never let this be overriden
-ixm_internal(IXM_MODULE_ROOT
-  "${CMAKE_CURRENT_LIST_DIR}/modules/IXM.cmake"
-  "Root module for the IXM library")
-ixm_internal(IXM_BINARY_DIR
-  "${CMAKE_CURRENT_BINARY_DIR}"
-  "Directory for generated files for the IXM Library")
+
