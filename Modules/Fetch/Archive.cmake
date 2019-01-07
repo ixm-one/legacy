@@ -7,7 +7,7 @@ function (archive pkg)
     @ARGS=* POLICIES OPTIONS TARGETS)
 
   if (DEFINED TARGET AND DEFINED TARGETS)
-    fatal("Cannot pass both TARGET and TARGETS")
+    error("Cannot pass both TARGET and TARGETS")
   endif()
 
   ixm_fetch_apply_options(${OPTIONS})

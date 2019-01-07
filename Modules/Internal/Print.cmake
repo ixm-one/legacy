@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-function(fatal)
+function(error)
   ixm_colors()
   message(FATAL_ERROR ${COLOR_RED}${ARGN}${COLOR_RESET})
 endfunction()

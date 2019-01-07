@@ -8,12 +8,12 @@ function (check_find_package package)
     @ARGS=? VERSION)
 
   if (NOT DEFINED COMPONENTS AND NOT DEFINED VERSION AND NOT DEFINED REMAINDER)
-    fatal("check_find_package requires any of: COMPONENTS VERSION ...")
+    error("check_find_package requires any of: COMPONENTS VERSION ...")
     return()
   endif()
 
   if (NOT REMAINDER)
-    fatal("check_find_package requires at least one variable")
+    error("check_find_package requires at least one variable")
     return()
   endif()
 

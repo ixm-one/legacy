@@ -21,7 +21,7 @@ function (gitclone pkg)
     @ARGS=* POLICIES TARGETS OPTIONS)
 
   if (DEFINED TARGETS AND DEFINED TARGET)
-    fatal("IXM::Fetch: Cannot pass both TARGET and TARGETS")
+    error("IXM::Fetch: Cannot pass both TARGET and TARGETS")
   endif()
 
   ixm_fetch_recipe(${pkg})

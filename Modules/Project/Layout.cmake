@@ -9,7 +9,7 @@ function (ixm_project_layout_discovery layout)
       return()
     endif()
   endforeach()
-  fatal("Could not discover layout '${layout}'")
+  error("Could not discover layout '${layout}'")
 endfunction()
 
 function (ixm_project_layout_search_paths var layout)

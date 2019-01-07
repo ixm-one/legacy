@@ -8,7 +8,7 @@ function (aliasa pkg)
     @ARGS=* POLICIES TARGETS OPTIONS)
 
   if (DEFINED TARGETS AND DEFINED TARGET)
-    fatal("IXM::Aliasa: Cannot pass both TARGET and TARGETS")
+    error("IXM::Aliasa: Cannot pass both TARGET and TARGETS")
   endif()
 
   ixm_fetch_recipe(${pkg})

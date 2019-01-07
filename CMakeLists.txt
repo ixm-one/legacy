@@ -27,10 +27,10 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 # TODO: Planned modules are
 # IXM::Internal::* # Auto 'imported'
 # IXM::Extra::* -> Anything that might be needed but is otherwise not typically used by IXM itself?
-# IXM::Project::Properties STANDALONE, etc. (Also PROJECT_XXX variables)
-# IXM::Project::Commands
-# IXM::Project::Layout
-# IXM::Project::Cache
+# IXM::Project::Properties # Prject specific properties STANDALONE, etc
+# IXM::Project::Commands # Project focused commands
+# IXM::Project::Layout # Support for loading an automatic layout on project()
+# IXM::Project::Cache # Project specific cache variables
 # IXM::Project::Fetch # Our version of FetchContent (inspired by ExternalData)
 
 # IXM::Detect::Component # Special way to find components for package
@@ -39,6 +39,7 @@ include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
 # IXM::Detect::Package # Our version of find_package
 # IXM::Detect::Version # Our way of finding the actual version of a packaget
 # IXM::Detect::File # Our Version of find_file
+# IXM::Detect::Header # Slightly modified form of ixm_detect_file
 # IXM::Detect::Path # Our version of find_path
 
 # IXM::Check::Headers # Can the compiler support including the given headers

@@ -11,7 +11,7 @@ function (extern name)
     @ARGS=* POLICIES TARGETS OPTIONS)
 
   if (DEFINED TARGETS AND DEFINED TARGET)
-    fatal("Cannot pass both TARGET and TARGETS")
+    error("Cannot pass both TARGET and TARGETS")
   endif()
 
   ixm_fetch_apply_options(${OPTIONS})
