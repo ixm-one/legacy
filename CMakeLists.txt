@@ -4,9 +4,6 @@ specifically so once we are included, we can not only rely on ourselves (and
 thus dogfood our behavior!) but we are also able to set a few cache vars and
 work *around* some of CMake's proclivities.
 ]]
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Languages)
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Packages)
-
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
 # These files do not depend on each other and *thus* we do not care about their
 # order of inclusion except as to make them look nice.
@@ -24,18 +21,25 @@ include("${IXM_ROOT}/Modules/Internal/Debug.cmake")
 include("${IXM_ROOT}/Modules/Internal/Parse.cmake") # The "new" ArgParse
 include("${IXM_ROOT}/Modules/Internal/Scope.cmake") # DONE (for now~)
 include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
+include("${IXM_ROOT}/Modules/Internal/Var.cmake")
+
+list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
+list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
+ixm_upvar(CMAKE_MODULE_PATH)
 
 ixm_internal(IXM_MODULE_ROOT
   "${CMAKE_CURRENT_LIST_DIR}/Modules"
   "Root module for the IXM library")
 
-if (NOT IXM_SOURCE_EXTENSIONS)
-  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
-  list(APPEND exts ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
-  list(REMOVE_DUPLICATES exts)
-  set(IXM_SOURCE_EXTENSIONS ${exts} CACHE INTERNAL "IXM Source Extensions")
-  unset(exts)
-endif()
+import(IXM::Project::*)
+
+#if (NOT IXM_SOURCE_EXTENSIONS)
+#  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
+#  list(APPEND exts ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
+#  list(REMOVE_DUPLICATES exts)
+#  set(IXM_SOURCE_EXTENSIONS ${exts} CACHE INTERNAL "IXM Source Extensions")
+#  unset(exts)
+#endif()
 
 # TODO: Planned modules are
 # IXM::Internal::* # Auto 'imported'

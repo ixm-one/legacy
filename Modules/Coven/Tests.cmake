@@ -17,6 +17,7 @@ function (ixm_coven_create_tests)
     add_executable(${target})
     add_executable(${alias} ALIAS ${target})
     add_test(test-${name} ${target})
+  endforeach()
 endfunction()
 
 function (ixm_coven_generate_tests)

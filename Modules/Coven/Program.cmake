@@ -25,12 +25,12 @@ function (ixm_coven_create_primary_program)
   endif()
   add_executable(main ${source})
   add_executable(${PROJECT_NAME}::main ALIAS main)
-  set_target_properties(main
-    PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-  target_link_libraries(${name}
+    set_target_properties(main
+      PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+  target_link_libraries(main
     PRIVATE
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-  target_include_directories(${name} PRIVATE "${PROJECT_SOURCE_DIR}/src")
+  target_include_directories(main PRIVATE "${PROJECT_SOURCE_DIR}/src")
   # install(TARGETS ${name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
 
@@ -60,6 +60,7 @@ function (ixm_coven_create_component_programs)
   endforeach()
 endfunction()
 
+# TODO: Turn into component programs
 function (ixm_coven_create_explicit_programs)
   foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
     file(GLOB files

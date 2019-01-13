@@ -25,8 +25,8 @@ endif()
 
 #Import.cmake
 if (IXM_ENABLE_MACRO_IMPORT)
-  macro(module)
-    ixm_module(${ARGN})
+  macro(import)
+    ixm_import(${ARGN})
   endmacro()
 endif()
 

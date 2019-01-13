@@ -16,7 +16,7 @@ function (ixm_coven_package_options)
 endfunction()
 
 # Initial tidbits for generating an automatic packaging system :)
-function(ixm_coven_generate_package)
+function(ixm_coven_create_package)
   set(version "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake")
   set(config "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake")
   set(template "${IXM_ROOT}/Templates/package-config.cmake.in")

@@ -12,10 +12,19 @@ function (ixm_coven_add_library)
   add_library(${PROJECT_NAME})
   target_include_directories(${PROJECT_NAME}
     PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_SOURCE}/include>
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
       $<INSTALL_INTERFACE:include>
     PRIVATE
       "${PROJECT_SOURCE_DIR}/src")
+  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+    file(GLOB files LIST_DIRECTORIES OFF "${PROJECT_SOURCE_DIR}/src/*.${ext}")
+    list(FILTER files EXCLUDE REGEX ".*/main[.]${ext}")
+    list(APPEND sources ${files})
+  endforeach()
+  if (NOT sources)
+    return()
+  endif()
+  target_sources(${PROJECT_NAME} PRIVATE ${sources})
 endfunction()
 
 function (ixm_coven_add_legacy_module directory)

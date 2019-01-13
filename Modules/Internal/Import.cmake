@@ -6,7 +6,7 @@ import(${root}::Submodule) -> ${root}_MODULE_ROOT/Submodule.cmake
 import(${root}::*) -> ${root}_MODULE_ROOT/*.cmake
 ]]
 
-function (ixm_import name)
+function (ixm_import_find var name)
   string(REPLACE "::" ";" paths ${name})
   list(LENGTH paths length)
   if (length LESS 2)
@@ -23,13 +23,19 @@ function (ixm_import name)
     error("${root}_MODULE_ROOT must be an absolute path")
   endif()
   list(REMOVE_AT paths 0)
-  string(REPLACE ";" "/" paths ${paths})
+  string(JOIN "/" paths ${paths})
   file(GLOB files LIST_DIRECTORIES OFF
     "${${root}_MODULE_ROOT}/${paths}.cmake")
-  foreach (file IN LISTS files)
+  set(${var} ${files} PARENT_SCOPE)
+endfunction()
+
+macro (ixm_import name)
+  ixm_import_find(@import-files ${name})
+  foreach (file IN LISTS @import-files)
     include(${file})
   endforeach()
-endfunction()
+  unset(@import-files)
+endmacro()
 
 #[[
 This is just a simple wrapper to let a user declare a module, *and* set it's

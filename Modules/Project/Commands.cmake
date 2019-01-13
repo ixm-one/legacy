@@ -7,34 +7,21 @@ include_guard(GLOBAL)
 # 4) Auto search for C and C++ tools if not already searched for
 # 5) Only perform *some* of these steps if we are the root project :)
 # 6) Automatically add a few paths to our module path
-function (project name)
-  ixm_parse(${ARGN}
-    @ARGS=? LAYOUT)
-  # CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE is called here if defined.
-  _project(${name} ${REMAINDER})
-
-  ixm_upvar(PROJECT_VERSION_MAJOR ${name}_VERSION_MAJOR)
-  ixm_upvar(PROJECT_VERSION_MINOR ${name}_VERSION_MINOR)
-  ixm_upvar(PROJECT_VERSION_PATCH ${name}_VERSION_PATCH)
-  ixm_upvar(PROJECT_VERSION_TWEAK ${name}_VERSION_TWEAK)
-  ixm_upvar(PROJECT_VERSION ${name}_VERSION)
-
-  ixm_upvar(PROJECT_HOMEPAGE_URL ${name}_HOMEPAGE_URL)
-  ixm_upvar(PROJECT_DESCRIPTION ${name}_DESCRIPTION)
-
-  ixm_upvar(PROJECT_SOURCE_DIR ${name}_SOURCE_DIR)
-  ixm_upvar(PROJECT_BINARY_DIR ${name}_BINARY_DIR)
-  ixm_upvar(PROJECT_NAME)
-
-  if (NOT DEFINED LAYOUT)
-    return()
+function (ixm_project_layout name)
+  ixm_parse(${ARGN} @ARGS=? LAYOUT)
+  ixm_upvar(REMAINDER)
+  if (LAYOUT)
+    set(IXM_CURRENT_LAYOUT_NAME ${LAYOUT} PARENT_SCOPE)
   endif()
+endfunction()
 
+function (ixm_project_load_layout name)
+  set(IXM_CURRENT_LAYOUT_NAME ${name})
   if (EXISTS "${PROJECT_SOURCE_DIR}/config.cmake")
     include("${PROJECT_SOURCE_DIR}/config.cmake")
   endif()
 
-  ixm_project_layout_discovery(${LAYOUT})
+  ixm_project_layout_discovery(${IXM_CURRENT_LAYOUT_NAME})
   get_property(IXM_CURRENT_LAYOUT_FILE GLOBAL PROPERTY IXM_CURRENT_LAYOUT_FILE)
   get_property(IXM_CURRENT_LAYOUT_NAME GLOBAL PROPERTY IXM_CURRENT_LAYOUT_NAME)
   # This is basically how we hack in a custom PROJECT scope for properties.
@@ -50,8 +37,19 @@ function (project name)
     PROPERTIES
       INTERFACE_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE}
       INTERFACE_LAYOUT_NAME ${IXM_CURRENT_LAYOUT_NAME})
-  include(${IXM_CURRENT_LAYOUT_FILE})
+  set(IXM_CURRENT_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE} PARENT_SCOPE)
 endfunction()
+
+macro (project name)
+  ixm_project_layout(${name} ${ARGN})
+  _project(${name} ${REMAINDER})
+  unset(REMAINDER)
+
+  if (DEFINED IXM_CURRENT_LAYOUT_NAME)
+    ixm_project_load_layout(${IXM_CURRENT_LAYOUT_NAME})
+    include(${IXM_CURRENT_LAYOUT_FILE})
+  endif()
+endmacro()
 
 function(ixm_target_compile_definitions target)
   ixm_alias_of(${target})

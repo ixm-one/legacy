@@ -2,13 +2,9 @@ import(IXM::Detect::Package)
 
 ixm_find_hints(SCCache)
 find_program(SCCache_EXECUTABLE NAMES sccache ${IXM_FIND_HINTS})
-if (SCCache_EXECUTABLE)
-  execute_process(
-    COMMAND ${SCCache_EXECUTABLE} --version
-    OUTPUT_VARIABLE output)
-  string(REGEX MATCH "([0-9]+)\.([0-9]+)\.([0-9]+)" version ${output})
-  set(SCCache_VERSION ${version})
-endif()
+find_program_version(SCCache_VERSION
+  PROGRAM "${SCCache_EXECUTABLE}"
+  REGEX "sccache ([0-9]+)\.([0-9]+)\.([0-9]+)")
 
 check_package(SCCache
   REQUIRED_VARS SCCache_EXECUTABLE

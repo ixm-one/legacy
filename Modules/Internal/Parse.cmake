@@ -36,7 +36,7 @@ DESCRIPTION
                not set.
 ]]
 function(ixm_parse)
-  get(max IXM_MAX_NARGS 9)
+  ixm_var(max IXM_MAX_NARGS 9)
   list(APPEND multi "@FLAGS")
   foreach (N RANGE 1 ${max})
     list(APPEND multi "@ARGS=${N}")

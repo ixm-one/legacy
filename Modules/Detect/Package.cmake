@@ -43,7 +43,7 @@ function (find_program_version var)
     ${CMAKE_MATCH_2}
     ${CMAKE_MATCH_3}
     ${CMAKE_MATCH_4})
-  set(${var} version PARENT_SCOPE)
+  set(${var} ${version} PARENT_SCOPE)
 endfunction()
 
 macro (check_package package)
