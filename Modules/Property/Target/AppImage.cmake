@@ -28,7 +28,7 @@ should not be redundant with the values of `APPIMAGE_NAME` and
 `APPIMAGE_GENERIC_NAME`
 ]=])
 
-define_property(TARGET PROPERTY APPIMAGE_ICON
+define_property(TARGET PROPERTY APPIMAGE_ICO
   BRIEF_DOCS "Icon to display in menus, etc."
   FULL_DOCS
 [=[
