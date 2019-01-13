@@ -16,11 +16,20 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-#[[Generates all possible targets based on location]]
-ixm_coven_generate_targets() 
-ixm_coven_generate_component_program() # these refer to src/bin/*.{ext} and src/*/main.{ext}
-ixm_coven_generate_component_library() # These refer to all modules as one, plus src/*/lib.{ext}
-ixm_coven_generate_modules() # New rules for "modules", so we can move to proper modules later
+ixm_coven_create_options() # [[Generate Options Here]]
+
+ixm_coven_create_primary_library()
+ixm_coven_create_primary_program()
+ixm_coven_create_legacy_modules() # [[ "modules" eligible for unity builds ]]
+ixm_coven_create_component_programs() # [[ All components in src/bin/*.{ext} ]]
+ixm_coven_create_configure_header()   # [[ Project wide configure header ]]
+
+ixm_coven_create_benchmarks() #[[ bench/*.{ext} and bench/*/main.{ext} ]]
+ixm_coven_create_examples() #[[ examples/*.{ext} and examples/*/main.{ext} ]]
+ixm_coven_create_tests() #[[ tests/*.{ext} and tests/*/main.{ext} ]]
+ixm_coven_create_docs() #[[ docs/*.{md|rst} ]]
+ixm_coven_create_install() #[[ Various calls to install the above ]]
+ixm_coven_create_package() #[[ Packaging settings (creates our own CPackConfig.cmake file) ]]
 
 #[[
 In order of execution we do:
@@ -32,16 +41,6 @@ In order of execution we do:
  * Generate explicit executables (src/bin/*.{ext})
 
 ]]
-
-# These are always run, but will return if the given setting isn't true
-ixm_coven_generate_benchmarks() #[[ Generate Benchmarks ]]
-ixm_coven_generate_examples() #[[ Generate Examples ]]
-ixm_coven_generate_tests() #[[ Generate Tests (acquire DocTest/Catch here)]]
-ixm_coven_generate_docs() #[[ Generate Docs ]]
-
-ixm_coven_generate_install() #[[ Various calls to install ]]
-#[[ Various settings for CPack(Do we generate our own CPackConfig.cmake file?) ]]
-ixm_coven_generate_package() 
 
 # Then users can do a Fetch(HUB{dependency-here}) call, and it will auto-link
 # in most cases.

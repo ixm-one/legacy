@@ -18,14 +18,16 @@ Alternatively, if we can place it into a configure header, this would be ideal.
 ]]
 
 function (ixm_coven_feature name description)
-  if (NOT ${PROJECT_NAME}_STANDALONE)
-    return()
-  endif()
   string(TOUPPER "${PROJECT_NAME}_WITH_${name}" var)
   option(${var} "${description}")
   project_compile_definitions(
     $<$<BOOL:${${var}}>:COVEN_FEATURE_WITH_JSON=1>)
-  foreach (dependency IN LISTS ARGN)
-    Fetch(${dependency})
-  endforeach()
+  list(LENGTH ARGN length)
+  if (NOT length)
+    return()
+  endif()
+  if (length GREATER 1)
+    error("feature(): Only one dependency per feature is permitted")
+  endif()
+  Fetch(${ARGN})
 endfunction()

@@ -1,4 +1,4 @@
 include_guard(GLOBAL)
 
-function (ixm_coven_generate_examples)
+function (ixm_coven_create_examples)
 endfunction()
