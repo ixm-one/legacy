@@ -33,6 +33,10 @@ function (project name)
     return()
   endif()
 
+  if (EXISTS "${PROJECT_SOURCE_DIR}/config.cmake")
+    include("${PROJECT_SOURCE_DIR}/config.cmake")
+  endif()
+
   ixm_project_layout_discovery(${LAYOUT})
   get_property(IXM_CURRENT_LAYOUT_FILE GLOBAL PROPERTY IXM_CURRENT_LAYOUT_FILE)
   get_property(IXM_CURRENT_LAYOUT_NAME GLOBAL PROPERTY IXM_CURRENT_LAYOUT_NAME)
@@ -41,9 +45,10 @@ function (project name)
   # includeded via IXM. Just a TARGET named ixm::${PROJECT_NAME}::{lookups}
   # These are also "imported" and not marked as global so they aren't
   # accessible OUTSIDE of te project scope :)
-  add_library(ixm::${name}::properties INTERFACE IMPORTED)
-  add_library(ixm::${name}::commands INTERFACE IMPORTED)
-  add_library(ixm::${name}::targets INTERFACE IMPORTED)
+  add_library(ixm::${name}::properties INTERFACE IMPORTED) # project specific properties
+  add_library(ixm::${name}::commands INTERFACE IMPORTED)   # dynamic commands for invoke
+  add_library(ixm::${name}::targets INTERFACE IMPORTED)    # info on various targets
+  add_library(ixm::${name}::fetched INTERFACE IMPORTED)    # dependencies grabbed via Fetch
   set_target_properties(ixm::${name}::properties
     PROPERTIES
       INTERFACE_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE}

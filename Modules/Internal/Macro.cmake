@@ -4,9 +4,6 @@ option(IXM_ENABLE_MACRO "Enable IXM Macros" ON)
 
 ixm_enable(MACRO UPVAR "Enable IXM upvar() wrapper macro")
 ixm_enable(MACRO IMPORT "Enable IXM import() wrapper macro")
-
-ixm_enable(MACRO UPVAR "Enable IXM upvar() wrapper macro")
-ixm_enable(MACRO IMPORT "Enable IXM import() wrapper macro")
 ixm_enable(MACRO MODULE "Enable IXM module() wrapper macro")
 ixm_enable(MACRO INVOKE "Enable IXM invoke() wrapper macro")
 ixm_enable(MACRO PARSE "Enable IXM parse() wrapper macro")

@@ -1,4 +1,5 @@
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 import(IXM::Use::Clang::Format)
 import(IXM::Use::Clang::Check)
@@ -17,6 +18,9 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 #[[Generates all possible targets based on location]]
 ixm_coven_generate_targets() 
+ixm_coven_generate_component_program() # these refer to src/bin/*.{ext} and src/*/main.{ext}
+ixm_coven_generate_component_library() # These refer to all modules as one, plus src/*/lib.{ext}
+ixm_coven_generate_modules() # New rules for "modules", so we can move to proper modules later
 
 #[[
 In order of execution we do:

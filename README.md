@@ -79,5 +79,18 @@ This will install the minimum set of modern CMake tools needed for you to
 use IXM. After this, just make sure these versions of `cmake` and `ninja` are
 on your system path.
 
+## RHEL
+
+Redhat and Redhat based systems, such as CentOS, do not come with a new python
+by default. However, thanks to an official SCL collection, one can install 
+python 3.6 and later. To use IXM on these platforms, perform the following
+operations at a minimum:
+
+```sh
+yum install rh-python36
+scl enable rh-python36 bash
+python3 -m pip install --upgrade setuptools pip cmake ninja
+```
+
 [git.io]: https://git.io
 [here]: https://git.io/ixm.git
