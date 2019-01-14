@@ -13,6 +13,11 @@ import(IXM::Fetch::*)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if (SCCache_FOUND)
+  set(CMAKE_CXX_COMPILER_LAUNCHER SCCache)
+  set(CMAKE_C_COMPILER_LAUNCHER SCcache)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -20,7 +25,7 @@ ixm_coven_create_options() # [[Generate Options Here]]
 
 ixm_coven_create_primary_library()
 ixm_coven_create_primary_program()
-ixm_coven_create_legacy_modules() # [[ "modules" eligible for unity builds ]]
+ixm_coven_create_primary_modules() # [[ "modules" eligible for unity builds ]]
 ixm_coven_create_component_programs() # [[ All components in src/bin/*.{ext} ]]
 ixm_coven_create_configure_header()   # [[ Project wide configure header ]]
 

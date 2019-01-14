@@ -2,9 +2,10 @@
 This is basically our bootstrap file. All statements placed here are done so
 specifically so once we are included, we can not only rely on ourselves (and
 thus dogfood our behavior!) but we are also able to set a few cache vars and
-work *around* some of CMake's proclivities.
+work *around* some of CMake's proclivities (aka, it's bullshit).
 ]]
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
+set(IXM_MODULE_ROOT "${IXM_ROOT}/Modules" CACHE INTERNAL "Root module for IXM")
 # These files do not depend on each other and *thus* we do not care about their
 # order of inclusion except as to make them look nice.
 # Additonally, each function inside *is* now namespace with the exception of
@@ -13,25 +14,12 @@ set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
 # Each macro can also be disabled on a case by case basis. This could
 # potentially cause problems with dependencies downstream, so please be careful
 include("${IXM_ROOT}/Modules/Internal/Import.cmake")
-include("${IXM_ROOT}/Modules/Internal/Invoke.cmake")
-include("${IXM_ROOT}/Modules/Internal/Enable.cmake")
-include("${IXM_ROOT}/Modules/Internal/Color.cmake")
-include("${IXM_ROOT}/Modules/Internal/Print.cmake")
-include("${IXM_ROOT}/Modules/Internal/Debug.cmake")
-include("${IXM_ROOT}/Modules/Internal/Parse.cmake") # The "new" ArgParse
-include("${IXM_ROOT}/Modules/Internal/Scope.cmake") # DONE (for now~)
-include("${IXM_ROOT}/Modules/Internal/Macro.cmake") # Options and macro wrappers
-include("${IXM_ROOT}/Modules/Internal/Var.cmake")
+ixm_import(IXM::Internal::*)
+ixm_import(IXM::API::*)
 
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
 ixm_upvar(CMAKE_MODULE_PATH)
-
-ixm_internal(IXM_MODULE_ROOT
-  "${CMAKE_CURRENT_LIST_DIR}/Modules"
-  "Root module for the IXM library")
-
-import(IXM::Project::*)
 
 #if (NOT IXM_SOURCE_EXTENSIONS)
 #  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})

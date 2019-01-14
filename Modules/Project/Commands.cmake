@@ -40,17 +40,6 @@ function (ixm_project_load_layout name)
   set(IXM_CURRENT_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE} PARENT_SCOPE)
 endfunction()
 
-macro (project name)
-  ixm_project_layout(${name} ${ARGN})
-  _project(${name} ${REMAINDER})
-  unset(REMAINDER)
-
-  if (DEFINED IXM_CURRENT_LAYOUT_NAME)
-    ixm_project_load_layout(${IXM_CURRENT_LAYOUT_NAME})
-    include(${IXM_CURRENT_LAYOUT_FILE})
-  endif()
-endmacro()
-
 function(ixm_target_compile_definitions target)
   ixm_alias_of(${target})
   target_compile_definitions(${target} ${ARGN})
