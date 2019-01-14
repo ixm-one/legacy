@@ -9,13 +9,6 @@ function (ixm_coven_add_interface)
 endfunction()
 
 function (ixm_coven_add_library)
-  add_library(${PROJECT_NAME})
-  target_include_directories(${PROJECT_NAME}
-    PUBLIC
-      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-      $<INSTALL_INTERFACE:include>
-    PRIVATE
-      "${PROJECT_SOURCE_DIR}/src")
   foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
     file(GLOB files LIST_DIRECTORIES OFF "${PROJECT_SOURCE_DIR}/src/*.${ext}")
     list(FILTER files EXCLUDE REGEX ".*/main[.]${ext}")
@@ -24,6 +17,13 @@ function (ixm_coven_add_library)
   if (NOT sources)
     return()
   endif()
+  add_library(${PROJECT_NAME})
+  target_include_directories(${PROJECT_NAME}
+    PUBLIC
+      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:include>
+    PRIVATE
+      "${PROJECT_SOURCE_DIR}/src")
   target_sources(${PROJECT_NAME} PRIVATE ${sources})
 endfunction()
 
@@ -77,10 +77,11 @@ function (ixm_coven_create_legacy_modules)
 endfunction()
 
 function (ixm_coven_create_primary_library)
-  if (NOT EXISTS "${PROJECT_SOURCE_DIR}/src")
-    ixm_coven_add_interface()
-  else()
+  if (EXISTS "${PROJECT_SOURCE_DIR}/src")
     ixm_coven_add_library()
+  endif()
+  if (NOT TARGET ${PROJECT_NAME})
+    ixm_coven_add_interface()
   endif()
   add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 endfunction()
