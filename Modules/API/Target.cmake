@@ -56,13 +56,19 @@ recursing into child directories. The name given to the submodule is NOT
 related to the directory that will represent the submodule.  If HIERARCHY is
 passed, each component of the `${name}` MUST match the name of a directory.
 However, much like the SPLAYED submodule, the HIERARCHY submodule will only
-have the scope of files contained within a single directory. 
+have the scope of files contained within a single directory.
+
+TODO: An enforcement SPLAYED vs HIERARCHY is still needed. Currently they do
+nothing.
 
 Lastly, if a submodule with no sources is added, we let CMake complain.
 ]]
 
+cache(BOOL IXM_UNITY_BUILD ON)
+
+# TODO: Support C files vs CXX files
 function (add_submodule name type)
-  list(APPEND valid-tyes SPLAYED HIERARCHY)
+  list(APPEND valid-types SPLAYED HIERARCHY)
   if (NOT type IN_LIST valid-types)
     error("'${type}' is an invalid type of submodule. Valid types are ${valid-types}")
   endif()
@@ -79,7 +85,7 @@ function (add_submodule name type)
   endif()
 
   string(REPLACE "::" "-" target ${name})
-  string(REPLACE "::" "/" path ${name})
+  string(REPLACE "::" "/" path ${name}.cxx)
   string(REPLACE "::" "." mod ${name})
 
   # TODO: Enforce SPLAYED vs HIERARCHY
@@ -87,35 +93,29 @@ function (add_submodule name type)
   add_library(${target} OBJECT)
   add_library(${name} ALIAS ${target})
 
+  set(unity-file "${CMAKE_CURRENT_BINARY_DIR}/src/${path}")
   genex(unity-if
-    $<IF:$<TARGET_PROPERTY:UNITY_BUILD>,
-         $<TARGET_PROPERTY:UNITY_BUILD_DIR>/$<TARGET_PROPERTY:UNITY_BUILD_FILE>
-         $<TARGET_PROPERTY:INTERFACE_SOURCES>>)
-  genex(unity-file 
-    $<IF:$<BOOL:${IXM_UNITY_BUILD_FILE}>,
-         ${IXM_UNITY_BUILD_FILE},
-         src/${path}>)
-  genex(unity-dir
-    $<IF:$<BOOL:${IXM_UNITY_BUILD_DIR}>,
-         ${IXM_UNITY_BUILD_DIR},
-         ${CMAKE_CURRENT_BINARY_DIR}>)
+    $<IF:$<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>,
+         ${unity-file},
+         $<TARGET_PROPERTY:${target},UNITY_SOURCES>>)
   genex(unity
-    $<IF:$<BOOL:${IXM_UNITY_BUILD}>
-         ${IXM_UNITY_BUILD}
+    $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
+         ${IXM_UNITY_BUILD},
          ON>)
 
-  target_sources(${target} INTERFACE ${sources} PRIVATE ${unity-if})
-  target_sources(${parent} PRIVATE $<TARGET_OBJECTS:${target}>)
+  get_property(parent-type TARGET ${parent} PROPERTY TYPE)
+  set(visibility PRIVATE)
+  if (parent-type STREQUAL INTERFACE_LIBRARY)
+    set(visibility INTERFACE)
+  endif()
+    target_sources(${parent}
+      ${visibility} $<TARGET_OBJECTS:${target}>)
+  target_sources(${target} PRIVATE ${unity-if})
 
   set_target_properties(${target}
     PROPERTIES
       UNITY_BUILD_FILE ${unity-file}
-      UNITY_BUILD_DIR ${unity-dir}
       UNITY_BUILD ${unity}
+      UNITY_SOURCES "${ARGN}"
       MODULE_NAME ${mod})
-
-  # TODO: This needs to be enforced for file paths regarding SPLAYED vs HIERARCHY
-  if (ARGN)
-    target_sources(${target} INTERFACE ${ARGN})
-  endif()
 endfunction()
