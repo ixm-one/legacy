@@ -5,7 +5,7 @@ set(IXM_HEADER_DIR "${IXM_FILES_DIR}/header")
 
 # Useful for some libraries, such as Catch2 or nlohmann::json
 function (header url)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS INSTALL QUIET
     @ARGS=? ALIAS)
   get_filename_component(name ${url} NAME_WE)

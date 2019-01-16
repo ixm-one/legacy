@@ -29,7 +29,7 @@ function (ixm_import_find var name)
   set(${var} ${files} PARENT_SCOPE)
 endfunction()
 
-macro (ixm_import name)
+macro (import name)
   ixm_import_find(@import-files ${name})
   foreach (file IN LISTS @import-files)
     include(${file})
@@ -41,9 +41,9 @@ endmacro()
 This is just a simple wrapper to let a user declare a module, *and* set it's
 ${name}_MODULE_ROOT all in one go.
 ]]
-macro(ixm_module name)
+macro(module name)
   include_guard(GLOBAL)
-  ixm_internal(${name}_MODULE_ROOT
+  internal(${name}_MODULE_ROOT
     ${CMAKE_CURRENT_LIST_DIR}
     "Module Root for '${name}'")
 endmacro()

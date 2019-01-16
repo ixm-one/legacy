@@ -5,7 +5,7 @@ set(IXM_EXTERN_DIR extern)
 
 #[[ Intended for projects embedded within your project ]]
 function (extern name)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS INSTALL QUIET
     @ARGS=? TARGET ALIAS
     @ARGS=* POLICIES TARGETS OPTIONS)

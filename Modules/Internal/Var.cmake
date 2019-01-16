@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-macro(ixm_var var lookup default)
+macro(var var lookup default)
   set(__@default ${default} ${ARGN})
   if (DEFINED ${lookup})
     set(__@default ${${lookup}} ${ARGN})

@@ -14,12 +14,12 @@ set(IXM_MODULE_ROOT "${IXM_ROOT}/Modules" CACHE INTERNAL "Root module for IXM")
 # Each macro can also be disabled on a case by case basis. This could
 # potentially cause problems with dependencies downstream, so please be careful
 include("${IXM_ROOT}/Modules/Internal/Import.cmake")
-ixm_import(IXM::Internal::*)
-ixm_import(IXM::API::*)
+import(IXM::Internal::*)
+import(IXM::API::*)
 
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
-ixm_upvar(CMAKE_MODULE_PATH)
+upvar(CMAKE_MODULE_PATH)
 
 #if (NOT IXM_SOURCE_EXTENSIONS)
 #  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})

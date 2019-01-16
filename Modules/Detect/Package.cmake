@@ -13,17 +13,17 @@ function (ixm_find_hints name)
       "${${pkg}_ROOT_DIR}"
       "${${pkg}_DIR}"
       "${${pkg}DIR}")
-  ixm_upvar(IXM_FIND_HINTS)
+  upvar(IXM_FIND_HINTS)
 endfunction()
 
 function (find_program_version var)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @ARGS=? VERSION_FLAG # --version by default
     @ARGS=1 PROGRAM REGEX) # Regex to match against :]
   if (NOT PROGRAM)
     return()
   endif()
-  ixm_var(VERSION_FLAG VERSION_FLAG --version)
+  var(VERSION_FLAG VERSION_FLAG --version)
   # Construct the correct extra flags for us
   execute_process(
     COMMAND ${PROGRAM} ${VERSION_FLAG}

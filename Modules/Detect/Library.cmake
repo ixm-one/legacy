@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 function (ixm_detect_library name)
   find_library(${name}_LIBRARY ${name})
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS LOCAL
     @ARGS=? LOCATION
     @ARGS=*

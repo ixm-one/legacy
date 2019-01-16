@@ -36,7 +36,7 @@ Additional flags include:
 
 ]]
 function (ixm_generate_response_file target)
-  ixm_parse(${ARGN} @ARGS=? LANGUAGE)
+  parse(${ARGN} @ARGS=? LANGUAGE)
   get_property(rsp TARGET ${target} PROPERTY RESPONSE_FILE)
   if (rsp)
     return()

@@ -1,5 +1,22 @@
 include_guard(GLOBAL)
 
+create_property(TARGET RESPONSE_FILE PUBLIC INHERITED [[
+
+Path to a response file for compiling the given item.
+
+A response file that is created at build system generation time based on the
+followig flags:
+
+ * CMAKE_<LANG>_FLAGS_<CONFIG>
+ * INTERFACE_INCLUDE_DIRECTORIES
+ * INTERFACE_COMPILE_DEFINITIONS
+ * INTERFACE_COMPILE_OPTIONS
+ * INTERFACE_COMPILE_FLAGS
+ * INTERFACE_LINK_DIRECTORIES
+ * INTERFACE_LINK_LIBRARIES
+ * INTERFACE_LINK_OPTIONS
+]])
+
 define_property(TARGET
   PROPERTY INTERFACE_RESPONSE_FILE INHERITED
   BRIEF_DOCS "Path to a response file for compiling the given item"

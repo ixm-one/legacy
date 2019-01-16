@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 # Defines COLOR variables in PARENT_SCOPE
 # Can optionally take a PREFIX
 # We actually only define BOLD so the colors stand out :v
-function(ixm_colors)
+function(colors)
   if ($CACHE{IXM_NO_COLOR})
     return()
   endif()
@@ -21,3 +21,8 @@ function(ixm_colors)
   set(${PREFIX}MAGENTA "${esc}[1;35m" PARENT_SCOPE)
   set(${PREFIX}CYAN "${esc}[1;36m" PARENT_SCOPE)
 endfunction()
+
+#[[ For my friends across the pond :) ]]
+macro(colours)
+  colors(${ARGN})
+endmacro()

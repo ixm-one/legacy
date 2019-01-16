@@ -1,10 +1,10 @@
 include_guard(GLOBAL)
 
 function (check_standalone)
-  ixm_var(output ARGV0 ${PROJECT_NAME}_STANDALONE)
+  var(output ARGV0 ${PROJECT_NAME}_STANDALONE)
   set(${output} FALSE)
   if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     set(${output} TRUE)
   endif()
-  ixm_upvar(${output})
+  upvar(${output})
 endfunction()

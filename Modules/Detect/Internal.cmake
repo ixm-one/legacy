@@ -8,7 +8,7 @@ macro(ixm_check_includes)
 endmacro()
 
 macro (ixm_check_common)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS QUIET REQUIRED
     @ARGS=?
       EXTRA_CMAKE_FLAGS

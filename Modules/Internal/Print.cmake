@@ -1,26 +1,26 @@
 include_guard(GLOBAL)
 
 function(error)
-  ixm_colors()
+  colors()
   message(FATAL_ERROR ${COLOR_RED}${ARGN}${COLOR_RESET})
 endfunction()
 
 function(warning)
-  ixm_colors()
+  colors()
   message(WARNING ${COLOR_YELLOW}${ARGN}${COLOR_RESET})
 endfunction()
 
 function(info)
-  ixm_colors()
+  colors()
   message(STATUS ${COLOR_CYAN}${ARGN}${COLOR_RESET})
 endfunction()
 
 function(success)
-  ixm_colors()
+  colors()
   message(STATUS ${COLOR_GREEN}${ARGN}${COLOR_RESET})
 endfunction()
 
 function(print)
-  ixm_colors()
+  colors()
   message(STATUS ${COLOR_BOLD}${ARGN}${COLOR_RESET})
 endfunction()

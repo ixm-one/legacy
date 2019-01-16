@@ -29,7 +29,7 @@ users desire
 ]]
 function (ixm_fetch_resource_repair var)
   string(REPLACE ";" "" ${var} ${ARGN})
-  ixm_upvar(${var})
+  upvar(${var})
 endfunction()
 
 #[[
@@ -40,7 +40,7 @@ function (ixm_fetch_resource_prepare var)
   ixm_fetch_resource_repair(${var} ${ARGN})
   ixm_fetch_providers_prepare(providers)
   string(REGEX REPLACE "(${providers}){(.*)}" "\\1;\\2" ${var} ${var})
-  ixm_upvar(${var})
+  upvar(${var})
 endfunction()
 
 function (Fetch)

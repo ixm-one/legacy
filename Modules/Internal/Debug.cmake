@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-macro(ixm_debug)
+macro(debug)
   foreach(var ${ARGN})
     if (DEFINED ${var})
       message("${var} := ${${var}}")

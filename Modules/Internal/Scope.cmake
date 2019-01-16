@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-macro(ixm_upvar)
+macro(upvar)
   foreach(var ${ARGN})
     if (DEFINED ${var})
       set(${var} "${${var}}" PARENT_SCOPE)
@@ -8,11 +8,12 @@ macro(ixm_upvar)
   endforeach()
 endmacro()
 
-function (ixm_internal name value)
-  set(${name} "${value}" CACHE INTERNAL "${ARGN}")
+# This is for forcing values
+function (internal name value)
+  cache(INTERNAL ${name} "${value}" "${ARGN}")
 endfunction()
 
 # This is *not* for forcing values
-function (ixm_cache name value type)
+function (cache type name value)
   set(${name} "${value}" CACHE ${type} "${ARGN}")
 endfunction()

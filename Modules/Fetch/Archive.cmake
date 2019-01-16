@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function (archive pkg)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS INSTALL QUIET
     @ARGS=? TARGET ALIAS
     @ARGS=* POLICIES OPTIONS TARGETS)

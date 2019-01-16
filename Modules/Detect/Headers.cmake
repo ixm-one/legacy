@@ -4,7 +4,7 @@ include(CMakePushCheckState)
 include(CheckIncludeFiles)
 
 function (ixm_check_header header)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS QUIET
     @ARGS=1 LANGUAGE
     @ARGS=* FLAGS DEFINITIONS INCLUDES LIBRARIES)
@@ -14,7 +14,7 @@ function (ixm_check_header header)
   set(CMAKE_REQUIRED_LIBRARIES ${LIBRARIES})
   set(CMAKE_REQUIRED_INCLUDES ${INCLUDES})
   set(CMAKE_REQUIRED_FLAGS ${FLAGS})
-  ixm_var(CMAKE_REQUIRED_QUIET QUIET OFF)
+  var(CMAKE_REQUIRED_QUIET QUIET OFF)
   check_include_files(${header} ${variable} LANGUAGE ${LANGUAGE})
   cmake_pop_check_state()
 endfunction()

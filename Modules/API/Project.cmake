@@ -5,6 +5,7 @@ import(IXM::Project::*)
 # This unfortunately MUST be a macro or else MANY THINGS will break
 macro (project name)
   ixm_project_layout(${name} ${ARGN})
+  # We fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
   endif()

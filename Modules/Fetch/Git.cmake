@@ -5,7 +5,7 @@ find_package(Git REQUIRED)
 # TODO: On successful 'clone', set the specific package to have its updates
 #       disconnected unless something is set.
 function (ixm_fetch_git_clone name repository tag)
-  ixm_parse(${ARGN} @ARGS=1 DOMAIN SEPARATOR SUFFIX SCHEME)
+  parse(${ARGN} @ARGS=1 DOMAIN SEPARATOR SUFFIX SCHEME)
   fetch(${name}
     GIT_REPOSITORY ${SCHEME}${DOMAIN}${SEPARATOR}${repository}${SUFFIX}
     GIT_TAG ${tag}
@@ -14,7 +14,7 @@ function (ixm_fetch_git_clone name repository tag)
 endfunction()
 
 function (gitclone pkg)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS INSTALL QUIET
     @ARGS=1 DOMAIN SCHEME
     @ARGS=? SEPARATOR SUFFIX ALIAS TARGET PATCH

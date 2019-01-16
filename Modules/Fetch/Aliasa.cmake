@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function (aliasa pkg)
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     @FLAGS INSTALL QUIET
     @ARGS=1 PROVIDER
     @ARGS=? ALIAS TARGET

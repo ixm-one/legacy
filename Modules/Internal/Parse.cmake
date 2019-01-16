@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 # TODO: Verify a difference between ARGS=* and ARGS=+
 #[[
 SYNOPSIS
-  ixm_parse(${ARGN}
+  parse(${ARGN}
     [@PREFIX prefix] # if not given, default arg prefix is actually "", not _
     [@FLAGS args...] # Flags
     [@ARGS=? args...] # single values
@@ -13,13 +13,13 @@ SYNOPSIS
     [@ARGS=N args...] # Args of exactly N arguments. Fatal if N is not exactly passed.
   )
 DESCRIPTION
-  All arguments passed to ixm_parse follow the same style of naming found in
-  python's nargs for it's ixm_parse, except the 'nargs=' is declared with an '@'
+  All arguments passed to parse follow the same style of naming found in
+  python's nargs for it's parse, except the 'nargs=' is declared with an '@'
   Types are ignored, as are settings such as METAVAR or --help guides. Them's
   the breaks!
 
   OPTIONS
-    ${ARGN} -- Write this to specify the ARGS passed to ixm_parse...
+    ${ARGN} -- Write this to specify the ARGS passed to parse...
     @PREFIX -- Prefix all arguments variables with this value. Regardless of
                whether it is given, we break from CMake's previous behavior and
                don't prefix variables with an underscore ever.
@@ -35,8 +35,8 @@ DESCRIPTION
     @ARGS=* -- Optional multi value arguments. These usually have a default if
                not set.
 ]]
-function(ixm_parse)
-  ixm_var(max IXM_MAX_NARGS 9)
+function(parse)
+  var(max IXM_MAX_NARGS 9)
   list(APPEND multi "@FLAGS")
   foreach (N RANGE 1 ${max})
     list(APPEND multi "@ARGS=${N}")
@@ -45,7 +45,7 @@ function(ixm_parse)
     list(APPEND multi "@ARGS=${var}")
   endforeach()
   if (ARGC EQUAL 0)
-    error("Did you forget to pass ARGN to ixm_parse?")
+    error("Did you forget to pass ARGN to parse?")
   endif()
   cmake_parse_arguments(_ "" "@PREFIX" "${multi}" ${ARGN})
 
@@ -71,7 +71,7 @@ function(ixm_parse)
 
   # TODO: Might want to make this a macro, given its complexity
   foreach (arg IN LISTS __\@ARGS\=\+)
-    if (NOT DEFINED ARG_${arg}) # This is needed to mimic the python ixm_parse
+    if (NOT DEFINED ARG_${arg}) # This is needed to mimic the python parse
       continue()
     endif()
     list(LENGTH ARG_${arg} length)
