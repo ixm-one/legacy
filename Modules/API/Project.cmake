@@ -10,7 +10,13 @@ macro (project name)
     set(CMAKE_BUILD_TYPE Debug)
   endif()
   _project(${name} ${REMAINDER})
+  # Cython is a strange beast, and to avoid recursive enable language calls,
+  # we need to do it AFTER project() has been called :/
+  if (IXM_ENABLE_CYTHON)
+    enable_language(Cython)
+  endif()
   unset(REMAINDER)
+  unset(IXM_ENABLE_CYTHON)
   if (DEFINED IXM_CURRENT_LAYOUT_NAME)
     ixm_project_load_layout(${IXM_CURRENT_LAYOUT_NAME})
     include(${IXM_CURRENT_LAYOUT_FILE})

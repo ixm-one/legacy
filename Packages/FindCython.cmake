@@ -1,17 +1,14 @@
-include(CheckFindPackage)
-include(ImportProgram)
-include(PushFindState)
-include(Halt)
-include(Hide)
+include(FindPackageHandleStandardArgs)
 
-find_package(Python COMPONENTS Interpreter QUIET REQUIRED)
+find_package(Python COMPONENTS Interpreter Development QUIET REQUIRED)
+find_program(Cython_EXECUTABLE NAMES cython)
 
-push_find_state(Cython)
-find_program(Cython_EXECUTABLE NAMES cython ${FIND_OPTIONS})
-pop_find_state()
+find_package_handle_standard_args(Cython REQUIRED_VARS Cython_EXECUTABLE)
 
-check_find_package(Cython EXECUTABLE)
-halt_unless(Cython EXECUTABLE)
-hide(Cython EXECUTABLE)
-import_program(cython LOCATION ${Cython_EXECUTABLE} GLOBAL)
+if (NOT Cython_FOUND)
+  return()
+endif()
+
+add_executable(cython IMPORTED GLOBAL)
 add_executable(Python::Cython ALIAS cython)
+set_target_properties(cython PROPERTIES IMPORTED_LOCATION ${Cython_EXECUTABLE})
