@@ -1,5 +1,8 @@
 include_guard(GLOBAL)
 
+function (ixm_coven_create_programs)
+endfunction()
+
 function (ixm_coven_find_main var path)
   foreach(ext IN LISTS IXM_SOURCE_EXTENSIONS)
     file(GLOB files
@@ -80,3 +83,33 @@ function (ixm_coven_create_explicit_programs)
   endforeach()
 endfunction()
 
+#function (ixm_layout_add_srcbin)
+#  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+#    file(GLOB files
+#      LIST_DIRECTORIES OFF
+#      CONFIGURE_DEPENDS
+#      "${PROJECT_SOURCE_DIR}/src/bin/*.${ext}")
+#    list(APPEND sources ${files})
+#  endforeach()
+#  foreach (source IN LISTS sources)
+#    ixm_layout_support_create(${source})
+#    add_executable(${PROJECT_NAME}::${name} ALIAS ${target})
+#    set_target_properties(${target} PROPERTIES OUTPUT_NAME ${name})
+#  endforeach()
+#endfunction()
+#
+#function (ixm_layout_add_srcdirs)
+#  file(GLOB entries LIST_DIRECTORIES OFF "${PROJECT_SOURCE_DIR}/src/*")
+#  list(REMOVE_ITEM entries "${PROJECT_SOURCE_DIR}/src/bin")
+#  foreach (entry IN LISTS entries)
+#    if (NOT IS_DIRECTORY ${entry})
+#      continue()
+#    endif()
+#    ixm_layout_support_create(${entry})
+#    add_executable(${PROJECT_NAME}::${name} ALIAS ${target})
+#    set_target_properties(${target} PROPERTIES OUTPUT_NAME ${name})
+#    foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+#      target_glob_sources(${target} PRIVATE "${entry}/*.${ext}")
+#    endforeach()
+#  endforeach()
+#endfunction()

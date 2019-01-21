@@ -1,12 +1,9 @@
 include_guard(GLOBAL)
 
-define_property(TARGET PROPERTY APPIMAGE_NAME
-  BRIEF_DOCS "Name of the application"
-  FULL_DOCS "Specific name of the application, for example 'Mozilla'")
-
-define_property(TARGET PROPERTY APPIMAGE_GENERIC_NAME
-  BRIEF_DOCS "Generic name of the application"
-  FULL_DOCS "Generic name of the application, for example 'Web Browser'")
+# specific name of the application, e.g., Firefox
+define_property(APPIMAGE_NAME SCOPE TARGET) 
+# Generic name of the application, for example 'Web Browser'
+define_property(APPIMAGE_GENERIC_NAME SCOPE TARGET)
 
 define_property(TARGET PROPERTY APPIMAGE_NO_DISPLAY
   BRIEF_DOCS "Don't display the application in menus"

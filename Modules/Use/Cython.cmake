@@ -17,9 +17,9 @@ function (ixm_cython_check_language name)
       CYTHON_OUTPUT_LANGUAGE ${language})
 endfunction()
 
-function (ixm_cython_valid_state name)
+function (ixm_cython_validate_state name)
   ixm_cython_check_language(${name})
- get_property(type TARGET PROPERTY TYPE)
+  get_property(type TARGET PROPERTY TYPE)
   if (type STREQUAL INTERFACE_LIBRARY)
     error("Cannot create an INTERFACE Cython Module")
   endif()
@@ -29,12 +29,9 @@ function (ixm_cython_valid_state name)
 endfunction()
 
 #[[
-This simply creates the cython library. It does not add sources. To add sources simply call `set_property(TARGET ${name} APPEND PROPERTY CYTHON_SOURCES sources...)
-
-# TODO: Hack in support for custom property settings in our target_sources
-# override
+This simply creates the cython library. It does not add sources. To add sources
+simply use target_sources like normal :)
 ]]
-
 function (add_cython_library name type)
   Python_add_library(${name} ${type})
   ixm_cython_validate_state(${name})
@@ -102,4 +99,20 @@ function (add_cython_library name type)
     COMMAND_EXPAND_LISTS
     VERBATIM)
   target_sources(${name} PRIVATE ${output-file})
+endfunction()
+
+#[[Hook for our target_sources override]]
+function (target_sources_pyx target visibility)
+  set(interface PUBLIC;INTERFACE)
+  set(private PRIVATE;PUBLIC)
+  if (visibility IN_LIST interface)
+    set_property(TARGET ${target} APPEND
+      PROPERTY
+        INTERFACE_CYTHON_SOURCES "${ARGN}")
+  endif()
+  if (visibility IN_LIST private)
+    set_property(TARGET ${target} APPEND
+      PROPERTY
+        CYTHON_SOURCES "${ARGN}")
+  endif()
 endfunction()

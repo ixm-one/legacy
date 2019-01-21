@@ -1,5 +1,6 @@
 include_guard(GLOBAL)
 
+#[[ Prints the current value of the given variable ]]
 macro(debug)
   foreach(var ${ARGN})
     if (DEFINED ${var})
@@ -9,3 +10,4 @@ macro(debug)
     endif()
   endforeach()
 endmacro()
+

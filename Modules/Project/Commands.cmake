@@ -1,5 +1,22 @@
 include_guard(GLOBAL)
 
+function (ixm_project_version name)
+  if (DEFINED PROJECT_VERSION)
+    return()
+  endif()
+  set(VERSION 0.1.0)
+  set(MAJOR 0)
+  set(MINOR 1)
+  set(PATCH 0)
+  set(TWEAK)
+  set(${name}_VERSION ${VERSION} PARENT_SCOPE)
+  set(PROJECT_VERSION ${VERSION} PARENT_SCOPE)
+  foreach (var IN ITEMS MAJOR MINOR PATCH TWEAK)
+    set(${name}_VERSION_${var} ${${var}} PARENT_SCOPE)
+    set(PROJECT_VERSION_${var} ${${var}} PARENT_SCOPE)
+  endforeach()
+endfunction()
+
 # We override project so that we can
 # 1) Let a user automatically set a project pre-determined layout as desired
 # 2) Override cmake policies in subprojects if they chose to
@@ -36,6 +53,7 @@ function (ixm_project_load_layout name)
   # includeded via IXM. Just a TARGET named ixm::${PROJECT_NAME}::{lookups}
   # These are also "imported" and not marked as global so they aren't
   # accessible OUTSIDE of te project scope :)
+  # TODO: Change this to ${PROJECT_NAME} 🤦
   add_library(ixm::${name}::properties INTERFACE IMPORTED) # project specific properties
   add_library(ixm::${name}::commands INTERFACE IMPORTED)   # dynamic commands for invoke
   add_library(ixm::${name}::targets INTERFACE IMPORTED)    # info on various targets

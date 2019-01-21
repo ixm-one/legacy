@@ -1,6 +1,7 @@
 include_guard(GLOBAL)
 
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 function (ixm_coven_package_options)
   option(${PROJECT_NAME}_PACKAGE_APPIMAGE)
@@ -20,7 +21,7 @@ function(ixm_coven_create_package)
   set(version "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake")
   set(config "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake")
   set(template "${IXM_ROOT}/Templates/package-config.cmake.in")
-  set(dest "share/cmake/${PROJECT_NAME}")
+  set(dest "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
   write_basic_package_version_file(${version} COMPATIBILITY SameMajorVersion)
   configure_package_config_file(${template} ${config}
     INSTALL_DESTINATION ${dest})

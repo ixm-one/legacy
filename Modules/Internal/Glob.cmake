@@ -1,0 +1,11 @@
+include_guard(GLOBAL)
+
+function (glob var)
+  parse(${ARGN} @FLAGS ALL @ARGS=? BASE)
+  if (BASE)
+    list(APPEND args RELATIVE "${BASE}")
+  endif()
+  list(APPEND args LIST_DIRECTORIES "${ALL}")
+  file(GLOB ${var} ${args} CONFIGURE_DEPENDS ${REMAINDER})
+  upvar(${var})
+endfunction()

@@ -1,17 +1,17 @@
 include_guard(GLOBAL)
 
 # Defines COLOR variables in PARENT_SCOPE
-# Can optionally take a PREFIX
 # We actually only define BOLD so the colors stand out :v
 function(colors)
+  if (WIN32)
+    return()
+  endif()
   if ($CACHE{IXM_NO_COLOR})
     return()
   endif()
-  set(PREFIX ARGV0)
-  if (NOT PREFIX)
-    set(PREFIX COLOR_)
-  endif()
+  set(PREFIX COLOR_)
   string(ASCII 27 esc)
+  debug(PREFIX)
   set(${PREFIX}RESET "${esc}[m" PARENT_SCOPE)
   set(${PREFIX}BOLD "${esc}[1m" PARENT_SCOPE)
   set(${PREFIX}RED "${esc}[1;31m" PARENT_SCOPE)

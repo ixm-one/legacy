@@ -23,9 +23,10 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 ixm_coven_create_options() # [[Generate Options Here]]
 
-ixm_coven_create_primary_library()
+ixm_coven_create_libraries() # [[Generate project library and modules]]
+ixm_coven_create_programs() # [[Generate project program]]
+
 ixm_coven_create_primary_program()
-ixm_coven_create_primary_modules() # [[ "modules" eligible for unity builds ]]
 ixm_coven_create_component_programs() # [[ All components in src/bin/*.{ext} ]]
 ixm_coven_create_configure_header()   # [[ Project wide configure header ]]
 
