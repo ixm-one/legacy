@@ -27,12 +27,14 @@ global(IXM_TOOL_PROPERTIES)
 global(IXM_DATA_PROPERTIES)
 
 # Fetch Properties
-global(IXM_FETCH_PROVIDERS HUB;LAB;BIT;WEB;SSH;URL;ADD;USE;BIN;S3B;SVN;CVS;CMD)
+global(IXM_FETCH_PROVIDERS
+  HUB LAB BIT WEB SSH GIT URL ADD USE BIN S3B SVN CVS CMD)
 global(IXM_FETCH_HUB ixm_fetch_hub)
 global(IXM_FETCH_LAB ixm_fetch_lab)
 global(IXM_FETCH_BIT ixm_fetch_bit)
 global(IXM_FETCH_WEB ixm_fetch_web)
 global(IXM_FETCH_SSH ixm_fetch_ssh)
+global(IXM_FETCH_GIT ixm_fetch_git)
 global(IXM_FETCH_URL ixm_fetch_url)
 global(IXM_FETCH_ADD ixm_fetch_add)
 global(IXM_FETCH_USE ixm_fetch_use)

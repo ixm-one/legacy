@@ -1,5 +1,8 @@
 include_guard(GLOBAL)
 
+function(ixm_fetch_git)
+endfunction()
+
 find_package(Git REQUIRED)
 
 # TODO: On successful 'clone', set the specific package to have its updates
