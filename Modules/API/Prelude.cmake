@@ -10,6 +10,9 @@ global(IXM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 global(IXM_SOURCE_EXTENSIONS cxx;cpp;c++;cc;c;mm;m)
 global(IXM_CUSTOM_EXTENSIONS)
 
+global(IXM_PRINT_COLORS "NOT ${WIN32}")
+global(IXM_PRINT_QUIET OFF)
+
 # XXX: Some of these here are placeholders and might be removed before release
 global(IXM_EXAMPLE_PROPERTIES)
 global(IXM_LIBRARY_PROPERTIES)
