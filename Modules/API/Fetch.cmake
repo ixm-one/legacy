@@ -8,7 +8,6 @@ We need to overhaul the syntax we use for getting dependencies via
 FetchContent. Basically, we want to do something like ExternalData's
 DATA{} variables.
 Current variable types are (in order of supported priority):
-(Planned) IXM{$NAME@$REV} IXM.ALIASA.IO download (but reserved for CMake projects)
 HUB{$USER/$REPO@$REV} -> HUB.ALIASA.IO download
 LAB{$USER/$REPO@$REV} -> LAB.ALIASA.IO download
 BIT{$USER/$REPO@$REV} -> BIT.ALIASA.IO download
@@ -20,14 +19,11 @@ USE{Path/To/Script.cmake} -> Executes script
 BIN{subject/repo@version:file} -> BinTray
 
 (Actual name not yet determined)
-AS3{S3 storage compatible info...} -> S3 Bucket access
+S3B{S3 storage compatible info...} -> S3 Bucket access
 SVN{BecauseYouHateYourSelf} -> SVN
 CVS{WhoHurtYou?} -> CVS
 CMD{Command} -> We'll look up how to do this later, but it's important to
                 support for extension purposes.
-
-Possible TLA's include AWS, S3B (S3 Bucket), AS3 and others. We'll figure out
-what to do later
 
 Aliasa download also support a special `:` addition, as this lets them
 specify directories to add_subdirectory from *or* specific files to pull
@@ -89,8 +85,6 @@ as well as define the TLA for a given variable at the head of the URI scheme
 
 # Each Provider MUST define a function titled: FetchContent_<PROVIDER>
 # Providers may only be 3 letters
-set(IXM_FETCH_API_PROVIDERS HUB LAB BIT WEB SSH URL ADD USE BIN S3B SVN CVS CMD)
-
 
 #[[This function prepares all the Fetch API providers for a regex]]
 function (ixm_fetch_providers_prepare var)

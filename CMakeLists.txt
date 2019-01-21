@@ -21,14 +21,6 @@ list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
 upvar(CMAKE_MODULE_PATH)
 
-#if (NOT IXM_SOURCE_EXTENSIONS)
-#  list(APPEND exts ${CMAKE_CXX_SOURCE_FILE_EXTENSIONS})
-#  list(APPEND exts ${CMAKE_C_SOURCE_FILE_EXTENSIONS})
-#  list(REMOVE_DUPLICATES exts)
-#  set(IXM_SOURCE_EXTENSIONS ${exts} CACHE INTERNAL "IXM Source Extensions")
-#  unset(exts)
-#endif()
-
 # TODO: Planned modules are
 # IXM::Internal::* # Auto 'imported'
 # IXM::Extra::* -> Anything that might be needed but is otherwise not typically used by IXM itself?
@@ -81,15 +73,6 @@ upvar(CMAKE_MODULE_PATH)
 # IXM::Generators::Unity # Unity Builds? (On a per-directory/per-target basis)
 # IXM::Generators::Header # Amalgam Header?
 # IXM::Generators::PCH # Precompiled Header?
-#
-# These are for the "builtin" providers for Fetch
-# IXM::Fetch::Hub -- Aliasa.io archive/asset download
-# IXM::Fetch::Lab -- Aliasa.io archive/asset download
-# IXM::Fetch::Bit -- Aliasa.io archive/asset download
-# IXM::Fetch::Git -- https:// based clone
-# IXM::Fetch::SSH -- ssh:// based clone
-# IXM::Fetch::URL -- download of archive
-# IXM::Fetch::SVN -- SVN based pull
 #
 # Additionally, we supply the following language support:
 # Rust

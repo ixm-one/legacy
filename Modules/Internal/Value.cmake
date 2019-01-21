@@ -1,5 +1,9 @@
 include_guard(GLOBAL)
 
+function (global name)
+  set_property(GLOBAL PROPERTY ${name} ${ARGN})
+endfunction()
+
 # This is for forcing values
 function (internal name value)
   cache(INTERNAL ${name} "${value}" "${ARGN}")
