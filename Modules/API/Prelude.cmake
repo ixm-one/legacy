@@ -2,11 +2,26 @@ include_guard(GLOBAL)
 
 # This is where all properties, cache values, builtin options, are declared.
 
-# Build System Settings
-global(IXM_SOURCE_EXTENSIONS cxx;cpp;c++;cc;c;mm;m)
-global(IXM_TARGET_PROPERTIES)
+# General Global Settings
+# This is done to make sure our "generated" files go into ixm-build
+global(IXM_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+global(IXM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-cache(BOOL IXM_UNITY_BUILD ON)
+global(IXM_SOURCE_EXTENSIONS cxx;cpp;c++;cc;c;mm;m)
+global(IXM_CUSTOM_EXTENSIONS)
+
+# XXX: Some of these here are placeholders and might be removed before release
+global(IXM_EXAMPLE_PROPERTIES)
+global(IXM_LIBRARY_PROPERTIES)
+global(IXM_PROGRAM_PROPERTIES)
+global(IXM_PACKAGE_PROPERTIES)
+global(IXM_TARGET_PROPERTIES)
+global(IXM_SOURCE_PROPERTIES)
+global(IXM_BENCH_PROPERTIES)
+global(IXM_TEST_PROPERTIES)
+global(IXM_DOCS_PROPERTIES)
+global(IXM_TOOL_PROPERTIES)
+global(IXM_DATA_PROPERTIES)
 
 # Fetch Properties
 global(IXM_FETCH_PROVIDERS HUB;LAB;BIT;WEB;SSH;URL;ADD;USE;BIN;S3B;SVN;CVS;CMD)
@@ -27,3 +42,12 @@ global(IXM_FETCH_CMD ixm_fetch_cmd)
 # Layout Properties
 global(IXM_CURRENT_LAYOUT_NAME)
 global(IXM_CURRENT_LAYOUT_FILE)
+
+# Cache Variables
+cache(PATH IXM_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
+cache(PATH IXM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+cache(BOOL IXM_UNITY_BUILD ON)
+
+list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
+list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
+upvar(CMAKE_MODULE_PATH)
