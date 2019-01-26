@@ -1,9 +1,45 @@
 include_guard(GLOBAL)
-
-function(ixm_fetch_git)
-endfunction()
-
 find_package(Git REQUIRED)
+
+
+function (ixm_fetch_git_package package)
+  parse(${ARGN}
+    @FLAGS ALL QUIET
+    @ARGS=1 SCHEME
+    @ARGS=? ALIAS TARGET PATCH
+    @ARGS=* POLICIES TARGETS OPTIONS)
+  if (DEFINED TARGETS AND DEFINED TARGET)
+    error("Cannot pass both TARGET and TARGETS")
+  endif()
+  ixm_fetch_git_recipe(${package})
+
+  var(target TARGET ${name})
+  var(alias ALIAS ${name})
+
+  set(all EXCLUDE_FROM_ALL)
+  if (ALL)
+    unset(all)
+  endif()
+
+  FetchContent_Declare(${alias}
+    GIT_REPOSITORY ${SCHEME}${DOMAIN}${SEPARATOR}${repository}${SUFFIX}
+    GIT_TAG ${tag}
+    GIT_SHALLOW ON)
+  FetchContent_GetProperties(${alias})
+  if (NOT ${alias}_POPULATED)
+    FetchContent_Populate(${alias})
+  endif()
+
+  #[[ PATCH ]]
+  ixm_fetch_apply_patch(${alias})
+
+  #[[ PACKAGE ]]
+  ixm_fetch_apply_options("${OPTIONS}")
+  add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${all})
+  #[[ TARGET ]]
+  ixm_fetch_apply_target(${target} ${alias})
+  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+endfunction()
 
 # TODO: On successful 'clone', set the specific package to have its updates
 #       disconnected unless something is set.

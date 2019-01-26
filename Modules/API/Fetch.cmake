@@ -1,7 +1,6 @@
 include_guard(GLOBAL)
 
-# TODO: Add IXM_FETCH_API_PROVIDERS as a cache variable, values are all providers
-# TODO: Add IXM_FETCH_API_<PROVIDERS> as a cache variable (of some kind)
+import(IXM::Fetch::*)
 #[[
 NOTES:
 We need to overhaul the syntax we use for getting dependencies via
@@ -18,7 +17,6 @@ ADD{Path/In/Local/Project} -> add_subdirectory
 USE{Path/To/Script.cmake} -> Executes script 
 BIN{subject/repo@version:file} -> BinTray
 
-(Actual name not yet determined)
 S3B{S3 storage compatible info...} -> S3 Bucket access
 SVN{BecauseYouHateYourSelf} -> SVN
 CVS{WhoHurtYou?} -> CVS
@@ -68,48 +66,25 @@ Separate by commas, turn each (.*): into a value! Easy!
 Full example of "hiredis" from days of "yore"
 Fetch(HUB{redis/hiredis@v0.14.0,PATCH:path/to/patchfile.cmake})
 
-XXX: If we ever pass a filepath/directory to Fetch, we include it, as if the
-contents of the file had been passed to us in the following way below.
-Fetch(
-  HUB {
-    redis/hiredis@v0.14.0,
-    PATCH:path/to/patch
-  }
-  Fetch(HUB{cpp-netlib/uri@v1.1.0},TARGET:network-uri,DISABLE:Uri_BUILD_TESTS;Uri_BUILD_DOCS;Uri_WARNINGS_AS_ERRORS}
-)
+#[[ This approach SHOULD eventually allow for
 
-Basically it's a way for us to generically construct URLs based on arguments,
-as well as define the TLA for a given variable at the head of the URI scheme
+Fetch(HUB{
+  catchorg/catch2@v2.5.0,
+  PATCH:my/cmake/path,
+  SETTINGS:
+    Uri_BUILD_TESTING OFF
+    Uri_BUILD_EXAMPLES OFF
+})
 
 ]]
-
-# Each Provider MUST define a function titled: FetchContent_<PROVIDER>
-# Providers may only be 3 letters
-
-#[[This function prepares all the Fetch API providers for a regex]]
-function (ixm_fetch_providers_prepare var)
-  if (NOT IXM_FETCH_API_PROVIDERS_REGEX)
-    foreach (provider IN LISTS IXM_FETCH_API_PROVIDERS)
-      string(REGEX REPLACE "([A-Z])" "\[\\1\]" prepared ${provider})
-      list(APPEND providers ${prepared})
-    endforeach()
-    list(JOIN providers "|" providers)
-    set(IXM_FETCH_API_PROVIDERS_REGEX ${providers} CACHE INTERNAL
-      "Regex for finding valid Fetch providers")
-  endforeach()
-  set(${var} ${IXM_FETCH_API_PROVIDERS_REGEX} PARENT_SCOPE)
-endfunction()
 
 #[[
-Prepares the resource to receive both the provider and recipe, as well as any
-
+This does all the work of extracting the provider name, getting the command
+iself, and then invoking said provider command with the requested arguments.
 ]]
-function (ixm_fetch_resource_prepare var)
-  ixm_fetch_providers_prepare(providers)
-  string(REGEX REPLACE "(${providers}){(.*)}" "\\1;\\2" ${var} ${var})
-  upvar(${var})
-endfunction()
-
 function (Fetch)
-
+  ixm_fetch_prepare_parameters("${ARGN}")
+  ixm_fetch_prepare_command(command ${command})
+  ixm_fetch_prepare_options(options "${options}")
+  invoke(${command} ${package} ${options})
 endfunction()
