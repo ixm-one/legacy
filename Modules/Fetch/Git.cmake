@@ -5,8 +5,8 @@ find_package(Git REQUIRED)
 function (ixm_fetch_git_package package)
   parse(${ARGN}
     @FLAGS ALL QUIET
-    @ARGS=1 SCHEME
-    @ARGS=? ALIAS TARGET PATCH
+    @ARGS=1 SCHEME SEPARATOR
+    @ARGS=? ALIAS TARGET PATCH SUFFIX
     @ARGS=* POLICIES TARGETS OPTIONS)
   if (DEFINED TARGETS AND DEFINED TARGET)
     error("Cannot pass both TARGET and TARGETS")
@@ -16,13 +16,16 @@ function (ixm_fetch_git_package package)
   var(target TARGET ${name})
   var(alias ALIAS ${name})
 
+  var(suffix SUFFIX git)
+
   set(all EXCLUDE_FROM_ALL)
+
   if (ALL)
     unset(all)
   endif()
 
   FetchContent_Declare(${alias}
-    GIT_REPOSITORY ${SCHEME}${DOMAIN}${SEPARATOR}${repository}${SUFFIX}
+    GIT_REPOSITORY ${SCHEME}${DOMAIN}${SEPARATOR}${repository}${suffix}
     GIT_TAG ${tag}
     GIT_SHALLOW ON)
   FetchContent_GetProperties(${alias})

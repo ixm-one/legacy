@@ -33,7 +33,6 @@ function (ixm_fetch_aliasa_package package)
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${all})
   #[[ TARGET ]]
   ixm_fetch_apply_target(${target} ${alias})
-
   upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 

@@ -19,36 +19,46 @@ endfunction()
 
 #[[ Git SSH ]]
 function (ixm_fetch_ssh ${package})
-  ixm_fetch_git_package(${package} ${ARGN} SCHEME ssh://)
+  ixm_fetch_git_package(${package} ${ARGN} SCHEME ssh:// SEPARATOR ":")
 endfunction()
 
 #[[ Git https ]]
 function (ixm_fetch_web ${package})
-  ixm_fetch_git_package(${package} ${ARGN} SCHEME https://)
+  ixm_fetch_git_package(${package} ${ARGN} SCHEME https:// SEPARATOR "/")
 endfunction()
 
 #[[ JFrog's BinTray ]]
 function (ixm_fetch_bin)
+  #  ixm_fetch_https_package(${package} ${ARGN}
+  #    DOMAIN "https://dl.bintray.com/"
 endfunction()
 
 #[[ S3 Buckets ]]
 function (ixm_fetch_s3b)
+  # parse(
+  #   @ARGS=1 ENDPOINT ACCESS_KEY SECRET_ACCESS_KEY REGION ENV_AUTH PROVIDER ACL
+  #   LOCATION_CONSTRAINT SERVER_SIDE_ENCRYPTION STORAGE_CLASS
+  # )
+#ixm_fetch_https_package(${package} ${ARGN})
 endfunction()
 
 #[[ URL ]]
 function (ixm_fetch_url)
 endfunction()
 
-#[[ add_subdirectory ]]
-function (ixm_fetch_add)
+#[[ add_subdirectory (used to be `extern()`) ]]
+function (ixm_fetch_add package)
+  ixm_fetch_script_subdirectory(${package} ${ARGN})
 endfunction()
 
 #[[ invoke() ]]
-function (ixm_fetch_cmd)
+function (ixm_fetch_cmd package)
+  ixm_fetch_script_command(${package} ${ARGN})
 endfunction()
 
 #[[ cmake -P script ]]
-function (ixm_fetch_use)
+function (ixm_fetch_use package)
+  ixm_fetch_script_run(${package} ${ARGN})
 endfunction()
 
 #[[ CVS ]]
