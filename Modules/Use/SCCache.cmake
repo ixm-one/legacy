@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+#Find(PACKAGE SCCache)
+
 find_package(SCCache)
 
 function (ixm_use_sccache target)

@@ -1,7 +1,4 @@
-import(IXM::API::Find)
-
 Find(PROGRAM sccache VERSION "sccache ([0-9]+)\.([0-9]+)\.([0-9]+)")
-Find(CONFIRM)
 
 #Find(LIBRARY BulletMath LinearMath COMPONENT Math)
 #Find(LIBRARY BulletCollision COMPONENT Collision)
