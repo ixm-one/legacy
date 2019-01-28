@@ -1,6 +1,26 @@
 include_guard(GLOBAL)
 
 #[[
+Though generic in name this simply checks that a given name and action
+will result in a valid invoke
+]]
+function (verify_actions name action)
+  string(TOUPPER ${name} upper)
+  get_property(valid-actions GLOBAL PROPERTY IXM_${upper}_ACTIONS)
+  if (NOT action IN_LIST valid-actions)
+    error("'${name}(${action})' is not a valid operation")
+  endif()
+  get_property(command GLOBAL PROPERTY IXM_${upper}_${action})
+  if (NOT command)
+    error("'${name}(${action})' command implementation is missing")
+  endif()
+  if (NOT COMMAND ${command})
+    error("'${name}(${action})' resolves to an invalid command '${command}'")
+  endif()
+  set(${name} ${command} PARENT_SCOPE)
+endfunction()
+
+#[[
 This module is for various miscellanous commands that don't really have a
 particular theme other than "Used inside of commands to improve the CMake
 experience"

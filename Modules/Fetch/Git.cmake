@@ -34,13 +34,13 @@ function (ixm_fetch_git_package package)
   endif()
 
   #[[ PATCH ]]
-  ixm_fetch_apply_patch(${alias})
+  ixm_fetch_common_patch(${alias})
 
   #[[ PACKAGE ]]
-  ixm_fetch_apply_options("${OPTIONS}")
+  ixm_fetch_common_options("${OPTIONS}")
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${all})
   #[[ TARGET ]]
-  ixm_fetch_apply_target(${target} ${alias})
+  ixm_fetch_common_target(${target} ${alias})
   upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 
@@ -94,15 +94,15 @@ function (gitclone pkg)
     SUFFIX ${suffix})
 
   #[[ PATCH ]]
-  ixm_fetch_apply_patch(${alias})
+  ixm_fetch_common_patch(${alias})
 
   #[[ PACKAGE ]]
-  ixm_fetch_apply_options(${OPTIONS})
+  ixm_fetch_common_options(${OPTIONS})
   get(IXM_MESSAGE_QUIET QUIET OFF)
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${install})
   set(IXM_MESSAGE_QUIET OFF)
 
   #[[ TARGET ]]
-  ixm_fetch_apply_target(${target} ${alias})
+  ixm_fetch_common_target(${target} ${alias})
   parent_scope(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()

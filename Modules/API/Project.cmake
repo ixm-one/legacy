@@ -1,7 +1,11 @@
 include_guard(GLOBAL)
 
+# This is anything related to the project itself *or* targets generated within
+# XXX: I feel like the above is overextending the focus of a project API
+# perhaps it would be better to also have an IXM::API::Target?
+# Ruminate on this further
+
 import(IXM::Project::*)
-import(IXM::API::Prelude)
 
 # Override Commands
 macro (project name)
@@ -22,8 +26,8 @@ macro (project name)
     set(PROJECT_STANDALONE ON)
   endif()
   global(${name}_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
-  global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
   global(${name}_STANDALONE ${PROJECT_STANDALONE})
+  global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
 endmacro()
 
 #[[
@@ -157,6 +161,7 @@ nothing.
 Lastly, if a submodule with no sources is added, we let CMake complain.
 ]]
 
+# XXX: This belongs in project()
 # TODO: Support C files vs CXX files
 # TODO: This is *extremely* broken at the moment and I don't know why...
 function (add_submodule name type)

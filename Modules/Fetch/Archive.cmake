@@ -10,7 +10,7 @@ function (archive pkg)
     error("Cannot pass both TARGET and TARGETS")
   endif()
 
-  ixm_fetch_apply_options(${OPTIONS})
+  ixm_fetch_common_options(${OPTIONS})
 
   get_filename_component(name ${pkg} NAME_WE)
 
@@ -20,9 +20,9 @@ function (archive pkg)
 
   fetch(${alias} URL ${pkg})
 
-  ixm_fetch_apply_patch(${alias})
+  ixm_fetch_common_patch(${alias})
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${install})
 
-  ixm_fetch_apply_target(${target} ${alias})
+  ixm_fetch_common_target(${target} ${alias})
   parent_scope(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()

@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 #[[ Sets all options in a key-value pair system ]]
-function (ixm_fetch_apply_options)
+function (ixm_fetch_common_options)
   set(options ${ARGN})
   if (NOT options)
     return()
@@ -17,7 +17,7 @@ function (ixm_fetch_apply_options)
 endfunction()
 
 #[[ Copies possible patch files for overrides ]]
-function (ixm_fetch_apply_patch alias)
+function (ixm_fetch_common_patch alias)
   set(src "${${alias}_SOURCE_DIR}/CMakeLists.txt")
   list(APPEND patches "${PATCH}")
   list(APPEND patches "${PROJECT_SOURCE_DIR}/.cmake/patch/${alias}.cmake")
@@ -45,7 +45,7 @@ function (ixm_fetch_apply_patch alias)
 endfunction()
 
 #[[ Create target aliases if necessary ]]
-function(ixm_fetch_apply_target target alias)
+function(ixm_fetch_common_target target alias)
   if (DEFINED TARGETS)
     add_library(${target} INTERFACE)
     target_link_libraries(${target} INTERFACE ${TARGETS})
@@ -65,7 +65,7 @@ endfunction()
 
 
 #[[ Sets all policies in a key-value pair system ]]
-function (ixm_fetch_apply_policies)
+function (ixm_fetch_common_policies)
   set(policies ${ARGN})
   if (NOT policies)
     return()

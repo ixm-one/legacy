@@ -4,10 +4,6 @@ function (global name)
   set_property(GLOBAL PROPERTY ${name} "${ARGN}")
 endfunction()
 
-function (target name)
-  set_property(TARGET PROPERTY ${name} "${ARGN}")
-endfunction()
-
 # This is for forcing values
 function (internal name value)
   cache(INTERNAL ${name} "${value}" "${ARGN}")

@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+import(IXM::Common::*)
+
 # This is where all properties, cache values, builtin options, are declared.
 
 # General Global Settings
@@ -7,11 +9,16 @@ include_guard(GLOBAL)
 global(IXM_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 global(IXM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
+global(IXM_PRINT_COLORS "NOT ${WIN32}")
+global(IXM_PRINT_QUIET OFF)
+
+# Project Settings
 global(IXM_SOURCE_EXTENSIONS cxx;cpp;c++;cc;c;mm;m)
 global(IXM_CUSTOM_EXTENSIONS)
 
-global(IXM_PRINT_COLORS "NOT ${WIN32}")
-global(IXM_PRINT_QUIET OFF)
+global(IXM_INTERFACE_PROPERTIES)
+global(IXM_PRIVATE_PROPERTIES)
+
 
 # XXX: Some of these here are placeholders and might be removed before release
 global(IXM_EXAMPLE_PROPERTIES)
@@ -27,8 +34,7 @@ global(IXM_TOOL_PROPERTIES)
 global(IXM_DATA_PROPERTIES)
 
 # Fetch Properties
-global(IXM_FETCH_PROVIDERS
-  HUB LAB BIT WEB SSH GIT URL ADD USE BIN S3B SVN CVS CMD)
+global(IXM_FETCH_PROVIDERS HUB LAB BIT WEB SSH GIT URL ADD USE BIN S3B SVN CVS)
 global(IXM_FETCH_HUB ixm_fetch_hub)
 global(IXM_FETCH_LAB ixm_fetch_lab)
 global(IXM_FETCH_BIT ixm_fetch_bit)
@@ -42,7 +48,6 @@ global(IXM_FETCH_BIN ixm_fetch_bin)
 global(IXM_FETCH_S3B ixm_fetch_s3b)
 global(IXM_FETCH_SVN ixm_fetch_svn)
 global(IXM_FETCH_CVS ixm_fetch_cvs)
-global(IXM_FETCH_CMD ixm_fetch_cmd)
 
 # Check/Require Properties
 global(IXM_CHECK_ACTIONS MEMBER ENUM INCLUDE SIZEOF FLAG STRUCT CLASS)
@@ -61,7 +66,6 @@ global(IXM_FIND_PACKAGE ixm_find_package)
 global(IXM_FIND_PROGRAM ixm_find_program)
 global(IXM_FIND_LIBRARY ixm_find_library)
 global(IXM_FIND_INCLUDE ixm_find_include)
-
 
 # Map/Dict Properties
 global(IXM_MAP_ACTIONS CONTAINS APPEND ASSIGN REMOVE GET COPY)

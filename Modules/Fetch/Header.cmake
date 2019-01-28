@@ -24,7 +24,7 @@ function (header url)
   add_library(${name} INTERFACE)
   target_include_directories(${name} INTERFACE ${source_dir})
 
-  ixm_fetch_apply_target(${target} ${alias})
+  ixm_fetch_common_target(${target} ${alias})
 
   set(${alias}_SOURCE_DIR ${source_dir} PARENT_SCOPE)
   set(${alias}_BINARY_DIR ${binary_dir} PARENT_SCOPE)
