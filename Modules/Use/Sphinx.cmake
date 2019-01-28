@@ -45,8 +45,8 @@ function (add_documentation name type)
     $<JOIN:$<TARGET_PROPERTY:${name},COMPILE_OPTIONS>,$<SEMICOLON>>
   >)
   genex(SOURCES $<
-    $<BOOL:$<TARGET_PROPERTY:${name},SOURCES>>:
-    $<TARGET_PROPERTY:${name}:SOURCES>
+    $<BOOL:$<TARGET_PROPERTY:${name},SPHINX_SOURCES>>:
+    $<TARGET_PROPERTY:${name}:SPHINX_SOURCES>
   >)
   set(SOURCEDIR $<TARGET_PROPERTY:${name},SOURCE_DIR>)
   set(BINARYDIR $<TARGET_PROPERTY:${name},BINARY_DIR>)
