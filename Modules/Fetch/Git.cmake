@@ -1,7 +1,6 @@
 include_guard(GLOBAL)
 find_package(Git REQUIRED)
 
-
 function (ixm_fetch_git_package package)
   parse(${ARGN}
     @FLAGS ALL QUIET
@@ -11,6 +10,7 @@ function (ixm_fetch_git_package package)
   if (DEFINED TARGETS AND DEFINED TARGET)
     error("Cannot pass both TARGET and TARGETS")
   endif()
+
   ixm_fetch_git_recipe(${package})
 
   var(target TARGET ${name})
@@ -42,6 +42,17 @@ function (ixm_fetch_git_package package)
   #[[ TARGET ]]
   ixm_fetch_apply_target(${target} ${alias})
   upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+endfunction()
+
+function (ixm_fetch_git_recipe package scheme)
+  if (scheme MATCHES "ssh://")
+    string(REPLACE ":" ";" recipe "${package}")
+    list(GET recipe 0 server)
+    list(GET recipe 1 recipe)
+  else()
+    get_filename_component(name package NAME_WE)
+    upvar(name)
+  endif()
 endfunction()
 
 # TODO: On successful 'clone', set the specific package to have its updates

@@ -1,4 +1,9 @@
-include(FindPackage)
+import(IXM::API::Find)
+
+Find(FRAMEWORK)
+
+Find(LIBRARY mbedTLS INCLUDE mbedtls/version.h)
+Find(LIBRARY mbedcrypto COMPONENT Crypto)
 
 ixm_add_package(mbedTLS
   LIBRARIES mbedtls

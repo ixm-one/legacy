@@ -5,10 +5,10 @@ include_guard(GLOBAL)
 function(ixm_generate_unity_build_file target)
   genex(expressions $<
     $<BOOL:$<TARGET_PROPERTY:${target},UNITY_SOURCES>>:
-    "#include<"
+    "#include <"
     $<JOIN:
       $<TARGET_PROPERTY:${target},UNITY_SOURCES>,
-      "$<ANGLE-R>\n#include<>$<ANGLE-R>"
+      "$<ANGLE-R>\n#include <>"
     >
   >)
   string(JOIN "\n" content
@@ -17,5 +17,5 @@ function(ixm_generate_unity_build_file target)
   file(GENERATE
     OUTPUT $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>
     CONTENT ${content}
-    CONDITION $<BOOL:$<TARGET_PROPERTY:${target},UNITY_SOURCES>>)
+    CONDITION $<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>)
 endfunction()

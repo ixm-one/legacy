@@ -44,6 +44,34 @@ global(IXM_FETCH_SVN ixm_fetch_svn)
 global(IXM_FETCH_CVS ixm_fetch_cvs)
 global(IXM_FETCH_CMD ixm_fetch_cmd)
 
+# Check/Require Properties
+global(IXM_CHECK_ACTIONS MEMBER ENUM INCLUDE SIZEOF FLAG STRUCT CLASS)
+global(IXM_CHECK_INCLUDE ixm_check_include)
+global(IXM_CHECK_MEMBER ixm_check_member)
+global(IXM_CHECK_SIZEOF ixm_check_sizeof)
+global(IXM_CHECK_STRUCT ixm_check_struct)
+global(IXM_CHECK_CLASS ixm_check_class)
+global(IXM_CHECK_FLAG ixm_check_flag)
+global(IXM_CHECK_ENUM ixm_check_enum)
+
+# Find Properties
+global(IXM_FIND_ACTIONS PROGRAM LIBRARY FRAMEWORK INCLUDE CONFIRM)
+global(IXM_FIND_FRAMEWORK ixm_find_framework)
+global(IXM_FIND_PROGRAM ixm_find_program)
+global(IXM_FIND_LIBRARY ixm_find_library)
+global(IXM_FIND_INCLUDE ixm_find_include)
+global(IXM_FIND_CONFIRM ixm_find_confirm)
+
+
+# Map/Dict Properties
+global(IXM_MAP_ACTIONS CONTAINS APPEND ASSIGN REMOVE GET COPY)
+global(IXM_MAP_CONTAINS ixm_map_contains)
+global(IXM_MAP_APPEND ixm_map_append)
+global(IXM_MAP_ASSIGN ixm_map_assign)
+global(IXM_MAP_REMOVE ixm_map_remove)
+#global(IXM_MAP_COPY ixm_map_copy)
+global(IXM_MAP_GET ixm_map_get)
+
 # Layout Properties
 global(IXM_CURRENT_LAYOUT_NAME)
 global(IXM_CURRENT_LAYOUT_FILE)

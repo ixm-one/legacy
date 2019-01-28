@@ -53,7 +53,7 @@ function (ixm_coven_create_project_library)
     if (main)
       continue()
     endif()
-    add_submodule(${PROJECT_NAME}::${directory} HIERARCHY)
+    add_submodule(${PROJECT_NAME}::${directory} HIERARCHY ${srcs})
   endforeach()
 endfunction()
 

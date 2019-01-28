@@ -1,7 +1,11 @@
 include_guard(GLOBAL)
 
 function (global name)
-  set_property(GLOBAL PROPERTY ${name} ${ARGN})
+  set_property(GLOBAL PROPERTY ${name} "${ARGN}")
+endfunction()
+
+function (target name)
+  set_property(TARGET PROPERTY ${name} "${ARGN}")
 endfunction()
 
 # This is for forcing values

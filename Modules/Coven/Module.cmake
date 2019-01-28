@@ -76,7 +76,7 @@ function (ixm_coven_generate_unity path)
   file(RELATIVE_PATH path "${PROJECT_SOURCE_DIR}/src" "${path}")
   string(JOIN "\n" content
     ${COMMENT}
-    "$<$<BOOL:${sources}>:#include <$<JOIN:${sources},$<ANGLE-R>\n#include<>>>>")
+    "$<$<BOOL:${sources}>:#include <$<JOIN:${sources},$<ANGLE-R>\n#include<>>>")
   file(GENERATE OUTPUT ${src} CONTENT ${content} CONDITION $<BOOL:${flag}>)
   target_sources(${target}
     PRIVATE

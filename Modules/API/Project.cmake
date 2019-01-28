@@ -6,7 +6,7 @@ import(IXM::API::Prelude)
 # Override Commands
 macro (project name)
   ixm_project_layout(${name} ${ARGN})
-  # We fix the "someone didn't pass in a build type, oh nooooo" problem.
+  # We also fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
   endif()
@@ -17,6 +17,13 @@ macro (project name)
     ixm_project_load_layout(${IXM_CURRENT_LAYOUT_NAME})
     include(${IXM_CURRENT_LAYOUT_FILE})
   endif()
+  set(PROJECT_STANDALONE OFF)
+  if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(PROJECT_STANDALONE ON)
+  endif()
+  global(${name}_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
+  global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
+  global(${name}_STANDALONE ${PROJECT_STANDALONE})
 endmacro()
 
 #[[
@@ -36,11 +43,30 @@ Adds support for:
 function(target_module)
 endfunction()
 
-# Like target_link_libraries, but copies all *known* targets
-function(target_copy_properties)
+# Like target_link_libraries, but copies all custom IXM properties
+function(target_copy_properties target)
+  get_property(interface-properties GLOBAL PROPERTY IXM_INTERFACE_PROPERTIES)
+  get_property(private-properties GLOBAL PROPERTY IXM_PRIVATE_PROPERTIES)
+
+  parse(${ARGN} @ARGS=* PRIVATE PUBLIC INTERFACE)
+
+  # TODO: make target verification occur *outside* of copy loops
+  foreach (tgt IN LISTS PRIVATE PUBLIC)
+    if (NOT TARGET ${tgt})
+      error("'${tgt}' is not a known target")
+    endif()
+    foreach (property IN LISTS private-properties)
+      get_target_property(value ${tgt} ${property})
+      if (NOT value)
+        continue()
+      endif()
+      set_property(TARGET ${target} APPEND PROPERTY ${property} ${value})
+    endforeach()
+  endforeach()
+
 endfunction()
 
-function(target_precompiled_header)
+function(target_precompiled_header target)
 endfunction()
 
 #[[
@@ -132,6 +158,7 @@ Lastly, if a submodule with no sources is added, we let CMake complain.
 ]]
 
 # TODO: Support C files vs CXX files
+# TODO: This is *extremely* broken at the moment and I don't know why...
 function (add_submodule name type)
   list(APPEND valid-types SPLAYED HIERARCHY)
   if (NOT type IN_LIST valid-types)
@@ -167,6 +194,12 @@ function (add_submodule name type)
     $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
          ${IXM_UNITY_BUILD},
          ON>)
+
+  ixm_generate_unity_build_file(${target})
+       #  file(GENERATE
+       #    OUTPUT $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>
+       #    CONTENT ${content}
+       #    CONDITION $<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>)
 
   get_property(parent-type TARGET ${parent} PROPERTY TYPE)
   set(visibility PRIVATE)
