@@ -26,7 +26,7 @@ function (ixm_find_library)
   mark_as_advanced(${variable})
   add_library(${library} IMPORTED GLOBAL)
   set_target_properties(${library} PROPERTIES IMPORTED_LOCATION "${value}")
-  map(APPEND ixm::find::${CMAKE_FIND_PACKAGE_NAME} LIBRARY ${library})
+  dict(APPEND ixm::find::${CMAKE_FIND_PACKAGE_NAME} LIBRARY ${library})
   if (COMPONENT)
     target_link_libraries(${CMAKE_FIND_PACKAGE_NAME}::${CMAKE_FIND_PACKAGE_NAME}
       PUBLIC ${library})

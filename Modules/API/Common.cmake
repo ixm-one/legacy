@@ -67,14 +67,6 @@ global(IXM_FIND_PROGRAM ixm_find_program)
 global(IXM_FIND_LIBRARY ixm_find_library)
 global(IXM_FIND_INCLUDE ixm_find_include)
 
-# Map/Dict Properties
-global(IXM_MAP_ACTIONS CONTAINS APPEND ASSIGN REMOVE GET COPY)
-global(IXM_MAP_CONTAINS ixm_map_contains)
-global(IXM_MAP_APPEND ixm_map_append)
-global(IXM_MAP_ASSIGN ixm_map_assign)
-global(IXM_MAP_REMOVE ixm_map_remove)
-global(IXM_MAP_GET ixm_map_get)
-
 # Layout Properties
 global(IXM_CURRENT_LAYOUT_NAME)
 global(IXM_CURRENT_LAYOUT_FILE)

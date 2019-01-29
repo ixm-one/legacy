@@ -28,6 +28,17 @@ macro (project name)
   global(${name}_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
   global(${name}_STANDALONE ${PROJECT_STANDALONE})
   global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
+
+  string(TOLOWER "${PROJECT_NAME}" project)
+
+  # This is used for various book-keeping within the IXM API
+  dict(CREATE ixm::${project}::check)
+  dict(CREATE ixm::${project}::find)
+
+  dict(CREATE ixm::${project}::feature)
+  dict(CREATE ixm::${project}::with)
+
+  dict(CREATE ixm::${project}::fetch)
 endmacro()
 
 #[[
@@ -135,11 +146,16 @@ endfunction()
 
 #[[
 Wrapper around Fetch() API so that the given <name> is used as an ALIAS, but
-additionally, if it is NOT enabled the value is never fetched. One thing to
-keep in mind is that we currently DO NOT support a "choice selection".
-This will be changed in the future.
+additionally, if it is NOT enabled the value is never fetched.
 ]]
-function (With name spec)
+function (With name)
+  string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
+  list(LENGTH ARGN length)
+  if (length LESS 1)
+    error("With() requires at least one Fetch() Dependency reference")
+  endif()
+  list(GET ARGN 0 default)
+  ixm_fetch_prepare_parameters(${default})
 endfunction()
 
 #[[
