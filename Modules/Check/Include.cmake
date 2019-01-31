@@ -1,19 +1,11 @@
 include_guard(GLOBAL)
 
-include(CheckIncludeFiles)
-
-function (ixm_check_common_symbol_prepare out name)
-  string(TOUPPER "${name}" item)
-  string(REPLACE "::" ":" item "${item}")
-  string(MAKE_C_IDENTIFIER "HAVE_${item}" variable)
-  set(${out} ${variable} PARENT_SCOPE)
-endfunction()
-
-function (ixm_check_common_symbol variable name)
+function (ixm_check_include header)
+  ixm_check_common_symbol_prepare(variable ${header})
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
   get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
 
-  string(SHA1 current-arghash "${variable} ${name} ${ARGN}")
+  string(SHA1 current-arghash "${variable} ${header} ${ARGN}")
 
   if (arghash STREQUAL current-arghash AND is-found)
     return()
@@ -21,60 +13,37 @@ function (ixm_check_common_symbol variable name)
 
   set(${variable}_ARGHASH ${current-arghash} CACHE INTERNAL "${variable} hash")
   unset(${variable} CACHE)
+  unset(args)
 
   list(APPEND args INCLUDE_DIRECTORIES)
   list(APPEND args COMPILE_DEFINITIONS)
-  list(APPEND args COMPILE_FEATURES)
   list(APPEND args COMPILE_OPTIONS)
-  list(APPEND args LINK_DIRECTORIES)
-  list(APPEND args LINK_LIBRARIES)
-  list(APPEND args LINK_OPTIONS)
 
   parse(${ARGN}
     @FLAGS QUIET REQUIRED
-    @ARGS=? LANGUAGE TARGET_TYPE
-    @ARGS=* CONTENT EXTRA_CMAKE_FLAGS INCLUDE_HEADERS ${args})
+    @ARGS=? LANGUAGE
+    @ARGS=* EXTRA_CMAKE_FLAGS ${args})
 
   # If no LANGUAGE is given, we assume CXX
-  var(TARGET_TYPE TARGET_TYPE STATIC)
   var(LANGUAGE LANGUAGE CXX)
-
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  set(BUILD_ROOT "${CMAKE_BINARY_DIR}/IXM/Check/Symbols/${project}")
+  set(BUILD_ROOT "${CMAKE_BINARY_DIR}/IXM/Check/Includes/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"
-    "TARGET_TYPE:STRING=${TARGET_TYPE}"
     "VERSION:STRING=${CMAKE_VERSION}"
     "LANGUAGE:STRING=${LANGUAGE}"
+    "TARGET_TYPE:STRING=OBJECT"
     "NAME:STRING=${project}")
-
   list(TRANSFORM EXTRA_CMAKE_FLAGS PREPEND "-D" OUTPUT_VARIABLE cmake-flags)
 
   foreach (arg IN LISTS args ITEMS CMAKE_${LANGUAGE}_COMPILER_LAUNCHER)
-    if (DEFINED ${arg})
-      list(APPEND cmake-flags "-D${arg}:STRING=${${arg}}")
-    endif()
+    list(APPEND cmake-flags "-D${arg}:STRING=${${arg}}")
   endforeach()
 
-  # Configure content for headers
-  if (INCLUDE_HEADERS)
-    foreach (arg IN ITEMS INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS)
-      if (DEFINED ${arg})
-        list(APPEND flags ${arg} ${${arg}})
-      endif()
-    endforeach()
-    foreach (header IN LISTS INCLUDE_HEADERS)
-      check(INCLUDE ${header} ${flags} REQUIRED LANGUAGE ${LANGUAGE})
-    endforeach()
-  endif()
-
-
-  list(TRANSFORM INCLUDE_HEADERS REPLACE "(.+)" "#include <\\1>")
-  list(JOIN INCLUDE_HEADERS "\n" IXM_CHECK_PREAMBLE)
-  string(CONFIGURE "${CONTENT}" IXM_CHECK_CONTENT @ONLY)
-
+  string(REGEX REPLACE "(.+)" "#include <\\1>" IXM_CHECK_PREAMBLE "${header}")
+  
   configure_file(
     "${IXM_ROOT}/Templates/Check/CMakeLists.txt"
     "${BUILD_ROOT}/CMakeLists.txt"
@@ -85,7 +54,7 @@ function (ixm_check_common_symbol variable name)
     @ONLY)
 
   if (NOT QUIET)
-    info("Looking for ${name}")
+    info("Looking for include file ${header}")
   endif()
 
   try_compile(${variable}
@@ -105,12 +74,12 @@ function (ixm_check_common_symbol variable name)
     set(found "not found")
   endif()
 
-  set(${variable} ${${variable}} CACHE INTERNAL "Have ${name}")
+  set(${variable} ${${variable}} CACHE INTERNAL "Have ${header}")
   file(APPEND "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${logfile}"
-    "Determining if '${name}' exists ${status} with the following output:\n"
+    "Determining if include file '${header}' exists ${status} with the following output:\n"
     "${output}")
 
-  set(result "Looking for ${name} - ${found}")
+  set(result "Looking for include file ${header} - ${found}")
   if (REQUIRED AND NOT ${variable})
     error("${result}")
   elseif(NOT QUIET AND ${variable})

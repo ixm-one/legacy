@@ -3,7 +3,7 @@ project(${NAME} LANGUAGES ${LANGUAGE})
 
 string(TOLOWER ${LANGUAGE} extension)
 
-if (TARGET_TYPE STREQUAL "STATIC" OR TARGET_TYPE STREQUAL "SHARED")
+if (NOT TARGET_TYPE STREQUAL "PROGRAM")
   add_library(${NAME} ${TARGET_TYPE})
 else()
   add_executable(${NAME})
