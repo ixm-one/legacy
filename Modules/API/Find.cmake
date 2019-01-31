@@ -1,6 +1,5 @@
 include_guard(GLOBAL)
 
-import(IXM::Check::*)
 import(IXM::Find::*)
 
 # Meant for packages and items stored on the host system
@@ -21,12 +20,4 @@ function(Find action)
   endif()
 endfunction()
 
-# Meant for checking the current state of the compiler
-function (Check action)
-  if (action STREQUAL ENUM)
-    ixm_check_enum(${ARGN})
-  else()
-    verify_actions(Check ${action})
-    invoke(${Check} ${ARGN})
-  endif()
-endfunction()
+

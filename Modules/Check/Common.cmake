@@ -2,6 +2,13 @@ include_guard(GLOBAL)
 
 include(CheckIncludeFiles)
 
+function (ixm_check_common_symbol_prepare out name)
+  string(TOUPPER "${name}" item)
+  string(REPLACE "::" ":" item "${item}")
+  string(MAKE_C_IDENTIFIER "HAVE_${item}" variable)
+  set(${out} ${variable} PARENT_SCOPE)
+endfunction()
+
 function (ixm_check_common_symbol variable name)
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
   get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
