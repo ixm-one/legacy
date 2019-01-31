@@ -1,7 +1,5 @@
 include_guard(GLOBAL)
 
-include(CheckIncludeFiles)
-
 function (ixm_check_common_symbol_prepare out name)
   string(TOUPPER "${name}" item)
   string(REPLACE "::" ":" item "${item}")
@@ -41,7 +39,7 @@ function (ixm_check_common_symbol variable name)
 
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  set(BUILD_ROOT "${CMAKE_BINARY_DIR}/IXM/Check/Symbols/${project}")
+  set(BUILD_ROOT "${IXM_CHECK_DIR}/Symbols/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"
@@ -110,8 +108,13 @@ function (ixm_check_common_symbol variable name)
     "Determining if '${name}' exists ${status} with the following output:\n"
     "${output}")
 
+  if (NOT ${variable})
+    file(REMOVE_RECURSE "${BUILD_ROOT}/build")
+  endif()
+
   set(result "Looking for ${name} - ${found}")
-  if (REQUIRED AND NOT ${variable})
+  if (NOT ${variable} AND REQUIRED)
+    debug(${variable})
     error("${result}")
   elseif(NOT QUIET AND ${variable})
     info("${result}")

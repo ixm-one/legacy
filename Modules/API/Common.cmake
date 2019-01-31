@@ -8,6 +8,14 @@ import(IXM::Common::*)
 # This is done to make sure our "generated" files go into ixm-build
 global(IXM_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 global(IXM_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+global(IXM_FETCH_DIR "${IXM_BINARY_DIR}/Fetch")
+global(IXM_CHECK_DIR "${IXM_BINARY_DIR}/Check")
+
+internal(IXM_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+internal(IXM_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+internal(IXM_FETCH_DIR "${IXM_BINARY_DIR}/Fetch")
+internal(IXM_CHECK_DIR "${IXM_BINARY_DIR}/Check")
+internal(IXM_INVOKE_DIR "${IXM_BINARY_DIR}/Invoke")
 
 global(IXM_PRINT_COLORS "NOT ${WIN32}")
 global(IXM_PRINT_QUIET OFF)
@@ -18,7 +26,6 @@ global(IXM_CUSTOM_EXTENSIONS)
 
 global(IXM_INTERFACE_PROPERTIES)
 global(IXM_PRIVATE_PROPERTIES)
-
 
 # XXX: Some of these here are placeholders and might be removed before release
 global(IXM_EXAMPLE_PROPERTIES)
