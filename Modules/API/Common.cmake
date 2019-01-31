@@ -59,14 +59,6 @@ global(IXM_CHECK_CLASS ixm_check_class)
 global(IXM_CHECK_FLAG ixm_check_flag)
 global(IXM_CHECK_ENUM ixm_check_enum)
 
-# Find Properties
-global(IXM_FIND_ACTIONS FRAMEWORK PACKAGE PROGRAM LIBRARY INCLUDE)
-global(IXM_FIND_FRAMEWORK ixm_find_framework)
-global(IXM_FIND_PACKAGE ixm_find_package)
-global(IXM_FIND_PROGRAM ixm_find_program)
-global(IXM_FIND_LIBRARY ixm_find_library)
-global(IXM_FIND_INCLUDE ixm_find_include)
-
 # Layout Properties
 global(IXM_CURRENT_LAYOUT_NAME)
 global(IXM_CURRENT_LAYOUT_FILE)

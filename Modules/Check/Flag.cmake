@@ -4,15 +4,13 @@ include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
 include(CMakePushCheckState)
 
-function (check_compiler_flag flag var)
-  parse(${ARGN}
-    @FLAGS QUIET
-    @ARGS=1 LANGUAGE)
-
+function (ixm_check_flag flag)
+  parse(${ARGN} @ARGS=1 LANGUAGE)
+  string(MAKE_C_IDENTIFIER CAN_USE_${flag} var)
   cmake_push_check_state()
   if (LANGUAGE STREQUAL "CXX")
     check_cxx_compiler(${flag} ${var})
-  elseif (LANGUAGE STREQUAL "C")
+  elseif(LANGUAGE STREQUAL "C")
     check_c_compiler(${flag} ${var})
   else()
     error("LANGUAGE must be either: CXX or C")

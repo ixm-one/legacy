@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION ${VERSION})
-project(${NAME})
+project(${NAME} LANGUAGES ${LANGUAGE})
+
+string(TOLOWER ${LANGUAGE} extension)
 
 if (TARGET_TYPE STREQUAL "STATIC" OR TARGET_TYPE STREQUAL "SHARED")
   add_library(${NAME} ${TARGET_TYPE})
@@ -7,7 +9,7 @@ else()
   add_executable(${NAME})
 endif()
 
-target_sources(${NAME} PRIVATE main.cxx)
+target_sources(${NAME} PRIVATE main.${extension})
 
 if (DEFINED INCLUDE_DIRECTORIES)
   target_include_directories(${NAME} PRIVATE ${INCLUDE_DIRECTORIES})
