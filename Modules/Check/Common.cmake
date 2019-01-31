@@ -2,10 +2,16 @@ include_guard(GLOBAL)
 
 function (ixm_check_common_symbol variable name)
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
-  if (is-found)
+  get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
+
+  string(SHA1 current-arghash "${variable} ${name} ${ARGN}")
+
+  if (arghash STREQUAL current-arghash AND is-found)
     return()
   endif()
+
   unset(${variable} CACHE)
+  set(${variable}_ARGHASH ${current-arghash} CACHE INTERNAL "${variable} hash")
 
   list(APPEND args INCLUDE_DIRECTORIES)
   list(APPEND args COMPILE_DEFINITIONS)
@@ -17,10 +23,11 @@ function (ixm_check_common_symbol variable name)
 
   parse(${ARGN}
     @FLAGS QUIET REQUIRED
-    @ARGS=? LANGUAGE
-    @ARGS=* CONTENT EXTRA_CMAKE_FLAGS TARGET_TYPE INCLUDE_HEADERS ${args})
+    @ARGS=? LANGUAGE TARGET_TYPE
+    @ARGS=* CONTENT EXTRA_CMAKE_FLAGS INCLUDE_HEADERS ${args})
 
   # If no LANGUAGE is given, we assume CXX
+  var(TARGET_TYPE TARGET_TYPE STATIC)
   var(LANGUAGE LANGUAGE CXX)
 
   string(TOLOWER ${variable} project)
@@ -29,6 +36,7 @@ function (ixm_check_common_symbol variable name)
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"
+    "TARGET_TYPE:STRING=${TARGET_TYPE}"
     "VERSION:STRING=${CMAKE_VERSION}"
     "LANGUAGE:STRING=${LANGUAGE}"
     "NAME:STRING=${project}")
