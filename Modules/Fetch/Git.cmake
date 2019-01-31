@@ -11,12 +11,12 @@ function (ixm_fetch_git_package package)
     error("Cannot pass both TARGET and TARGETS")
   endif()
 
-  ixm_fetch_git_recipe(${package})
+  ixm_fetch_git_recipe(${package} ${SCHEME})
 
   var(target TARGET ${name})
   var(alias ALIAS ${name})
 
-  var(suffix SUFFIX git)
+  var(suffix SUFFIX .git)
 
   set(all EXCLUDE_FROM_ALL)
 
@@ -24,8 +24,10 @@ function (ixm_fetch_git_package package)
     unset(all)
   endif()
 
+  set(path "${SCHEME}${DOMAIN}${SEPARATOR}${repository}${suffix}")
+
   FetchContent_Declare(${alias}
-    GIT_REPOSITORY ${SCHEME}${DOMAIN}${SEPARATOR}${repository}${suffix}
+    GIT_REPOSITORY ${path}
     GIT_TAG ${tag}
     GIT_SHALLOW ON)
   FetchContent_GetProperties(${alias})
@@ -49,9 +51,21 @@ function (ixm_fetch_git_recipe package scheme)
     string(REPLACE ":" ";" recipe "${package}")
     list(GET recipe 0 server)
     list(GET recipe 1 recipe)
+    set(DOMAIN ${server} PARENT_SCOPE)
+    string(REPLACE "@" ";" result ${recipe})
+    list(APPEND result HEAD)
+    list(GET result 0 repository)
+    list(GET result 1 tag)
+    get_filename_component(name ${repository} NAME)
+    upvar(repository tag name)
   else()
-    get_filename_component(name package NAME_WE)
-    upvar(name)
+    string(REPLACE "@" ";" result ${package})
+    list(APPEND result HEAD)
+    list(GET result 0 repository)
+    list(GET result 1 tag)
+    get_filename_component(name ${repository} NAME)
+    debug(name tag repository)
+    upvar(name tag repository)
   endif()
 endfunction()
 

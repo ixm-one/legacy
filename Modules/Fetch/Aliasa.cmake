@@ -2,24 +2,41 @@ include_guard(GLOBAL)
 
 function (ixm_fetch_aliasa_package package)
   parse(${ARGN}
-    @FLAGS ALL QUIET
+    @FLAGS ALL QUIET CLONE
     @ARGS=1 PROVIDER
     @ARGS=? ALIAS TARGET PATCH
     @ARGS=* POLICIES TARGETS OPTIONS)
   if (DEFINED TARGETS AND DEFINED TARGET)
-    error("IXM::Aliasa: Cannot pass both TARGET and TARGETS")
+    error("Cannot pass both TARGET and TARGETS")
   endif()
   ixm_fetch_aliasa_recipe(${package})
 
   var(target TARGET ${name})
   var(alias ALIAS ${name})
+  var(clone CLONE OFF)
+
+  set(declare-args URL "https://${PROVIDER}.aliasa.io/${package}")
+
+
+  if (clone)
+    string(TOUPPER ${PROVIDER} provider)
+    get_property(url GLOBAL PROPERTY IXM_FETCH_${provider}_CLONE_${alias})
+    if (NOT url)
+      get_property(url GLOBAL PROPERTY IXM_FETCH_${provider}_CLONE)
+    endif()
+    set(declare-args
+      GIT_REPOSITORY "${url}/${repository}.git"
+      GIT_SHALLOW ON
+      GIT_TAG ${tag})
+    debug(declare-args)
+  endif()
 
   set(all EXCLUDE_FROM_ALL)
   if (ALL)
     unset(all)
   endif()
 
-  FetchContent_Declare(${alias} URL "https://${PROVIDER}.aliasa.io/${package}")
+  FetchContent_Declare(${alias} ${declare-args})
   FetchContent_GetProperties(${alias})
   if (NOT ${alias}_POPULATED)
     FetchContent_Populate(${alias})

@@ -56,6 +56,10 @@ global(IXM_FETCH_S3B ixm_fetch_s3b)
 global(IXM_FETCH_SVN ixm_fetch_svn)
 global(IXM_FETCH_CVS ixm_fetch_cvs)
 
+global(IXM_FETCH_BIT_CLONE "https://bitbucket.com")
+global(IXM_FETCH_HUB_CLONE "https://github.com")
+global(IXM_FETCH_LAB_CLONE "https://gitlab.com")
+
 # Check/Require Properties
 global(IXM_CHECK_ACTIONS MEMBER ENUM INCLUDE SIZEOF FLAG STRUCT CLASS)
 global(IXM_CHECK_INCLUDE ixm_check_include)

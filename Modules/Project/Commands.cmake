@@ -36,6 +36,8 @@ function (ixm_project_layout name)
   upvar(REMAINDER)
   if (LAYOUT)
     set(IXM_CURRENT_LAYOUT_NAME ${LAYOUT} PARENT_SCOPE)
+  else()
+    unset(IXM_CURRENT_LAYOUT_NAME PARENT_SCOPE)
   endif()
 endfunction()
 
