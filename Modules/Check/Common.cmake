@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+include(CheckIncludeFiles)
+
 function (ixm_check_common_symbol variable name)
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
   get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
@@ -51,6 +53,20 @@ function (ixm_check_common_symbol variable name)
   endforeach()
 
   # Configure content for headers
+  # TODO: Use our *own* check(INCLUDE) when it's available
+  if (INCLUDE_HEADERS)
+    cmake_push_check_state()
+    set(CMAKE_REQUIRED_DEFINITIONS ${COMPILE_DEFINITIONS})
+    set(CMAKE_REQUIRED_INCLUDES ${INCLUDE_DIRECTORIES})
+    set(CMAKE_REQUIRED_FLAGS ${COMPILE_OPTIONS})
+    set(CMAKE_REQUIRED_QUIET ${QUIET})
+    check_include_files("${INCLUDE_HEADERS}"
+      ${variable}_INCLUDE_HEADERS
+      LANGUAGE ${LANGUAGE})
+    cmake_pop_check_state()
+  endif()
+
+
   list(TRANSFORM INCLUDE_HEADERS REPLACE "(.+)" "#include <\\1>")
   list(JOIN INCLUDE_HEADERS "\n" IXM_CHECK_PREAMBLE)
   string(CONFIGURE "${CONTENT}" IXM_CHECK_CONTENT @ONLY)
@@ -96,6 +112,4 @@ function (ixm_check_common_symbol variable name)
   elseif(NOT QUIET AND ${variable})
     info("${result}")
   endif()
-
-
 endfunction()
