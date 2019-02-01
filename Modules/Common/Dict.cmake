@@ -1,14 +1,62 @@
 include_guard(GLOBAL)
 
+#[[
+A few small notes on serialization:
+
+Because we are treating this data in a hierarchical way, we need to specify
+a way to "escape" the way that CMake handles lists. This, as it turns out,
+is quite easy, since we can simply use the FS, GS, RS, US control codes from
+ascii/unicode. Thus, if we wanted, we can generate a massive database file.
+We aren't doing this *yet* but suffice to say, most of this could be done at
+generation time, minus a few housekeeping tricks. This "database" file could
+then be passed off to additional build tools if desired by the user, as it's
+all just bytes and therefore quite simple to parse out. This might turn out to
+be unwiedly in large projects, but that's not really my problem now.
+
+I should note, this is separate from a user's ability to just dump a dict() to
+disk without giving a damn.
+
+Effectively, the layout of a database file looks like so:
+
+␜${filename}␝${target::name}␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
+␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
+␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
+␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
+␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
+␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+␜${filename}␝${target::name}␞${key}␟value␟value␟value␟value␞${key}␟value␟value
+
+This is quite easy to work with in the space of CMake's control flow
+capabilities and builtin data structures.
+]]
+
 function (dict action name)
   if (action STREQUAL LOAD)
     ixm_dict_load(${name} ${ARGN})
   elseif (action STREQUAL SAVE)
     ixm_dict_save(${name} ${ARGN})
-  elseif (action STREQUAL EXTRACT) # GET + REMOVE in one function
   elseif (action STREQUAL INSERT)
     ixm_dict_insert(${name} ${ARGN})
   elseif (action STREQUAL REMOVE)
+    ixm_dict_remove(${name} ${ARGN})
   elseif (action STREQUAL MERGE)
     ixm_dict_merge(${name} ${ARGN})
   elseif (action STREQUAL KEYS)
@@ -16,7 +64,12 @@ function (dict action name)
   elseif (action STREQUAL GET)
     ixm_dict_get(${name} ${ARGN})
   else()
-    #error("dict(${action}) is an invalid operation")
+    error("dict(${action}) is an invalid operation")
+  endif()
+  set(returns KEYS GET)
+  if (action IN_LIST returns)
+    list(GET ARGN -1 out)
+    upvar(${out})
   endif()
 endfunction()
 
@@ -30,6 +83,16 @@ function (ixm_dict_create name)
   if (NOT TARGET ${name})
     add_library(${name} INTERFACE IMPORTED)
   endif()
+endfunction()
+
+function (ixm_dict_filepath out path)
+  if (NOT path MATCHES ".+[.]ixm$")
+    set(path "${path}.ixm")
+  endif()
+  if (NOT IS_ABSOLUTE "${path}")
+    set(path "${CMAKE_CURRENT_BINARY_DIR}/${path}")
+  endif()
+  set(${out} "${path}" PARENT_SCOPE)
 endfunction()
 
 function (ixm_dict_how var message)
@@ -58,10 +121,20 @@ function (ixm_dict_load name)
   if (NOT FROM)
     error("dict(LOAD) missing 'FROM' parameter")
   endif()
+  ixm_dict_filepath(FROM "${FROM}")
   if (NOT EXISTS "${FROM}")
     return()
   endif()
   file(READ "${FROM}" data)
+  string(ASCII 2 STX)
+  string(ASCII 3 ETX)
+  string(ASCII 25 EM)
+  set(HEADER "${STX}IXM${ETX}${STX}([^${ETX}]+)${ETX}${EM}")
+  string(REGEX MATCH "^${HEADER}\n(.*)$" matched "${data}")
+  if (NOT matched)
+    error("Could not read IXM file format from ${FROM}")
+  endif()
+  set(data "${CMAKE_MATCH_2}")
   string(ASCII 29 group)
   string(ASCII 30 record)
   string(ASCII 31 unit)
@@ -93,7 +166,11 @@ function (ixm_dict_save name)
     endif()
   endforeach()
   list(JOIN output "${group}" output)
-  file(WRITE ${INTO} "${output}")
+  ixm_dict_filepath(INTO "${INTO}")
+  string(ASCII 2 STX)
+  string(ASCII 3 ETX)
+  string(ASCII 25 EM)
+  file(WRITE ${INTO} "${STX}IXM${ETX}${STX}v1${ETX}${EM}\n${output}")
 endfunction()
 
 #dict(INSERT <dict> key [STRING|APPEND|ASSIGN] <value> [<value>...])
@@ -132,23 +209,23 @@ function (ixm_dict_merge name)
     dict(KEYS ${target} keys)
     foreach (key IN LISTS keys)
       dict(GET ${target} ${key} value)
-      dict(INSERT ${name} ${key} ${action} ${value})
+      dict(INSERT ${name} "${key}" ${action} "${value}")
     endforeach()
   endforeach()
 endfunction()
 
 # macro because dict() is a function
-macro (ixm_dict_keys name var)
+function (ixm_dict_keys name var)
   ixm_dict_noop(${name})
   # This is a valid *byte* but is an invalid utf-8 character :)
   string(ASCII 192 c0)
-  get_property(${var} TARGET ${name} PROPERTY "INTERFACE_${c0}")
-  upvar(${var})
-endmacro()
+  dict(GET ${name} ${c0} value)
+  set(${var} ${value} PARENT_SCOPE)
+endfunction()
 
 # Macro because dict() is a function
-macro (ixm_dict_get name key var)
+function (ixm_dict_get name key var)
   ixm_dict_noop(${name})
-  get_property(${var} TARGET ${name} PROPERTY "INTERFACE_${key}")
-  upvar(${var})
-endmacro()
+  get_property(value TARGET ${name} PROPERTY "INTERFACE_${key}")
+  set(${var} ${value} PARENT_SCOPE)
+endfunction()

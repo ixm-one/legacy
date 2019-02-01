@@ -33,15 +33,15 @@ macro (project name)
 
   # This is used for various book-keeping within the IXM API.
   # Because these are not "global", they are local to a given "directory"
-  dict(CREATE ixm::${project}::check)
-  dict(CREATE ixm::${project}::find)
+  #dict(CREATE ixm::${project}::check)
+  #dict(CREATE ixm::${project}::find)
 
-  dict(CREATE ixm::${project}::feature)
-  dict(CREATE ixm::${project}::with)
+  #dict(CREATE ixm::${project}::feature)
+  #dict(CREATE ixm::${project}::with)
 
-  dict(CREATE ixm::${project}::fetch)
+  #dict(CREATE ixm::${project}::fetch)
 
-  dict(CREATE ixm::project::check)
+  #dict(CREATE ixm::project::check)
 endmacro()
 
 #[[

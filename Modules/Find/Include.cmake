@@ -22,7 +22,7 @@ function (ixm_find_include)
   endif()
 
   mark_as_advanced(${variable})
-  map(APPEND ixm::find::${CMAKE_FIND_PACKAGE_NAME} INCLUDE ${variable})
+  dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND INCLUDE ${variable})
   if (TARGET ${library})
     target_include_directories(${library} PUBLIC "${${variable}}")
   endif()

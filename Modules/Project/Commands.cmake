@@ -56,11 +56,11 @@ function (ixm_project_load_layout name)
   # These are also "imported" and not marked as global so they aren't
   # accessible OUTSIDE of te project scope :)
   # TODO: Change this to ${PROJECT_NAME} 🤦
-  dict(CREATE ixm::${name}::properties)
-  dict(CREATE ixm::${name}::targets)
-  dict(CREATE ixm::${name}::fetched)
-  dict(ASSIGN ixm::${name}::properties LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE})
-  dict(ASSIGN ixm::${name}::properties LAYOUT_NAME ${IXM_CURRENT_LAYOUT_NAME})
+  #dict(ixm::${name}::properties)
+  #dict(ixm::${name}::targets)
+  #dict(ixm::${name}::fetched)
+  dict(INSERT ixm::${name}::properties LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE})
+  dict(INSERT ixm::${name}::properties LAYOUT_NAME ${IXM_CURRENT_LAYOUT_NAME})
   set(IXM_CURRENT_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE} PARENT_SCOPE)
 endfunction()
 
