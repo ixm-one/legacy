@@ -56,14 +56,11 @@ function (ixm_project_load_layout name)
   # These are also "imported" and not marked as global so they aren't
   # accessible OUTSIDE of te project scope :)
   # TODO: Change this to ${PROJECT_NAME} 🤦
-  add_library(ixm::${name}::properties INTERFACE IMPORTED) # project specific properties
-  add_library(ixm::${name}::commands INTERFACE IMPORTED)   # dynamic commands for invoke
-  add_library(ixm::${name}::targets INTERFACE IMPORTED)    # info on various targets
-  add_library(ixm::${name}::fetched INTERFACE IMPORTED)    # dependencies grabbed via Fetch
-  set_target_properties(ixm::${name}::properties
-    PROPERTIES
-      INTERFACE_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE}
-      INTERFACE_LAYOUT_NAME ${IXM_CURRENT_LAYOUT_NAME})
+  dict(CREATE ixm::${name}::properties)
+  dict(CREATE ixm::${name}::targets)
+  dict(CREATE ixm::${name}::fetched)
+  dict(ASSIGN ixm::${name}::properties LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE})
+  dict(ASSIGN ixm::${name}::properties LAYOUT_NAME ${IXM_CURRENT_LAYOUT_NAME})
   set(IXM_CURRENT_LAYOUT_FILE ${IXM_CURRENT_LAYOUT_FILE} PARENT_SCOPE)
 endfunction()
 

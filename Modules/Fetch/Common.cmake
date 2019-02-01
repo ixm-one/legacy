@@ -63,7 +63,6 @@ function(ixm_fetch_common_target target alias)
   endforeach()
 endfunction()
 
-
 #[[ Sets all policies in a key-value pair system ]]
 function (ixm_fetch_common_policies)
   set(policies ${ARGN})

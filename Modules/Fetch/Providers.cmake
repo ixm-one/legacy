@@ -51,11 +51,6 @@ function (ixm_fetch_add package)
   ixm_fetch_script_subdirectory(${package} ${ARGN})
 endfunction()
 
-#[[ invoke() ]]
-function (ixm_fetch_cmd package)
-  ixm_fetch_script_command(${package} ${ARGN})
-endfunction()
-
 #[[ cmake -P script ]]
 function (ixm_fetch_use package)
   ixm_fetch_script_run(${package} ${ARGN})

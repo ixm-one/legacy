@@ -9,27 +9,29 @@ Additionally, it is intended for CMake 3.13 and newer.
 
 # Installation
 
-IXM is intended to be installed in one of the following forms:
+IXM is intended to be installed via the `FetchContent` CMake Module. A code
+sample is provided below for quick copy-pasting into a project's
+`CMakeLists.txt`.
 
-|    Method      |
-|----------------|
-| git submodule  |
-| git worktree   |
-| `FetchContent` |
-
-Of these, `FetchContent` is the one that is most recommended for flexibility,
-as CMake provides a variety of hooks to modify `FetchContent` with nothing more
-than variables.
-
-In each scenario, one will call `add_subdirectory()` on the location of the
-`ixm` folder. A code sample is provided below for quick copy-pasting into a
-project's `CMakeLists.txt`.
+If using a custom local version
 
 ## FetchContent
 
-The following code snippet can be copied directly into a `CMakeLists.txt` file.
+If using CMake 3.14 or greater, please use the following code snippet at the
+top of your root `CMakeLists.txt`.
 
 ```cmake
+cmake_minimum_required(VERSION 3.14)
+include(FetchContent)
+FetchContent_Declare(ixm URL https://hub.aliasa.io/slurps-mad-rips/ixm)
+FetchContent_MakeAvailable(ixm)
+```
+
+If using CMake 3.13, use the following snippet:
+
+
+```cmake
+cmake_minimum_required(VERSION 3.13)
 include(FetchContent)
 FetchContent_Declare(ixm URL https://hub.aliasa.io/slurps-mad-rips/ixm)
 FetchContent_GetProperties(ixm)
@@ -38,6 +40,9 @@ if(NOT ixm_POPULATED)
   add_subdirectory(${ixm_SOURCE_DIR} ${ixm_BINARY_DIR})
 endif()
 ```
+
+It is recommended to use CMake 3.14 for greater benefits. Additionally, the
+1.0 release of IXM may use 3.14 as the minimum target.
 
 To enable support for the additional programming language support IXM provides,
 this code should be placed before the first call to `project()`, but after the
