@@ -7,12 +7,7 @@ endfunction()
 
 function(warning)
   colors()
-  if (WIN32)
-    execute_process(COMMAND "${CMAKE_COMMAND}"
-      "-E" "cmake_echo_color" "--yellow" ${ARGN})
-  else()
-    message(WARNING ${COLOR_YELLOW}${ARGN}${COLOR_RESET})
-  endif()
+  message(WARNING ${COLOR_YELLOW}${ARGN}${COLOR_RESET})
 endfunction()
 
 function(info)
