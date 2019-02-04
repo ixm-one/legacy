@@ -84,5 +84,3 @@ function (target_sources target)
     _target_sources(${target} ${visibility} ${sources})
   endforeach()
 endfunction()
-
-

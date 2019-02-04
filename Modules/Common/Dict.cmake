@@ -29,20 +29,7 @@ Effectively, the layout of a database file looks like so:
 ␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
 ␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
 ␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
-␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
-␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
 ␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-␜${filename}␝${target::name}␞${key}␟value␟value␟value␟value␞${key}␟value␟value
 
 This is quite easy to work with in the space of CMake's control flow
 capabilities and builtin data structures.
@@ -53,6 +40,8 @@ function (dict action name)
     ixm_dict_load(${name} ${ARGN})
   elseif (action STREQUAL SAVE)
     ixm_dict_save(${name} ${ARGN})
+  elseif (action STREQUAL TRANSFORM)
+    error("dict(TRANSFORM) is not yet implemented")
   elseif (action STREQUAL INSERT)
     ixm_dict_insert(${name} ${ARGN})
   elseif (action STREQUAL REMOVE)
@@ -173,6 +162,24 @@ function (ixm_dict_save name)
   file(WRITE ${INTO} "${STX}IXM${ETX}${STX}v1${ETX}${EM}\n${output}")
 endfunction()
 
+# Like list(TRANSFORM), but on a key
+# TODO: Add parent-scope to dict() for transform command
+function (ixm_dict_transform name key)
+  if (NOT TARGET ${name})
+    return()
+  endif()
+  dict(GET ${name} ${key} values)
+  if (NOT values)
+    return()
+  endif()
+  list(TRANSFORM values ${ARGN})
+  dict(INSERT ${name} ${key} ASSIGN ${values})
+  parse(${ARGN} @ARGS=? OUTPUT_VARIABLE)
+  if (OUTPUT_VARIABLE)
+    set(${OUTPUT_VARIABLE} ${${OUTPUT_VARIABLE}} PARENT_SCOPE)
+  endif()
+endfunction()
+
 #dict(INSERT <dict> key [STRING|APPEND|ASSIGN] <value> [<value>...])
 function (ixm_dict_insert name key)
   set(message "dict(INSERT) requires at least one value to be inserted")
@@ -214,7 +221,6 @@ function (ixm_dict_merge name)
   endforeach()
 endfunction()
 
-# macro because dict() is a function
 function (ixm_dict_keys name var)
   ixm_dict_noop(${name})
   # This is a valid *byte* but is an invalid utf-8 character :)
@@ -223,7 +229,6 @@ function (ixm_dict_keys name var)
   set(${var} ${value} PARENT_SCOPE)
 endfunction()
 
-# Macro because dict() is a function
 function (ixm_dict_get name key var)
   ixm_dict_noop(${name})
   get_property(value TARGET ${name} PROPERTY "INTERFACE_${key}")

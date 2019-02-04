@@ -2,96 +2,85 @@ include_guard(GLOBAL)
 
 import(IXM::Project::*)
 
-# No-op so we can have full control over other projects while still generating
-# our own test target.
-function(enable_testing)
-endfunction()
+# General Project Functions
+# These include overrides, new "target" types, etc.
 
 # Override Commands
 macro (project name)
-  ixm_project_layout(${name} ${ARGN})
-  # We also fix the "someone didn't pass in a build type, oh nooooo" problem.
+  # We fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
   endif()
+  ixm_project_layout_prepare(${name} ${ARGN})
   _project(${name} ${REMAINDER})
-  ixm_project_version(${name})
   unset(REMAINDER)
-  if (DEFINED IXM_CURRENT_LAYOUT_NAME)
-    ixm_project_load_layout(${IXM_CURRENT_LAYOUT_NAME})
-    include(${IXM_CURRENT_LAYOUT_FILE})
-  endif()
-  set(PROJECT_STANDALONE OFF)
-  if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    set(PROJECT_STANDALONE ON)
-  endif()
+  ixm_project_common_standalone(${name})
+  ixm_project_common_version(${name})
+  ixm_project_layout_load(${IXM_CURRENT_LAYOUT_NAME})
+  include(${IXM_CURRENT_LAYOUT_FILE})
   global(${name}_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
-  global(${name}_STANDALONE ${PROJECT_STANDALONE})
   global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
-
-  string(TOLOWER "${PROJECT_NAME}" project)
-
-  # This is used for various book-keeping within the IXM API.
-  # Because these are not "global", they are local to a given "directory"
-  #dict(CREATE ixm::${project}::check)
-  #dict(CREATE ixm::${project}::find)
-
-  #dict(CREATE ixm::${project}::feature)
-  #dict(CREATE ixm::${project}::with)
-
-  #dict(CREATE ixm::${project}::fetch)
-
-  #dict(CREATE ixm::project::check)
 endmacro()
 
-#[[
-Adds support for:
- * SERVICE 
+#[[ Adds support for the following options:
+ * SERVICE (for background processes) # TODO (Windows Service support is needed)
  * GUI (WIN32/MACOSX_BUNDLE/APPIMAGE)
- * CONSOLE (APPIMAGE-TERMINAL)
+ * CONSOLE
 ]]
-#function(add_executable)
-#endfunction()
-#
-
-# Custom commands
+function(add_executable name)
+  set(references ALIAS IMPORTED)
+  parse(${ARGN} @FLAGS CONSOLE SERVICE GUI)
+  _add_executable(${name} ${REMAINDER})
+  list(GET ARGN 0 type)
+  if (type IN_LIST references)
+    return()
+  endif()
+  if (GUI)
+    set_target_properties(${name}
+      PROPERTIES
+        MACOSX_BUNDLE ON
+        WIN32_EXECUTABLE ON
+        APPIMAGE ON)
+  endif()
+  if (CONSOLE)
+    set_target_properties(${name} PROPERTIES APPIMAGE_TERMINAL ON)
+  endif()
+  if (SERVICE)
+    error("SERVICE option not yet implemented for IXM")
+  endif()
+endfunction()
 
 #[[
 Creates an OBJECT library, and adds the sources found within the given
 directory to it. Additionally, a UNITY_BUILD property is set on the target
-(to ON unless turned off by the user in the function call or in the properties)
 to generate a special source file that allows the "module" to be built as a
-unity build.
+unity build. Additionally, if any headers with a base name of "mod" or "module"
+are found in the directory, a precompiled header will be set on the target.
 
-This can then be extended further with precompiled headers, which are a
-separate mechanism.
+The ${type} parameter must be one of either SPLAYED or HIERARCHY.
 
-NOTE: The given name *must* start with the name of an existing TARGET. If the
-TARGET does not exist, we give a hard fatal error. The name must use export
-style `::`, as this will be used to verify the name of the parent library,
-as well as generate an alias target.
+If the type is SPLAYED, the sources given MUST be under a *single* directory.
+Additionally, IXM will not recurse into subdirectories, nor will it generate
+targets. Lastly, the name given will not be enforced as a submodule if greater
+than a depth of 1.
 
-The `type` parameter will be one of either SPLAYED or HIERARCHY. In the case of
-SPLAYED, the sources given MUST be under a *single* directory, with no
-recursing into child directories. The name given to the submodule is NOT
-related to the directory that will represent the submodule.  If HIERARCHY is
-passed, each component of the `${name}` MUST match the name of a directory.
-However, much like the SPLAYED submodule, the HIERARCHY submodule will only
-have the scope of files contained within a single directory.
+If the type is HIERARCHY, each component of ${name} MUST match the name of a
+directory. Additionally, child directories will be recursed into, and
+additional submodules will be generated.
 
-TODO: An enforcement SPLAYED vs HIERARCHY is still needed. Currently they do
-nothing.
+The unity build can be disabled by using the NO_UNITY flag.
+The precompiled header can be disabled by using the NO_PCH flag.
+Passing a generator expression via WHEN means the submodule will only
+be built when the condition is satisfied.
 
-Lastly, if a submodule with no sources is added, we let CMake complain.
+add_submodule(project::submodule
+  WHEN $<PLATFORM_ID:Windows>)
+
 ]]
-
-# XXX: This belongs in project()
-# TODO: Support C files vs CXX files
-# TODO: This is *extremely* broken at the moment and I don't know why...
 function (add_submodule name type)
-  list(APPEND valid-types SPLAYED HIERARCHY)
+  set(valid-types SPLAYED HIERARCHY)
   if (NOT type IN_LIST valid-types)
-    error("'${type}' is an invalid type of submodule. Valid types are ${valid-types}")
+    error("'${type}' is an invalid submodule type.")
   endif()
   string(REPLACE "::" ";" components ${name})
   list(LENGTH components length)
@@ -100,16 +89,13 @@ function (add_submodule name type)
     error("'${name}' must be scoped to a length of at least two (i.e., foo::bar)")
   endif()
 
-  # How do we want to enforce the name?
   if (NOT TARGET ${parent})
-    error("'${name}' contains a parent library '${parent}' that does not exist")
+    error("'${name}' contains non-existant parent module '${parent}'")
   endif()
 
   string(REPLACE "::" "-" target ${name})
   string(REPLACE "::" "/" path ${name}.cxx)
   string(REPLACE "::" "." mod ${name})
-
-  # TODO: Enforce SPLAYED vs HIERARCHY
 
   add_library(${target} OBJECT)
   add_library(${name} ALIAS ${target})
@@ -119,11 +105,12 @@ function (add_submodule name type)
     $<IF:$<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>,
          ${unity-file},
          $<TARGET_PROPERTY:${target},UNITY_SOURCES>>)
+
+  # OLD!
   genex(unity
     $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
          ${IXM_UNITY_BUILD},
          ON>)
-
   ixm_generate_unity_build_file(${target})
        #  file(GENERATE
        #    OUTPUT $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>
@@ -145,7 +132,19 @@ function (add_submodule name type)
       UNITY_BUILD ${unity}
       UNITY_SOURCES "${ARGN}"
       MODULE_NAME ${mod})
+
+
+
 endfunction()
+
+# Custom commands
+
+#[[
+TODO: An enforcement SPLAYED vs HIERARCHY is still needed. Currently they do
+nothing.
+
+Lastly, if a submodule with no sources is added, we let CMake complain.
+]]
 
 #[[
 Wrapper around Fetch() API so that the given <name> is used as an ALIAS, but

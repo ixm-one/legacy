@@ -77,5 +77,4 @@ function (ixm_generate_response_file target)
   file(GENERATE
     OUTPUT $<TARGET_PROPERTY:${target},RESPONSE_FILE>
     CONTENT ${content})
-
 endfunction()

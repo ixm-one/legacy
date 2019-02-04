@@ -3,6 +3,7 @@ include_guard(GLOBAL)
 import(IXM::Check::*)
 
 # Meant for checking the current state of the compiler and code
+# TODO: Add SIZEOF ALIGNOF
 function (Check action)
   list(APPEND structs CLASS STRUCT)
   if (action STREQUAL ENUM)
