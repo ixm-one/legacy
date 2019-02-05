@@ -1,6 +1,7 @@
 # Izzy's eXtension Modules
 
-[![License](https://img.shields.io/github/license/slurps-mad-rips/ixm.svg)](LICENSE.md)
+[![License][license-svg]][license]
+[![Donate][donate-svg]][donate]
 
 IXM is a CMake library for writing Modern *flexible* CMake. This means:
 
@@ -21,3 +22,8 @@ and it's internals.
 
 Visit the [Roadmap](slurps-mad-rips/ixm/projects/1) to see upcoming and
 in-progress features for the 1.0 release.
+
+[license-svg]: https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge
+[donate-svg]: https://liberapay.com/assets/widgets/donate.svg
+[license]: LICENSE.md
+[donate]: https://liberapay.com/slurps-mad-rips/donate
