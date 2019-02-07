@@ -13,6 +13,11 @@ IXM is a CMake library for writing Modern *flexible* CMake. This means:
 :warning: IXM currently supports CMake 3.13 as a minimum target. This will
 change to CMake 3.14 once released.
 
+## Donations
+
+Donations are extremely appreciated. If you have gotten some use out of IXM,
+please consider donating to my liberapay. Click the donate link above.
+
 ## Navigation
 
 See [Getting Started](slurps-mad-rips/ixm/wiki/Getting-Started) to begin using
