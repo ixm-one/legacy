@@ -16,20 +16,15 @@ function (ixm_fetch_aliasa_package package)
   var(clone CLONE OFF)
 
   set(declare-args URL "https://${PROVIDER}.aliasa.io/${package}")
-
-
   if (clone)
     string(TOUPPER ${PROVIDER} provider)
-    get_property(url GLOBAL PROPERTY IXM_FETCH_${provider}_CLONE_${alias})
-    if (NOT url)
-      get_property(url GLOBAL PROPERTY IXM_FETCH_${provider}_CLONE)
-    endif()
+    ixm_fetch_aliasa_clone(clone-url ${provider} ${alias})
     set(declare-args
-      GIT_REPOSITORY "${url}/${repository}.git"
+      GIT_REPOSITORY "${clone-url}/${repository}.git"
       GIT_SHALLOW ON
       GIT_TAG ${tag})
-    debug(declare-args)
   endif()
+
 
   set(all EXCLUDE_FROM_ALL)
   if (ALL)
@@ -51,6 +46,21 @@ function (ixm_fetch_aliasa_package package)
   #[[ TARGET ]]
   ixm_fetch_common_target(${target} ${alias})
   upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+endfunction()
+
+function (ixm_fetch_aliasa_clone out provider alias)
+  list(APPEND properties IXM_FETCH_${provider}_CLONE_${alias})
+  list(APPEND properties IXM_FETCH_${provider}_CLONE)
+  foreach (property IN LISTS properties)
+    get_property(url GLOBAL PROPERTY ${property})
+    if (url)
+      break()
+    endif()
+  endforeach()
+  if (NOT url)
+    error("Cannot find CLONE URL for '${alias}'")
+  endif()
+  set(${out} ${url} PARENT_SCOPE)
 endfunction()
 
 function (ixm_fetch_aliasa_recipe package)
