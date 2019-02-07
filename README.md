@@ -15,7 +15,7 @@ change to CMake 3.14 once released.
 
 ## Navigation
 
-See [Getting Started](slurps-mad-rips/ixm/wiki/getting-started) to begin using
+See [Getting Started](slurps-mad-rips/ixm/wiki/Getting-Started) to begin using
 IXM. When you're ready, feel free to read the
 [documentation](slurps-mad-rips/ixm/wiki) for detailed information on IXM's API
 and it's internals.
