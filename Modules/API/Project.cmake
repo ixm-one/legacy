@@ -58,6 +58,7 @@ endfunction()
 function (add_test)
   if (NOT ARGN)
     error("add_test() requires at least one parameter")
+  endif()
   parse(${ARGN}
     @ARGS=? NAME WORKING_DIRECTORY
     @ARGS=* COMMAND CONFIGURATIONS)
