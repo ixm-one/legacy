@@ -3,8 +3,15 @@
 </p>
 <h1 align="center">Izzy's eXtension Modules</h1>
 <p align="center">
-  <a href="LICENSE.md"><img src="https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge"></a>
-  <a href="https://liberapay.com/slurps-mad-rips/donate"><img src="https://liberapay.com/assets/widgets/donate.svg"></a>
+  <a href="LICENSE.md" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge">
+  </a>
+  <a href="https://liberapay.com/slurps-mad-rips/donate" target="_blank" rel="noopener noreferrer">
+    <img src="https://liberapay.com/assets/widgets/donate.svg">
+  </a>
+  <a href='https://ko-fi.com/V7V66HAG' target="_blank" rel="noopener noreferrer">
+    <img height='28' src='https://az743702.vo.msecnd.net/cdn/kofi5.png' alt='Buy Me a Coffee at ko-fi.com' />
+  </a>
 </p>
 <hr>
 
