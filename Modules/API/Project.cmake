@@ -55,6 +55,39 @@ function(add_executable name)
   endif()
 endfunction()
 
+function (add_test)
+  if (NOT ARGN)
+    error("add_test() requires at least one parameter")
+  parse(${ARGN}
+    @ARGS=? NAME WORKING_DIRECTORY
+    @ARGS=* COMMAND CONFIGURATIONS)
+  if (NOT NAME)
+    _add_test(${ARGN})
+    return()
+  endif()
+  if (NAME)
+    _add_test(${ARGN})
+    return()
+  endif()
+endfunction()
+
+#[[
+A special type of `add_executable()`. When cross compiling, these targets will
+be built as native executables and then IMPORTED into the cross-compiling
+build. This improves the ability to have self bootstrapping builds, as well
+as code generation for cross compiling. That said, the operations we take tend
+to be a bit slower in a cross compiling build. There is, unfortunately, no
+way to prevent that. Additionally, tools are
+1) Not installable targets
+2) Never GUI targets
+
+They are only permitted to be used as *part* of the cross compiling build.
+]]
+
+function (add_tool name)
+  error("Not yet implemented")
+endfunction()
+
 #[[
 Creates an OBJECT library, and adds the sources found within the given
 directory to it. Additionally, a UNITY_BUILD property is set on the target

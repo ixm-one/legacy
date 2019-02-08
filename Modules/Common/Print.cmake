@@ -20,6 +20,11 @@ function(success)
   message(STATUS ${COLOR_GREEN}${ARGN}${COLOR_RESET})
 endfunction()
 
+function (failure)
+  colors()
+  message(STATUS ${COLOR_RED}${ARGN}${COLOR_RESET})
+endfunction()
+
 function(print)
   colors()
   message(STATUS ${COLOR_BOLD}${ARGN}${COLOR_RESET})
