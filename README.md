@@ -6,6 +6,9 @@
   <a href="LICENSE.md" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge">
   </a>
+  <a href='https://docs.ixm.one/en/latest/?badge=latest'>
+    <img alt="Documentation Status" src="https://img.shields.io/readthedocs/ixm.svg?style=for-the-badge">
+  </a>
   <a href="https://liberapay.com/slurps-mad-rips/donate" target="_blank" rel="noopener noreferrer">
     <img src="https://liberapay.com/assets/widgets/donate.svg">
   </a>
