@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" height="200" src="https://github.com/slurps-mad-rips/ixm/wiki/logo.png">
+  <img width="200" height="200" src="https://ixm.one/logo.png">
 </p>
 <h1 align="center">Izzy's eXtension Modules</h1>
 <p align="center">
