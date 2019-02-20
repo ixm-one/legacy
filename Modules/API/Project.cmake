@@ -6,6 +6,8 @@ import(IXM::Project::*)
 # These include overrides, new "target" types, etc.
 
 # Override Commands
+# TODO: Support pulling from IXM's toolchain files by simply stating a name as
+# the value. e.g., -DIXM/CMAKE_TOOLCHAIN_NAME=<target-triple>
 macro (project name)
   # We fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)

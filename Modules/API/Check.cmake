@@ -3,7 +3,6 @@ include_guard(GLOBAL)
 import(IXM::Check::*)
 
 # Meant for checking the current state of the compiler and code
-# TODO: Add SIZEOF ALIGNOF
 function (Check action)
   list(APPEND structs CLASS STRUCT)
   if (action STREQUAL ENUM)
@@ -14,6 +13,10 @@ function (Check action)
     ixm_check_union(${ARGN})
   elseif (action STREQUAL INCLUDE)
     ixm_check_include(${ARGN})
+  elseif (action STREQUAL SIZEOF)
+    ixm_check_sizeof(${ARGN})
+  elseif (action STREQUAL ALIGNOF)
+    ixm_check_alignof(${ARGN})
   else()
     error("check(${action}) is not a valid operation")
   endif()
