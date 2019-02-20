@@ -1,40 +1,5 @@
 include_guard(GLOBAL)
 
-#[[
-A few small notes on serialization:
-
-Because we are treating this data in a hierarchical way, we need to specify
-a way to "escape" the way that CMake handles lists. This, as it turns out,
-is quite easy, since we can simply use the FS, GS, RS, US control codes from
-ascii/unicode. Thus, if we wanted, we can generate a massive database file.
-We aren't doing this *yet* but suffice to say, most of this could be done at
-generation time, minus a few housekeeping tricks. This "database" file could
-then be passed off to additional build tools if desired by the user, as it's
-all just bytes and therefore quite simple to parse out. This might turn out to
-be unwiedly in large projects, but that's not really my problem now.
-
-I should note, this is separate from a user's ability to just dump a dict() to
-disk without giving a damn.
-
-Effectively, the layout of a database file looks like so:
-
-␜${filename}␝${target::name}␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␝${target::name}
-␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value␞${key}␟value
-␟value␟value␟value␞${key}␟value␟value␞${key}␟value␟value␟value␟value␞${key}
-␟value␟value␞${key}␟value␟value␟value␟value␞${key}␟value␟value
-
-This is quite easy to work with in the space of CMake's control flow
-capabilities and builtin data structures.
-]]
-
 function (dict action name)
   if (action STREQUAL LOAD)
     ixm_dict_load(${name} ${ARGN})

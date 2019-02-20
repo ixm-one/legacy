@@ -11,9 +11,6 @@ function (ixm_find_package name)
     upvar(${name}_FOUND)
     return()
   endif()
-  # THIS IS WHERE WE DO ACTUAL CONFIRMATION!!!
-  #set(${name}::Found OFF PARENT_SCOPE)
-  #set(${name}_FOUND OFF PARENT_SCOPE)
 
   if (NOT TARGET ${name}::${name})
     set(${name}::Found ${${name}_FOUND} PARENT_SCOPE)

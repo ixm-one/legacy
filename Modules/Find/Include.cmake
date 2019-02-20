@@ -26,5 +26,4 @@ function (ixm_find_include)
   if (TARGET ${library})
     target_include_directories(${library} PUBLIC "${${variable}}")
   endif()
-
 endfunction()
