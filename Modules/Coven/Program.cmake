@@ -1,7 +1,8 @@
 include_guard(GLOBAL)
 
-function (ixm_coven_create_programs)
+function (ixm_coven_program_create)
   ixm_coven_create_project_program()
+  ixm_coven_create_bin_program()
 endfunction()
 
 function (ixm_coven_create_project_program)
@@ -22,83 +23,24 @@ function (ixm_coven_create_project_program)
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
 endfunction()
 
-function (ixm_coven_find_main var path)
-  foreach(ext IN LISTS IXM_SOURCE_EXTENSIONS)
-    file(GLOB files
-      LIST_DIRECTORIES OFF
-      RELATIVE "${PROJECT_SOURCE_DIR}"
-      CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/${path}/main.${ext}")
-    list(APPEND sources ${files})
-  endforeach()
-  list(LENGTH sources length)
-  if (NOT length)
+function (ixm_coven_create_bin_program)
+  if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src/bin")
     return()
   endif()
-  if (length GREATER 1)
-    error("${PROJECT_NAME} has more than one entry point in '${path}/'")
-  endif()
-  set(${var} ${sources} PARENT_SCOPE)
-endfunction()
-
-function (ixm_coven_create_primary_program)
-  ixm_coven_find_main(source "src")
-  if (NOT source)
+  glob(files FILES_ONLY "${PROJECT_SOURCE_DIR}/src/bin/*")
+  if (NOT files)
     return()
   endif()
-  add_executable(main ${source})
-  add_executable(${PROJECT_NAME}::main ALIAS main)
-    set_target_properties(main
-      PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-  target_link_libraries(main
-    PRIVATE
-      $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-  target_include_directories(main PRIVATE "${PROJECT_SOURCE_DIR}/src")
-  # install(TARGETS ${name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endfunction()
-
-function (ixm_coven_create_component_programs)
-  file(GLOB entries LIST_DIRECTORIES ON
-    RELATIVE ${PROJECT_SOURCE_DIR}
-    "${PROJECT_SOURCE_DIR}/src/*")
-  foreach (entry IN LISTS entries)
-    if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/${entry}")
-      list(APPEND components ${entry})
-    endif()
-  endforeach()
-  foreach (component IN LISTS components)
-    ixm_coven_find_main(source ${component})
-    if (NOT source)
-      continue()
-    endif()
-    get_filename_component(name ${component} NAME_WE)
-    add_executable(${name})
-    add_executable(${PROJECT_NAME}::component::${name} ALIAS ${name})
-    target_include_directories(${name}
-      PRIVATE
-        "${PROJECT_SOURCE_DIR}/${component}")
-    target_link_libraries(${name}
-      PRIVATE
-        $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${name}>)
-  endforeach()
-endfunction()
-
-# TODO: Turn into component programs
-function (ixm_coven_create_explicit_programs)
-  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
-    file(GLOB files
-      LIST_DIRECTORIES OFF
-      CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/bin/*.${ext}")
-    list(APPEND sources ${files})
-  endforeach()
-  foreach (source IN LISTS sources)
-    get_filename_component(name ${source} NAME_WE)
-    add_executable(${name} ${source})
-    add_executable(${PROJECT_NAME}::bin::${name} ALIAS ${name})
-    target_link_libraries(${name}
+  foreach (file IN LISTS files)
+    get_filename_component(name "${file}" NAME_WE)
+    set(target ${PROJECT_NAME}-${name})
+    add_executable(${target})
+    add_executable(${PROJECT_NAME}::${name} ALIAS ${target})
+    set_property(TARGET ${target} PROPERTY OUTPUT_NAME ${name})
+    target_sources(${target} PRIVATE "${file}")
+    target_link_libraries(${target}
       PRIVATE
         $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-    # TODO: How to move this to the install section?
-    install(TARGETS ${name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   endforeach()
 endfunction()
 

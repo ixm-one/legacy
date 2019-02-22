@@ -1,7 +1,5 @@
 include_guard(GLOBAL)
 
-include(CMakeDependentOption)
-
 function (ixm_coven_options_create)
   set(options BENCHMARKS;EXAMPLES;TESTS;DOCS)
   foreach (opt IN LISTS options)

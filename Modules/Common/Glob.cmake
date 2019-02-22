@@ -1,9 +1,15 @@
 include_guard(GLOBAL)
 
 function (glob out-var)
-  parse(${ARGN} @FLAGS FILES_ONLY @ARGS=? INCLUDE EXCLUDE RELATIVE_TO)
+  parse(${ARGN}
+    @FLAGS FILES_ONLY
+    @ARGS=? INCLUDE EXCLUDE RELATIVE_TO
+    @ARGS=* EXTENSIONS)
   if (DEFINED INCLUDE AND DEFINED EXCLUDE)
     error("Cannot use INCLUDE and EXCLUDE regex parameters")
+  endif()
+  if (DEFINED EXTENSIONS)
+    error("Passing file extensions not yet implemented")
   endif()
   if (RELATIVE_TO)
     list(APPEND args RELATIVE "${RELATIVE_TO}")
