@@ -25,9 +25,10 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/.cmake)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-ixm_coven_create_options() # [[Generate Options Here]]
+ixm_coven_options_create() #[[Generate Options Here]]
 
-ixm_coven_create_libraries() # [[Generate project library and modules]]
+ixm_coven_library_create()
+#ixm_coven_create_libraries() # [[Generate project library and modules]]
 ixm_coven_create_programs() # [[Generate project program]]
 
 ixm_coven_create_primary_program()

@@ -2,8 +2,8 @@ include_guard(GLOBAL)
 
 # No-op so we can have full control over projects while generating a custom
 # test target
-function (enable_testing)
-endfunction()
+#function (enable_testing)
+#endfunction()
 
 function (ixm_coven_create_tests)
   file(GLOB items

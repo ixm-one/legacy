@@ -1,6 +1,25 @@
 include_guard(GLOBAL)
 
 function (ixm_coven_create_programs)
+  ixm_coven_create_project_program()
+endfunction()
+
+function (ixm_coven_create_project_program)
+  if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
+    return()
+  endif()
+  glob(files "${PROJECT_SOURCE_DIR}/src/main.*")
+  if (NOT files)
+    return()
+  endif()
+
+  add_executable(main)
+  set_property(TARGET main PROPERTY OUTPUT_NAME ${PROJECT_NAME})
+  target_sources(main PRIVATE ${files})
+  add_executable(${PROJECT_NAME}::main ALIAS main)
+  target_link_libraries(main
+    PRIVATE
+      $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
 endfunction()
 
 function (ixm_coven_find_main var path)

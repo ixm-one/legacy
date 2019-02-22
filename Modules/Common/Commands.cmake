@@ -39,10 +39,10 @@ function(invoke name)
 endfunction()
 
 #[[Works like set() but with a default value if the lookup value is undefined]]
-macro(var var lookup default)
-  set(__@default ${default} ${ARGN})
+macro(var var lookup)
+  set(__@default ${ARGN})
   if (DEFINED ${lookup})
-    set(__@default ${${lookup}} ${ARGN})
+    set(__@default ${${lookup}})
   endif()
   set(${var} ${__\@default})
   unset(__@default)

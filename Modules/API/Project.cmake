@@ -11,7 +11,8 @@ import(IXM::Project::*)
 macro (project name)
   # We fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Debug)
+    warning("CMAKE_BUILD_TYPE not set. Using 'Debug'")
+    cache(STRING CMAKE_BUILD_TYPE Debug)
   endif()
   ixm_project_layout_prepare(${name} ${ARGN})
   _project(${name} ${REMAINDER})
@@ -152,7 +153,7 @@ function (add_submodule name type)
     $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
          ${IXM_UNITY_BUILD},
          ON>)
-  ixm_generate_unity_build_file(${target})
+  ixm_target_generate_unity(${target})
        #  file(GENERATE
        #    OUTPUT $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>
        #    CONTENT ${content}

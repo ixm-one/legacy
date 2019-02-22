@@ -1,14 +1,7 @@
 include_guard(GLOBAL)
 
-import(IXM::Generators::UnityBuild)
-
-function (ixm_coven_create_libraries)
-  ixm_coven_create_project_library()
-  #[[
-    This means that there are no sources or directories *without* a main file
-    located within it. BUT we still make an interface library. Because it's the
-    right thing to do.
-  ]]
+function (ixm_coven_library_create)
+  ixm_coven_library_primary()
   if (NOT TARGET ${PROJECT_NAME})
     add_library(${PROJECT_NAME} INTERFACE)
     target_include_directories(${PROJECT_NAME}
@@ -19,31 +12,40 @@ function (ixm_coven_create_libraries)
   add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 endfunction()
 
+function (ixm_coven_library_primary)
+    if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
+      return()
+    endif()
+    glob(entries "${PROJECT_SOURCE_DIR}/src/*" EXCLUDE "(bin|main[.].*)")
+    if (NOT entries)
+      return()
+    endif()
+    foreach (entry IN LISTS entries)
+      if (IS_DIRECTORY "${entry}")
+        list(APPEND directories "${entry}")
+      else()
+        list(APPEND files "${entry}")
+      endif()
+    endforeach()
+    if (files)
+      add_library(${PROJECT_NAME})
+      target_sources(${PROJECT_NAME} PRIVATE ${files})
+      target_include_directories(${PROJECT_NAME}
+        PUBLIC
+          $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+          $<INSTALL_INTERFACE:include>)
+    endif()
+    if (NOT directories)
+      return()
+    endif()
+    foreach (directory IN LISTS directories)
+      get_filename_component(directory ${directory} NAME)
+      glob(srcs FILES_ONLY "${PROJECT_SOURCE_DIR}/src/${directory}/*")
+      add_submodule(${PROJECT_NAME}::${directory} HIERARCHY ${srcs})
+    endforeach()
+endfunction()
+
 function (ixm_coven_create_project_library)
-  if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
-    return()
-  endif()
-  glob(entries BASE "${PROJECT_SOURCE_DIR}/src" ALL "${PROJECT_SOURCE_DIR}/src/*")
-  if (NOT entries)
-    return()
-  endif()
-  list(FILTER entries EXCLUDE REGEX "(bin|main[.].*)")
-
-  list(APPEND directories ${entries})
-  list(APPEND files ${entries})
-
-  if (files)
-    list(FILTER files INCLUDE REGEX ".*[.].*")
-    add_library(${PROJECT_NAME})
-    target_sources(${PROJECT_NAME} PRIVATE ${files})
-  endif()
-
-  # If there's no directories, we return. If there were no source files, we
-  # return. Simple!
-  if (NOT directories)
-    return()
-  endif()
-
   # This filtering saves us a foreach within CMake.
   list(FILTER directories EXCLUDE REGEX ".*[.].*")
   foreach (directory IN LISTS directories)
@@ -89,15 +91,3 @@ function (ixm_coven_create_primary_modules)
     ixm_coven_add_legacy_module(${directory})
   endforeach()
 endfunction()
-
-function (ixm_coven_create_primary_library)
-  if (EXISTS "${PROJECT_SOURCE_DIR}/src")
-    ixm_coven_add_library()
-  endif()
-  if (NOT TARGET ${PROJECT_NAME})
-    ixm_coven_add_interface()
-  endif()
-  add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-endfunction()
-
-
