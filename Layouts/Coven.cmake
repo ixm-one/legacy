@@ -37,7 +37,7 @@ ixm_coven_create_configure_header()   # [[ Project wide configure header ]]
 
 ixm_coven_create_benchmarks() #[[ bench/*.{ext} and bench/*/main.{ext} ]]
 ixm_coven_create_examples() #[[ examples/*.{ext} and examples/*/main.{ext} ]]
-ixm_coven_create_tests() #[[ tests/*.{ext} and tests/*/main.{ext} ]]
+ixm_coven_tests_create() #[[ tests/*.{ext} and tests/*/main.{ext} ]]
 ixm_coven_create_docs() #[[ docs/*.{md|rst} ]]
 ixm_coven_create_install() #[[ Various calls to install the above ]]
 ixm_coven_create_package() #[[ Packaging settings (creates our own CPackConfig.cmake file) ]]

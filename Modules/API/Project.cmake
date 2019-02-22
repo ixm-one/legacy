@@ -58,22 +58,22 @@ function(add_executable name)
   endif()
 endfunction()
 
-function (add_test)
-  if (NOT ARGN)
-    error("add_test() requires at least one parameter")
-  endif()
-  parse(${ARGN}
-    @ARGS=? NAME WORKING_DIRECTORY
-    @ARGS=* COMMAND CONFIGURATIONS)
-  if (NOT NAME)
-    _add_test(${ARGN})
-    return()
-  endif()
-  if (NAME)
-    _add_test(${ARGN})
-    return()
-  endif()
-endfunction()
+#function (add_test)
+#  if (NOT ARGN)
+#    error("add_test() requires at least one parameter")
+#  endif()
+#  parse(${ARGN}
+#    @ARGS=? NAME WORKING_DIRECTORY
+#    @ARGS=* COMMAND CONFIGURATIONS)
+#  if (NOT NAME)
+#    _add_test(${ARGN})
+#    return()
+#  endif()
+#  if (NAME)
+#    _add_test(${ARGN})
+#    return()
+#  endif()
+#endfunction()
 
 #[[
 A special type of `add_executable()`. When cross compiling, these targets will
@@ -154,10 +154,6 @@ function (add_submodule name type)
          ${IXM_UNITY_BUILD},
          ON>)
   ixm_target_generate_unity(${target})
-       #  file(GENERATE
-       #    OUTPUT $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>
-       #    CONTENT ${content}
-       #    CONDITION $<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>)
 
   get_property(parent-type TARGET ${parent} PROPERTY TYPE)
   set(visibility PRIVATE)
