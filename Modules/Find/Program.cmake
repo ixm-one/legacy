@@ -10,6 +10,7 @@ function (ixm_find_program)
 
   set(variable ${name}_EXECUTABLE)
   find_program(${variable} NAMES ${REMAINDER} HINTS ${HINTS} ${hints})
+  dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND PROGRAM ${program})
 
   if (NOT ${variable})
     return()
@@ -20,7 +21,6 @@ function (ixm_find_program)
   mark_as_advanced(${variable})
   add_executable(${program} IMPORTED GLOBAL)
   set_target_properties(${program} PROPERTIES IMPORTED_LOCATION "${value}")
-  dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND PROGRAM ${program})
   if (NOT DEFINED VERSION)
     return()
   endif()
@@ -47,7 +47,7 @@ function (ixm_find_program_version command)
       ${CMAKE_MATCH_2}
       ${CMAKE_MATCH_3}
       ${CMAKE_MATCH_4})
-    set(docstring "Program '${program}' Version")
+    set(docstring "${program} Version")
     set(${name}_VERSION "${version}" CACHE STRING "${docstring}" FORCE)
   endif()
 

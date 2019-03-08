@@ -25,7 +25,8 @@ function (define_property scope-or-property)
 
   parse(${ARGN}
     @FLAGS PRIVATE # Implies no INTERFACE_ and no INHERITED
-    @ARGS=? HELP SCOPE)
+    @ARGS=1 SCOPE
+    @ARGS=? HELP)
   list(APPEND args ${SCOPE} PROPERTY ${scope-or-property})
   if (NOT PRIVATE)
     list(APPEND args INHERITED)

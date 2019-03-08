@@ -2,16 +2,6 @@ include_guard(GLOBAL)
 
 # TODO: Verify a difference between ARGS=* and ARGS=+
 #[[
-SYNOPSIS
-  parse(${ARGN}
-    [@PREFIX prefix] # if not given, default arg prefix is actually "", not _
-    [@FLAGS args...] # Flags
-    [@ARGS=? args...] # single values
-    [@ARGS=1 args...] # single values with VERIFICATION on being passed
-    [@ARGS=* args...] # Optional lists
-    [@ARGS=+ args...] # Lists of at LEAST one argument. Will hard error if no arguments
-    [@ARGS=N args...] # Args of exactly N arguments. Fatal if N is not exactly passed.
-  )
 DESCRIPTION
   All arguments passed to parse follow the same style of naming found in
   python's nargs for it's parse, except the 'nargs=' is declared with an '@'

@@ -17,16 +17,24 @@ function (target_sources_rst target visibility)
   endif()
 endfunction()
 
-#[[ TODO: Some verification of use is still needed ]]
+#[[
+TODO: Need to cleanup for 'modern' handling of sources, make sure targets are
+well named, etc.
+]]
+#[[TODO: Some verification of use is still needed]]
 function (add_documentation name type)
   set(possible HTML EPUB MAN LATEX JSON XML)
   if (NOT TARGET Python::Sphinx)
     error("Cannot create documentation target without Sphinx")
   endif()
-  if (${type} NOT IN_LIST possible)
-    error("add_documentation takes one of: ${possible}")
+  if (NOT ${type} IN_LIST possible)
+    error("add_documentation(${type} is invalid. Use one of: ${possible}")
   endif()
-  add_custom_target(${name}-documentation)
+  genex(compile-definitions
+    $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>)
+  genex(compile-options $<TARGET_PROPERTY:${name},COMPILE_OPTIONS>)
+  genex(sphinx-sources $<TARGET_PROPERTY:${name},SPHINX_SOURCES>)
+  add_custom_target(${name})
   set_target_properties(${name}
     PROPERTIES
       SPHINX_DOCTREES_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/doctrees/${type}
@@ -34,20 +42,13 @@ function (add_documentation name type)
       BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/${type}
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
   genex(COMPILE_DEFINITIONS $<
-    $<BOOL:$<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>>:
-    -D$<JOIN:
-        $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>,
-        $<SEMICOLON>-D
-      >
+    $<BOOL:${compile-definitions}>:
+    -D$<JOIN:${compile-definitions},$<SEMICOLON>-D>
   >)
   genex(COMPILE_OPTIONS $<
-    $<BOOL:$<TARGET_PROPERTY:${name},COMPILE_OPTIONS>>:
-    $<JOIN:$<TARGET_PROPERTY:${name},COMPILE_OPTIONS>,$<SEMICOLON>>
+    $<BOOL:${compile-options}>:$<JOIN:${compile-options},$<SEMICOLON>>
   >)
-  genex(SOURCES $<
-    $<BOOL:$<TARGET_PROPERTY:${name},SPHINX_SOURCES>>:
-    $<TARGET_PROPERTY:${name}:SPHINX_SOURCES>
-  >)
+  genex(SOURCES $<$<BOOL:${sphinx-sources}>:${sphinx-sources}>)
   set(SOURCEDIR $<TARGET_PROPERTY:${name},SOURCE_DIR>)
   set(BINARYDIR $<TARGET_PROPERTY:${name},BINARY_DIR>)
   set(OUTPUTS $<TARGET_PROPERTY:${name},SPHINX_${type}_OUTPUTS>)
@@ -62,8 +63,8 @@ function (add_documentation name type)
       ${BINARYDIR}
       ${SOURCES}
     MAIN_DEPENDENCY $<TARGET_PROPERTY:${name},SPHINX_CONFIG>
+    OUTPUT index.html
     DEPENDS ${SOURCES}
-    OUTPUT ${OUTPUTS}
     COMMAND_EXPAND_LISTS
     USES_TERMINAL
     VERBATIM)

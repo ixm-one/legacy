@@ -1,6 +1,10 @@
 include_guard(GLOBAL)
 
 function (ixm_coven_component_create component)
+  string(TOUPPER "${component}" option)
+  if (NOT BUILD_${option})
+    return()
+  endif()
   glob(items "${PROJECT_SOURCE_DIR}/${component}/*")
   foreach (item IN LISTS items)
     if (IS_DIRECTORY "${item}")
@@ -21,5 +25,7 @@ function (ixm_coven_component_create component)
     target_link_libraries(${target}
       PRIVATE
         $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
+    set_property(TARGET ${target} PROPERTY
+      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${component})
   endforeach()
 endfunction()
