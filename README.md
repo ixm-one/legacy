@@ -6,14 +6,14 @@
   <a href="LICENSE.md" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge">
   </a>
-  <a href='https://docs.ixm.one/en/latest/?badge=latest'>
+  <a href='https://docs.ixm.one/en/latest/?badge=latest' target="_blank" rel="noopener noreferrer">
     <img alt="Documentation Status" src="https://img.shields.io/readthedocs/ixm.svg?style=for-the-badge">
   </a>
-  <a href="https://liberapay.com/slurps-mad-rips/donate" target="_blank" rel="noopener noreferrer">
-    <img src="https://liberapay.com/assets/widgets/donate.svg">
+  <a href="https://www.patreon.com/slurpsmadrips" target="_blank" rel="noopener noreferrer">
+    <img height="28" alt="Become a Patron!" src="https://c5.patreon.com/external/logo/become_a_patron_button.png">
   </a>
-  <a href='https://ko-fi.com/V7V66HAG' target="_blank" rel="noopener noreferrer">
-    <img height='28' src='https://az743702.vo.msecnd.net/cdn/kofi5.png' alt='Buy Me a Coffee at ko-fi.com' />
+  <a href="https://ko-fi.com/V7V66HAG" target="_blank" rel="noopener noreferrer">
+    <img height="28" alt="Buy Me a Coffee at ko-fi.com" src="https://az743702.vo.msecnd.net/cdn/kofi5.png" />
   </a>
 </p>
 <hr>
