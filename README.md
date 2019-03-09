@@ -43,6 +43,6 @@ and it's internals.
 Visit the [Roadmap][3] to see upcoming and
 in-progress features for the 1.0 release.
 
-[1]: https://docs.ixm.one/en/latest/tutorial.html
+[1]: https://docs.ixm.one/en/latest/tutorial/
 [2]: https://docs.ixm.one
 [3]: https://github.com/slurps-mad-rips/ixm/projects/1
