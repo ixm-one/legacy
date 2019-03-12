@@ -16,6 +16,20 @@ function (ixm_fetch_common_options)
   endforeach()
 endfunction()
 
+#[[ Argument Conflicy Check ]]
+function (ixm_fetch_common_check_target)
+  if (DEFINED TARGETS AND DEFINED TARGET)
+    error("Cannot pass both TARGET and TARGETS")
+  endif()
+endfunction()
+
+function (ixm_fetch_common_exclude)
+  set(all EXCLUDE_FROM_ALL PARENT_SCOPE)
+  if (ALL)
+    unset(all PARENT_SCOPE)
+  endif()
+endfunction()
+
 #[[ Copies possible patch files for overrides ]]
 function (ixm_fetch_common_patch alias)
   set(src "${${alias}_SOURCE_DIR}/CMakeLists.txt")

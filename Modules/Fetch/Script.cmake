@@ -29,3 +29,13 @@ function (ixm_fetch_script_subdirectory package)
   set(${alias}_SOURCE_DIR ${source_dir} PARENT_SCOPE)
   set(${alias}_BINARY_DIR ${binary_dir} PARENT_SCOPE)
 endfunction()
+
+# This will
+# 1) Run a script via `cmake -P <package>`
+# 2) The script will have to acquire the expected dependency
+# 3) Once acquired, it will output:
+#      SOURCE_DIR:<path>;BINARY_DIR:<path>
+# 4) These will then be set, and used to add the subdirectory with the typical
+#    setting calls found in Common
+function (ixm_fetch_script_run package)
+endfunction()

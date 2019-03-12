@@ -2,64 +2,60 @@ include_guard(GLOBAL)
 
 # All builtin provider commands are located here
 
-#[[ hub.aliasa.io ]]
+# HUB{user/repo@rev-parse}
 function (ixm_fetch_hub package)
-  ixm_fetch_aliasa_package(${package} ${ARGN} PROVIDER hub)
+  ixm_fetch_platform_package(${package} ${ARGN} PROVIDER "HUB")
 endfunction()
 
-#[[ lab.aliasa.io ]]
+# LAB{user/repo@rev-parse}
 function (ixm_fetch_lab package)
-  ixm_fetch_aliasa_package(${package} ${ARGN} PROVIDER lab)
+  ixm_fetch_platform_package(${package} ${ARGN} PROVIDER "LAB")
 endfunction()
 
-#[[ bit.aliasa.io ]]
+# BIT{user/repo@rev-parse}
 function (ixm_fetch_bit package)
-  ixm_fetch_aliasa_package(${package} ${ARGN} PROVIDER bit)
+  ixm_fetch_platform_package(${package} ${ARGN} PROVIDER "BIT")
 endfunction()
 
-#[[ Git SSH ]]
-function (ixm_fetch_ssh ${package})
-  ixm_fetch_git_package(${package} ${ARGN} SCHEME ssh:// SEPARATOR ":")
-endfunction()
-
-#[[ Git https ]]
-function (ixm_fetch_web ${package})
-  ixm_fetch_git_package(${package} ${ARGN} SCHEME https:// SEPARATOR "/")
-endfunction()
-
-#[[ JFrog's BinTray ]]
+# BIN{subject/repo@file-path}
 function (ixm_fetch_bin)
-  #  ixm_fetch_https_package(${package} ${ARGN}
-  #    DOMAIN "https://dl.bintray.com/"
+  error("Not yet implemented")
+  ixm_fetch_web_package(${package} ${ARGN} PROVIDER "BIN")
 endfunction()
 
-#[[ S3 Buckets ]]
-function (ixm_fetch_s3b)
-  # parse(
-  #   @ARGS=1 ENDPOINT ACCESS_KEY SECRET_ACCESS_KEY REGION ENV_AUTH PROVIDER ACL
-  #   LOCATION_CONSTRAINT SERVER_SIDE_ENCRYPTION STORAGE_CLASS
-  # )
-#ixm_fetch_https_package(${package} ${ARGN})
-endfunction()
-
-#[[ URL ]]
+# URL{name}
 function (ixm_fetch_url)
+  error("Not yet implemented")
+  ixm_fetch_web_package(${package} ${ARGN} PROVIDER "ANY")
 endfunction()
 
-#[[ add_subdirectory (used to be `extern()`) ]]
+# ADD{name}
 function (ixm_fetch_add package)
   ixm_fetch_script_subdirectory(${package} ${ARGN})
 endfunction()
 
-#[[ cmake -P script ]]
+# USE{name}
 function (ixm_fetch_use package)
   ixm_fetch_script_run(${package} ${ARGN})
 endfunction()
 
-#[[ CVS ]]
-function (ixm_fetch_cvs)
+# GIT{repo@rev-parse}
+function (ixm_fetch_git package)
+  ixm_fetch_vcs_git(${package} ${ARGN})
 endfunction()
 
-#[[ subversion ]]
-function (ixm_fetch_svn)
+# SVN{name@revision}
+function (ixm_fetch_svn package)
+  ixm_fetch_vcs_svn(${package} ${ARGN})
 endfunction()
+
+# CVS{root/module@tag}
+function (ixm_fetch_cvs package)
+  ixm_fetch_vcs_cvs(${package} ${ARGN})
+endfunction()
+
+# HG{name@tag}
+function (ixm_fetch_hg package)
+  ixm_fetch_vcs_hg(${package} ${ARGN})
+endfunction()
+
