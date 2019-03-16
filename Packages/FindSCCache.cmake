@@ -1,4 +1,4 @@
-Find(PROGRAM sccache VERSION "sccache ([0-9]+)[.]([0-9]+)[.]([0-9]+)")
+find(PROGRAM sccache VERSION "sccache ([0-9]+)[.]([0-9]+)[.]([0-9]+)")
 
 #Find(LIBRARY BulletMath LinearMath COMPONENT Math)
 #Find(LIBRARY BulletCollision COMPONENT Collision)

@@ -19,7 +19,7 @@ S3B{S3 storage compatible info...} -> S3 Bucket access
 This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
-function (Fetch)
+function (fetch)
   ixm_fetch_prepare_parameters("${ARGN}")
   ixm_fetch_prepare_command(command ${command})
   ixm_fetch_prepare_options(options "${options}")

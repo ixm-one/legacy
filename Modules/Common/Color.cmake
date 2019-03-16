@@ -3,9 +3,6 @@ include_guard(GLOBAL)
 # Defines COLOR variables in PARENT_SCOPE
 # We actually only define BOLD so the colors stand out :v
 function(colors)
-  if (WIN32)
-    return()
-  endif()
   if ($CACHE{IXM_NO_COLOR})
     return()
   endif()
