@@ -8,34 +8,24 @@ function (ixm_fetch_vcs_git package)
     @ARGS=* POLICIES TARGETS OPTIONS)
 
   # Common operation, could easily be refactored into a separate function
-  if (NOT QUIET OR NOT IXM_FETCH_QUIET)
-    info("[FETCH]: ${package}")
-  endif()
-
-  # Common error, could easily be refactored into a separate function
-  if (NOT PATH)
-    error("GIT{${package}} requires a PATH: to know where to clone")
-  endif()
-
-  ixm_fetch_common_check_target()
+  ixm_fetch_common_status()
   ixm_fetch_vcs_git_recipe(${package})
+  ixm_fetch_common_dict(${name} ALL QUIET PATH ALIAS TARGET PATCH POLICIES TARGETS OPTIONS)
+  # Common error, could easily be refactored into a separate function
+  ixm_fetch_common_check_target()
+
+  if (NOT PATH)
+    error("GIT{${package}} requires a 'PATH:' option to know where to clone")
+  endif()
 
   var(target TARGET ${name})
   var(alias ALIAS ${name})
 
   ixm_fetch_common_exclude()
-
-  FetchContent_Declare(${alias}
+  ixm_fetch_common_download(${alias} 
     GIT_REPOSITORY ${PATH}
     GIT_SHALLOW ON
     GIT_TAG ${tag})
-
-  # All functions will share this... It should be possible to place this
-  # into Common
-  FetchContent_GetProperties(${alias})
-  if (NOT ${alias}_POPULATED)
-    FetchContent_Populate(${alias})
-  endif()
 
   #[[ PATCH ]]
   ixm_fetch_common_patch(${alias})

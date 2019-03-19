@@ -17,11 +17,7 @@ function (ixm_fetch_script_subdirectory package)
   var(target TARGET "${name}")
   var(alias ALIAS "${name}")
 
-  set(all EXCLUDE_FROM_ALL)
-  if (ALL)
-    unset(all)
-  endif()
-
+  ixm_fetch_common_exclude()
   add_subdirectory(${source_dir} ${binary_dir} ${all})
 
   ixm_fetch_common_target(${target} ${alias})

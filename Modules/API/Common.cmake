@@ -41,7 +41,6 @@ global(IXM_TOOL_PROPERTIES)
 global(IXM_DATA_PROPERTIES)
 
 # Fetch Properties
-global(IXM_FETCH_PROVIDERS HUB LAB BIT BIN URL ADD USE GIT SVN CVS HG)
 global(IXM_FETCH_HUB ixm_fetch_hub)
 global(IXM_FETCH_LAB ixm_fetch_lab)
 global(IXM_FETCH_BIT ixm_fetch_bit)
@@ -53,10 +52,6 @@ global(IXM_FETCH_GIT ixm_fetch_git)
 global(IXM_FETCH_SVN ixm_fetch_svn)
 global(IXM_FETCH_CVS ixm_fetch_cvs)
 global(IXM_FETCH_HG ixm_fetch_hg)
-
-global(IXM_FETCH_BIT_CLONE "https://bitbucket.com")
-global(IXM_FETCH_HUB_CLONE "https://github.com")
-global(IXM_FETCH_LAB_CLONE "https://gitlab.com")
 
 # Check/Require Properties
 global(IXM_CHECK_ACTIONS MEMBER ENUM INCLUDE SIZEOF FLAG STRUCT CLASS)

@@ -1,5 +1,8 @@
 include_guard(GLOBAL)
 
+function (ixm_fetch_common_preacquire)
+endfunction()
+
 #[[ Sets all options in a key-value pair system ]]
 function (ixm_fetch_common_options)
   set(options ${ARGN})
@@ -16,7 +19,14 @@ function (ixm_fetch_common_options)
   endforeach()
 endfunction()
 
-#[[ Argument Conflicy Check ]]
+#[[ Status Print ]]
+function (ixm_fetch_common_status recipe)
+  if (NOT QUIET OR NOT IXM_FETCH_QUIET)
+    info("[FETCH]: ${recipe}")
+  endif()
+endfunction()
+
+#[[ Argument Conflict Check ]]
 function (ixm_fetch_common_check_target)
   if (DEFINED TARGETS AND DEFINED TARGET)
     error("Cannot pass both TARGET and TARGETS")
@@ -24,10 +34,19 @@ function (ixm_fetch_common_check_target)
 endfunction()
 
 function (ixm_fetch_common_exclude)
-  set(all EXCLUDE_FROM_ALL PARENT_SCOPE)
-  if (ALL)
-    unset(all PARENT_SCOPE)
+  set(EXCLUDE_FROM_ALL EXCLUDE_FROM_ALL PARENT_SCOPE)
+  if (NOEXCLUDE)
+    unset(EXCLUDE_FROM_ALL PARENT_SCOPE)
   endif()
+endfunction()
+
+function (ixm_fetch_common_download alias)
+  FetchContent_Declare(${alias} ${ARGN})
+  FetchContent_GetProperties(${alias})
+  if (NOT ${alias}_POPULATED)
+    FetchContent_Populate(${alias})
+  endif()
+  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 
 #[[ Copies possible patch files for overrides ]]
@@ -70,6 +89,7 @@ function(ixm_fetch_common_target target alias)
   if (NOT TARGET ${alias}::${alias})
     add_library(${alias}::${alias} ALIAS ${target})
   endif()
+  # Used for bookkeeping
   foreach (target IN LISTS TARGETS)
     if (NOT TARGET ${alias}::${target})
       add_library(${alias}::${target} ALIAS ${target})

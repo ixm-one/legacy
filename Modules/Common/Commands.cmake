@@ -35,7 +35,11 @@ function(invoke name)
     string(CONFIGURE [[@name@(${ARGN})]] content @ONLY)
     file(WRITE "${call}" "${content}")
   endif()
+  locals(old-locals)
   include(${call})
+  locals(current)
+  list(REMOVE_ITEM current ${old-locals} old-locals)
+  upvar(${current})
 endfunction()
 
 #[[Works like set() but with a default value if the lookup value is undefined]]
@@ -62,6 +66,16 @@ macro(upvar)
     endif()
   endforeach()
 endmacro()
+
+#[[
+Sets all variables in the current scope to a list. Intended for internal
+use and debugging purposes
+]]
+function (locals out-var)
+  get_directory_property(locals VARIABLES)
+  #list(REMOVE_ITEM locals locals)
+  set(${out-var} ${locals} PARENT_SCOPE)
+endfunction()
 
 #[[
 This function is used to condense a multiline generator expression into a
