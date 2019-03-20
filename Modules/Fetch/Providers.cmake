@@ -50,12 +50,29 @@ endfunction()
 
 # BIN{subject/repo@file-path}
 function (ixm_fetch_bin package out-var)
-  error("Not yet implemented")
-  #ixm_fetch_web_package(${package} ${ARGN} PROVIDER "BIN")
+  ixm_fetch_recipe_advanced(${package})
+  # Additional customization points
+  var(tag tag ${PATH})
+  if (NOT tag)
+    error("BIN{${package}} requires an explicit path to be given")
+  endif()
+  set(arguments URL)
+  if (PREMIUM)
+    list(APPEND arguments "https://${root}.bintray.com/${name}/${tag}")
+  else()
+    list(APPEND arguments "https://dl.bintray.com/${root}/${name}/${tag}")
+  endif()
+  list(APPEND arguments TLS_VERIFY ON)
+  if (USERNAME AND PASSWORD)
+    list(APPEND HTTP_USERNAME ${USERNAME})
+    list(APPEND HTTP_PASSWORD ${PASSWORD})
+  endif()
+  set(${out-var} ${arguments})
 endfunction()
 
 # URL{name}
 function (ixm_fetch_url package out-var)
+
   error("Not yet implemented")
   #ixm_fetch_web_package(${package} ${ARGN} PROVIDER "ANY")
 endfunction()
@@ -64,12 +81,6 @@ endfunction()
 function (ixm_fetch_add package out-var)
   error("Not yet implemented")
   ixm_fetch_script_subdirectory(${package} ${ARGN})
-endfunction()
-
-# USE{name}
-function (ixm_fetch_use package out-var)
-  error("Not yet implemented")
-  ixm_fetch_script_run(${package} ${ARGN})
 endfunction()
 
 # GIT{name@rev-parse}
@@ -87,7 +98,22 @@ endfunction()
 # SVN{name@revision}
 function (ixm_fetch_svn package out-var)
   ixm_fetch_recipe_basic(${package})
-  error("Not yet implemented")
+  dict(GET ${dict} USERNAME username)
+  dict(GET ${dict} PASSWORD password)
+  dict(GET ${dict} REPOSITORY repository)
+  dict(GET ${dict} REVISION revision)
+  var(tag tag "${revision}")
+  if (NOT repository)
+    error("SVN{${package}} requires a repository PATH")
+  endif()
+  list(APPEND arguments SVN_REPOSITORY ${repository})
+  if (username AND password)
+    list(APPEND arguments SVN_USERNAME username)
+    list(APPEND arguments SVN_PASSWORD password)
+  endif()
+  if (tag)
+    list(APPEND arguments SVN_REVISION -r${tag})
+  endif()
 endfunction()
 
 # CVS{root/module@tag}
