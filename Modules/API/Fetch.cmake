@@ -23,7 +23,10 @@ function (fetch reference)
   invoke(${command} ${package} arguments) # Sets arguments for the call to 'download'
 
   #ixm_fetch_common_noexclude()
-  ixm_fetch_common_download(${alias} ${arguments})
+  # Allows for non-download resources
+  if (arguments)
+    ixm_fetch_common_download(${alias} ${arguments})
+  endif()
 
 
   var(target TARGET ${name})

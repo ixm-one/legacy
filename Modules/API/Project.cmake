@@ -185,17 +185,19 @@ Lastly, if a submodule with no sources is added, we let CMake complain.
 ]]
 
 #[[
-Wrapper around Fetch() API so that the given <name> is used as an ALIAS, but
+Wrapper around fetch() API so that the given <name> is used as an ALIAS, but
 additionally, if it is NOT enabled the value is never fetched.
 ]]
-function (With name)
+function (with name dependency)
+  parse(${ARGN} @ARGS=? ALIAS DICT)
+  var(alias ALIAS ${name})
+  var(dict DICT ixm::fetch::${name})
   string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
-  list(LENGTH ARGN length)
-  if (length LESS 1)
-    error("With() requires at least one Fetch() Dependency reference")
+  option(${option} "Build ${PROJECT_NAME} with ${name} support")
+  if (${option})
+    fetch(${dependency} ALIAS ${alias} DICT ${dict})
   endif()
-  list(GET ARGN 0 default)
-  ixm_fetch_prepare_parameters(${default})
+  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
 endfunction()
 
 #[[
