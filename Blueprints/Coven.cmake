@@ -30,6 +30,8 @@ ixm_coven_component_create(examples) #[[examples/*.* and examples/*/main.*]]
 ixm_coven_component_create(benches) #[[benches/*.* and benches/*/*.*]]
 ixm_coven_component_create(tests) #[[tests/*.* and tests/*/*.*]]
 
+# ixm_coven_fetch_dependencies() #[[ Sets up generator expression for ixm::fetch ]]
+
 ixm_coven_documentation_create() #[[docs/*.{md|rst}]]
 
 ixm_coven_create_install() #[[Various calls to install the above]]

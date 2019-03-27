@@ -1,5 +1,11 @@
 include_guard(GLOBAL)
 
+#[[ TODO: Add support for:
+ * MkDocs
+ * Jekyll
+ * Doxygen
+ * Hugo
+]]
 function (ixm_coven_documentation_create)
   if (NOT BUILD_DOCS)
     return()

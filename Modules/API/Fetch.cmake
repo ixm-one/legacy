@@ -28,7 +28,6 @@ function (fetch reference)
     ixm_fetch_common_download(${alias} ${arguments})
   endif()
 
-
   var(target TARGET ${name})
 
   #### POST
