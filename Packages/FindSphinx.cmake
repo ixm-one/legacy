@@ -3,7 +3,7 @@ if (NOT TARGET Python::Interpreter)
   return()
 endif()
 
-Find(PROGRAM sphinx-build VERSION "sphinx-build ([0-9]+)[.]([0-9]+)[.]([0-9]+)")
+find(PROGRAM sphinx-build)
 if (TARGET Sphinx::Sphinx)
   add_executable(Python::Sphinx ALIAS Sphinx::Sphinx)
 endif()

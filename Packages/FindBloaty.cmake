@@ -1,1 +1,1 @@
-Find(PROGRAM bloaty)
+find(PROGRAM bloaty)

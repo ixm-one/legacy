@@ -1,2 +1,2 @@
-Find(PROGRAM icecc)
+find(PROGRAM icecc)
 

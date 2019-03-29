@@ -1,2 +1,2 @@
-Find(LIBRARY rt)
-Find(INCLUDE time.h)
+find(LIBRARY rt)
+find(INCLUDE time.h)

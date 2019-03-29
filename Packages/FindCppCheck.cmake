@@ -1,1 +1,1 @@
-Find(PROGRAM cppcheck)
+find(PROGRAM cppcheck)

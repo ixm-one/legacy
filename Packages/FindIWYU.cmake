@@ -1,1 +1,1 @@
-Find(PROGRAM include-what-you-use)
+find(PROGRAM include-what-you-use)

@@ -10,20 +10,16 @@ function (ixm_find_program)
 
   set(variable ${name}_EXECUTABLE)
   find_program(${variable} NAMES ${REMAINDER} HINTS ${HINTS} ${hints})
-  dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND PROGRAM ${program})
 
+  ixm_find_common_append(${variable})
   if (NOT ${variable})
     return()
   endif()
 
   set(value "${${variable}}")
-
   mark_as_advanced(${variable})
   add_executable(${program} IMPORTED GLOBAL)
   set_target_properties(${program} PROPERTIES IMPORTED_LOCATION "${value}")
-  if (NOT DEFINED VERSION)
-    return()
-  endif()
   ixm_find_program_version(${value})
 endfunction()
 
@@ -31,13 +27,14 @@ endfunction()
 function (ixm_find_program_version command)
   if (NOT ${name}_VERSION)
     var(flags FLAGS "--version")
+    var(regex VERSION "[^0-9]+([0-9]+)[.]([0-9]+)?[.]?([0-9]+)?[.]?([0-9]+)?")
     execute_process(COMMAND ${command} ${flags}
       OUTPUT_STRIP_TRAILING_WHITESPACE
       ERROR_STRIP_TRAILING_WHITESPACE
       OUTPUT_VARIABLE output
       ERROR_VARIABLE output)
 
-    string(REGEX MATCH "${VERSION}.*" matched ${output})
+    string(REGEX MATCH "${regex}.*" matched ${output})
     if (NOT matched)
       return()
     endif()
