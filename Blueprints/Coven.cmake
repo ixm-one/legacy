@@ -19,6 +19,16 @@ find_package(SCCache)
 find_package(CCache)
 find_package(DistCC)
 
+#cvn_common_launcher(SCCache::SCCache)
+#cvn_common_launcher(CCache::CCache)
+#
+#cvn_create_options() #[[ Generate project options ]]
+#coven_generate_options()
+#coven_generate_component(examples)
+#coven_generate_component(benches)
+#coven_generate_component(tests)
+#coven_create_options()
+
 ixm_coven_common_launcher(SCCache::SCCache)
 ixm_coven_common_launcher(CCache::CCache)
 

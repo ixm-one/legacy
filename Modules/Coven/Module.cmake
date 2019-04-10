@@ -30,6 +30,9 @@ macro(ixm_coven_module_vars path)
   set(src "${ixm}/${path}.cxx")
   set(rsp "${ixm}/${path}.rsp")
   set(pch "${ixm}/${path}.gch")
+  if (MSVC)
+    set(pch "${ixm}/${path}.pch")
+  endif()
 endmacro()
 
 #[[ Generates a response file for creating a precompiled header ]]

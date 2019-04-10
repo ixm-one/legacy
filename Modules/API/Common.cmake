@@ -17,6 +17,8 @@ internal(IXM_FETCH_DIR "${IXM_BINARY_DIR}/Fetch")
 internal(IXM_CHECK_DIR "${IXM_BINARY_DIR}/Check")
 internal(IXM_INVOKE_DIR "${IXM_BINARY_DIR}/Invoke")
 
+global(IXM_COLOR_cyan 0 255 255)
+
 global(IXM_PRINT_COLORS "NOT ${WIN32}")
 global(IXM_PRINT_QUIET OFF)
 
