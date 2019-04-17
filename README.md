@@ -6,8 +6,8 @@
   <a href="LICENSE.md" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/github/license/slurps-mad-rips/ixm.svg?style=for-the-badge">
   </a>
-  <a href='https://docs.ixm.one/en/latest/?badge=latest' target="_blank" rel="noopener noreferrer">
-    <img alt="Documentation Status" src="https://img.shields.io/readthedocs/ixm.svg?style=for-the-badge">
+  <a href="https://docs.ixm.one" target="_blank" rel="noopener noreferrer">
+    <img height="28" src="https://api.netlify.com/api/v1/badges/b1e01271-ec5f-4a43-8ed6-f7d79ab777d3/deploy-status">
   </a>
   <a href="https://www.patreon.com/slurpsmadrips" target="_blank" rel="noopener noreferrer">
     <img height="28" alt="Become a Patron!" src="https://c5.patreon.com/external/logo/become_a_patron_button.png">
@@ -43,6 +43,6 @@ and it's internals.
 Visit the [Roadmap][3] to see upcoming and
 in-progress features for the 1.0 release.
 
-[1]: https://docs.ixm.one/en/latest/tutorial/
+[1]: https://docs.ixm.one/en/tutorial.html
 [2]: https://docs.ixm.one
 [3]: https://github.com/slurps-mad-rips/ixm/projects/1
