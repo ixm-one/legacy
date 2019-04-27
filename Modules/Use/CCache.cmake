@@ -1,6 +1,5 @@
 include_guard(GLOBAL)
 
-#Find(PACKAGE CCache)
 find_package(CCache)
 
 if (TARGET CCache::CCache)

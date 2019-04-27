@@ -1,28 +1,28 @@
 include_guard(GLOBAL)
 
 function(error)
-  colorize(text "<red>${ARGN}</>")
-  message(FATAL_ERROR ${text})
+  list(JOIN ARGN " " text)
+  message(FATAL_ERROR "${.red}${text}${.default}")
 endfunction()
 
 function(warning)
-  colorize(text "<yellow>${ARGN}</>")
-  message(WARNING ${text})
+  list(JOIN ARGN " " text)
+  message(WARNING "${.yellow}${text}${.default}")
 endfunction()
 
 function(info)
-  print("<cyan>${ARGN}</>")
+  print("${.cyan}${ARGN}${.default}")
 endfunction()
 
 function(success)
-  print("<green>${ARGN}</>")
+  print("${.lime}${ARGN}${.default}")
 endfunction()
 
 function (failure)
-  print("<crimson>${ARGN}</>")
+  print("${.crimson}${ARGN}${.default}")
 endfunction()
 
 function(print)
-  colorize(text "${ARGN}")
-  message(STATUS ${text})
+  list(JOIN ARGN " " text)
+  message(STATUS "${text}")
 endfunction()
