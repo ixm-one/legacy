@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-function (ixm_find_framework name)
+function (ixm_find_framework)
   ixm_find_common_check(FRAMEWORK ${ARGN})
   parse(${ARGN} @ARGS=? COMPONENT HEADER @ARGS=* HINTS)
   set(name ${CMAKE_FIND_PACKAGE_NAME})
@@ -23,7 +23,7 @@ function (ixm_find_framework name)
   endif()
 
   mark_as_advanced(${library} ${include})
-  add_library(${target} IMPORTED GLOBAL)
+  add_library(${target} SHARED IMPORTED GLOBAL)
   target_include_directories(${target} INTERFACE ${${include}})
   set_target_properties(${target} PROPERTIES IMPORTED_LOCATION ${${library}})
   dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND FRAMEWORK ${name})
