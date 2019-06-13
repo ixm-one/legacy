@@ -203,7 +203,11 @@ endfunction()
 #[[
 Better "option()" that also adds several defines and variables so that they are
 available in the configure header for the project. This is placed into a file
-that is generated at generation time, as opposed to configure_file.
+that is generated at generation time, as opposed to configure_file. This speeds
+up project configuration and generation.
 ]]
-function (Feature name help)
+function (feature name help)
+  string(TOUPPER "${PROJECT_NAME}_ENABLE_${name}" option)
+  option("${option}" "Build ${PROJECT_NAME} with ${name} enabled")
+  dict(INSERT ixm::${PROJECT_NAME} FEATURE APPEND ${name})
 endfunction()
