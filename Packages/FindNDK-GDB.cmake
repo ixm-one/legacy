@@ -1,0 +1,1 @@
+find(PROGRAM ndk-gdb HINTS "${CMAKE_ANDROID_NDK}")
