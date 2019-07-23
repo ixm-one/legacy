@@ -53,11 +53,9 @@ macro(var var lookup)
 endmacro()
 
 #[[
-
 Allows placing variables in the parent_scope without having to continually call
 `set(var ${var} PARENT_SCOPE)` for each one. Instead, we can pass in as many
 as we want :)
-
 ]]
 macro(upvar)
   foreach(var ${ARGN})
@@ -73,20 +71,19 @@ use and debugging purposes
 ]]
 function (locals out-var)
   get_directory_property(locals VARIABLES)
-  #list(REMOVE_ITEM locals locals)
   set(${out-var} ${locals} PARENT_SCOPE)
 endfunction()
 
 #[[
 This function is used to condense a multiline generator expression into a
-single line and then place it into the output variable `var`. If a newline is
-needed, make sure the entire generator expression section is a "quoted"
+single line and then place it into the output variable `out-var`. If a newline
+is needed, make sure the entire generator expression section is a "quoted"
 argument.
 ]]
-function (genex var)
+function (genexp out-var)
   if (NOT ARGN)
-    error("genex() requires at least one parameter")
+    error("genexp() requires at least one parameter")
   endif()
-  string(REPLACE ";" "" genex ${ARGN})
-  set(${var} "${genex}" PARENT_SCOPE)
+  string(REPLACE ";" "" genexp ${ARGN})
+  set(${out-var} "${genexp}" PARENT_SCOPE)
 endfunction()

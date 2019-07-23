@@ -1,6 +1,7 @@
 include_guard(GLOBAL)
 
 import(IXM::Property::Target::Generate)
+import(IXM::Generate::*)
 
 #[[
 The following was sent to me from Robert Schumaker from MS regarding cpprest
@@ -25,8 +26,8 @@ function (ixm_target_generate_pch target)
   # TODO: Add this in as a generataor expression, please~
   get_property(pch TARGET ${target} PROPERTY PRECOMPILED_HEADER)
 
-  genex(non-msvc $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>)
-  #genex(msvc $<$<CXX_COMPILER_ID:MSVC>:>
+  genexp(non-msvc $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>)
+  #genexp(msvc $<$<CXX_COMPILER_ID:MSVC>:>)
 
   add_custom_command(
     OUTPUT ${pch}
@@ -54,7 +55,7 @@ endfunction()
   #  parse(${ARGN} @ARGS=? LANGUAGE)
   #  var(LANGUAGE LANGUAGE "CXX")
   #  set(unity-sources $<TARGET_PROPERTY:${target},UNITY_SOURCES>)
-  #  genex(unity-sources $<
+  #  genexp(unity-sources $<
   #    $<BOOL:${unity-sources}>:
   #    "#include <"
   #    $<JOIN:${unity-sources},
@@ -62,8 +63,8 @@ endfunction()
   #    >
   #  >)
   #  string(TOLOWER "${LANGUAGE}" extension)
-  #  genex(unity-build-file $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>)
-  #  genex(unity-build-file $<IF:$<BOOL:${unity-build-file}>,
+  #  genexp(unity-build-file $<TARGET_PROPERTY:${target},UNITY_BUILD_FILE>)
+  #  genexp(unity-build-file $<IF:$<BOOL:${unity-build-file}>,
   #    ${unity-build-file},
   #    ${CMAKE_CURRENT_BINARY_DIR}/IXM/Unity/${target}.${extension}
   #  >)
@@ -79,12 +80,12 @@ endfunction()
   #function (ixm_target_generate_proto target)
   #  set(MKDIR_COMMAND ${CMAKE_COMMAND} -E make_directory)
   #  set(error-format $<$<CXX_COMPILER_ID:MSVC>:--error_format=msvs>)
-  #  genex(protobuf-output-dir $<TARGET_PROPERTY:${target},PROTOBUF_OUTPUT_DIR>)
-  #  genex(protobuf-path $<TARGET_PROPERTY:${target},PROTOBUF_PATH>)
-  #  genex(protobuf-path $<
+  #  genexp(protobuf-output-dir $<TARGET_PROPERTY:${target},PROTOBUF_OUTPUT_DIR>)
+  #  genexp(protobuf-path $<TARGET_PROPERTY:${target},PROTOBUF_PATH>)
+  #  genexp(protobuf-path $<
   #    $<BOOL:${protobuf-path}>:--proto_path=$<JOIN:${protobuf-path}>
   #  >)
-  #  genex(protobuf-output-dir $<IF:$<BOOL:${protobuf-output-dir}>,
+  #  genexp(protobuf-output-dir $<IF:$<BOOL:${protobuf-output-dir}>,
   #    ${protobuf-output-dir},
   #    ${CMAKE_CURRENT_BINARY_DIR}/IXM/protobuf/${target}
   #  >)
@@ -106,12 +107,12 @@ endfunction()
 #  var(LANGUAGE LANGUAGE CXX)
 #  get_property(rsp TARGET ${target} PROPERTY RESPONSE_FILE)
 #  if (NOT rsp)
-#    set(outut "${CMAKE_CURRENT_BINARY_DIR}/IXM/${target}.rsp")
+#    set(output "${CMAKE_CURRENT_BINARY_DIR}/IXM/${target}.rsp")
 #    set_property(TARGET ${target} PROPERTY RESPONSE_FILE "${output}")
 #  endif()
-#  ixm_target_generate_rsp_genex(compile-flags ${target})
-#  genex(release-flags $<$<CONFIG:Release>:${CMAKE_${LANGUAGE}_FLAGS_RELEASE})
-#  genex(debug-flags $<$<CONFIG:Debug>:${CMAKE_${LANGUAGE}_FLAGS_DEBUG})
+#  ixm_target_generate_rsp_genexp(compile-flags ${target})
+#  genexp(release-flags $<$<CONFIG:Release>:${CMAKE_${LANGUAGE}_FLAGS_RELEASE})
+#  genexp(debug-flags $<$<CONFIG:Debug>:${CMAKE_${LANGUAGE}_FLAGS_DEBUG})
 #  set(flags "${CMAKE_${LANGUAGE}_FLAGS}")
 #
 #  string(JOIN "\n" content
@@ -124,33 +125,3 @@ endfunction()
 #    OUTPUT $<TARGET_PROPERTY:${target},RESPONSE_FILE>
 #    CONTENT ${content})
 #endfunction()
-
-function (ixm_target_generate_rsp_genex out-var target)
-  set(include-directories $<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>)
-  set(compile-definitions $<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>)
-  set(compile-options $<TARGET_PROPERTY:${target},COMPILE_OPTIONS>)
-  set(compile-flags $<TARGET_PROPERTY:${target},COMPILE_FLAGS>)
-  genex(include-directories $<
-      $<BOOL:${include-directories}>:-I
-      $<JOIN:${include-directories},"\n-I">
-  >)
-
-  genex(compile-definitions $<
-      $<BOOL:${compile-definitions}:-D
-      $<JOIN:${compile-definitions},"\n-D">
-  >)
-
-  genex(compile-options $<
-    $<BOOL:${compile-options}>:$<JOIN:${compile-options},"\n">
-  >)
-
-  genex(COMPILE_FLAGS $<
-    $<BOOL:${compile-flags}>:$<JOIN:${compile-flags},"\n">
-  >)
-
-  list(APPEND output ${include-directories})
-  list(APPEND output ${compile-definitions})
-  list(APPEND output ${compile-options})
-  list(APPEND output ${compile-flags})
-  set(${out-var} ${output} PARENT_SCOPE)
-endfunction()

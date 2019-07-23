@@ -1,11 +1,24 @@
 include_guard(GLOBAL)
 
-#[[ TODO: Add support for:
- * MkDocs
- * Jekyll
- * Doxygen
- * Hugo
-]]
+# TODO: Add support for Adobe's Hyde
+# (which is then fed to a tool like below)
+function (ixm_coven_documentation_detect)
+  set(netlify-config ${PROJECT_SOURCE_DIR}/docs/netlify.toml)
+  set(gohugo-config ${PROJECT_SOURCE_DIR}/docs/config.toml)
+  set(jekyll-config ${PROJECT_SOURCE_DIR}/docs/_config.yml)
+  set(mkdocs-config ${PROJECT_SOURCE_DIR}/docs/mkdocs.yml)
+  set(sphinx-config ${PROJECT_SOURCE_DIR}/docs/conf.py)
+  if (EXISTS "${jekyll-config}")
+    find_package(Jekyll)
+  elseif (EXISTS "${mkdocs-config}")
+    find_package(MkDocs)
+  elseif (EXISTS "${sphinx-config}")
+    find_package(Sphinx)
+  elseif (EXISTS "${gohugo-config}")
+    find_package(Hugo)
+  endif()
+endfunction()
+
 function (ixm_coven_documentation_create)
   if (NOT BUILD_DOCS)
     return()

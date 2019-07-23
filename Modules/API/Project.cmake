@@ -27,21 +27,24 @@ macro (project name)
   endif()
 endmacro()
 
-#[[ Adds support for the following options:
- * SERVICE (for background processes) # TODO (Windows Service support is needed)
- * GUI (WIN32/MACOSX_BUNDLE/APPIMAGE)
- * CONSOLE
-]]
-function(add_executable name)
-  set(references ALIAS IMPORTED)
+#[[Adds a executable intended to run in a terminal as a target]]
+function(executable name)
+  set(ixm::add::executable "${name}")
   parse(${ARGN} @FLAGS CONSOLE SERVICE GUI)
-  _add_executable(${name} ${REMAINDER})
-  if (NOT ARGN)
-    return()
+  add_executable(${name})
+  if (REMAINDER)
+    target_sources(${name} PRIVATE ${REMAINDER})
   endif()
-  list(GET ARGN 0 type)
-  if (type IN_LIST references)
-    return()
+  if ((CONSOLE AND GUI) OR (CONSOLE AND SERVICE) OR (SERVICE AND GUI))
+    error("Only one of CONSOLE, SERVICE, or GUI is permitted")
+  endif()
+  if (CONSOLE)
+    set_target_properties(${name} PROPERTIES APPIMAGE_TERMINAL ON)
+  endif()
+  if (SERVICE)
+    # This is just going to setup a few generator expressions to generate
+    # systemd/launchd configuration files.
+    error("SERVICE option is not yet implemented for IXM")
   endif()
   if (GUI)
     set_target_properties(${name}
@@ -50,47 +53,44 @@ function(add_executable name)
         WIN32_EXECUTABLE ON
         APPIMAGE ON)
   endif()
-  if (CONSOLE)
-    set_target_properties(${name} PROPERTIES APPIMAGE_TERMINAL ON)
-  endif()
-  if (SERVICE)
-    error("SERVICE option not yet implemented for IXM")
-  endif()
+  unset(ixm::add::executable)
 endfunction()
 
-#function (add_test)
-#  if (NOT ARGN)
-#    error("add_test() requires at least one parameter")
-#  endif()
-#  parse(${ARGN}
-#    @ARGS=? NAME WORKING_DIRECTORY
-#    @ARGS=* COMMAND CONFIGURATIONS)
-#  if (NOT NAME)
-#    _add_test(${ARGN})
-#    return()
-#  endif()
-#  if (NAME)
-#    _add_test(${ARGN})
-#    return()
-#  endif()
-#endfunction()
-
-#[[
-A special type of `add_executable()`. When cross compiling, these targets will
-be built as native executables and then IMPORTED into the cross-compiling
-build. This improves the ability to have self bootstrapping builds, as well
-as code generation for cross compiling. That said, the operations we take tend
-to be a bit slower in a cross compiling build. There is, unfortunately, no
-way to prevent that. Additionally, tools are
-1) Not installable targets
-2) Never GUI targets
-
-They are only permitted to be used as *part* of the cross compiling build.
-]]
-
-function (add_tool name)
-  error("Not yet implemented")
+function (archive name)
+  set(ixm::add::archive ${name})
+  add_library(${name} STATIC)
+  if (ARGN)
+    target_sources(${name} PRIVATE ${ARGN})
+  endif()
+  unset(ixm::add::archive)
 endfunction()
+
+function (library name)
+  set(ixm::add::library ${name})
+  add_library(${name} SHARED)
+  if (ARGN)
+    target_sources(${name} PRIVATE ${ARGN})
+  endif()
+  unset(ixm::add::library)
+endfunction ()
+
+function (plugin name)
+  set(ixm::add::plugin ${name})
+  add_library(${name} MODULE)
+  if (ARGN)
+    target_sources(${name} PRIVATE ${ARGN})
+  endif()
+  unset(ixm::add::plugin)
+endfunction ()
+
+function (object name)
+  set(ixm::add::object ${name})
+  add_library(${name} OBJECT)
+  if (ARGN)
+    target_sources(${name} PRIVATE ${ARGN})
+  endif()
+  unset(ixm::add::object)
+endfunction ()
 
 #[[
 Creates an OBJECT library, and adds the sources found within the given
@@ -143,13 +143,13 @@ function (add_submodule name type)
   add_library(${name} ALIAS ${target})
 
   set(unity-file "${CMAKE_CURRENT_BINARY_DIR}/src/${path}")
-  genex(unity-if
+  genexp(unity-if
     $<IF:$<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>,
          ${unity-file},
          $<TARGET_PROPERTY:${target},UNITY_SOURCES>>)
 
   # OLD!
-  genex(unity
+  genexp(unity
     $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
          ${IXM_UNITY_BUILD},
          ON>)

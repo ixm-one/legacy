@@ -45,7 +45,7 @@ function (target_sources target)
   if (RECURSE)
     set(glob GLOB_RECURSE)
   endif()
-  if (REMAINDER)
+  if (NOT (INTERFACE OR PUBLIC OR PRIVATE))
     error(
       "target_sources requires at least"
       "PRIVATE, PUBLIC, or INTERFACE as the second parameter")

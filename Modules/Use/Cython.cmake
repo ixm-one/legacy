@@ -40,7 +40,7 @@ function (add_cython_library name type)
   get_property(language TARGET PROPERTY CYTHON_OUTPUT_LANGUAGE)
   string(TOLOWER ${language} extension)
 
-  genex(INCLUDE_DIRECTORIES $<
+  genexp(INCLUDE_DIRECTORIES $<
     $<BOOL:$<TARGET_PROPERTY:${name},INCLUDE_DIRECTORIES>>:
     -I
     $<JOIN:
@@ -49,33 +49,33 @@ function (add_cython_library name type)
     >
   >)
 
-  genex(COMPILER_DIRECTIVES $<
+  genexp(COMPILER_DIRECTIVES $<
     $<BOOL:$<TARGET_PROPERTY:${name},CYTHON_COMPILER_DIRECTIVES>>:
     -X$<JOIN:
         $<TARGET_PROPERTY:${name},CYTHON_COMPILER_DIRECTIVES>,
         $<SEMICOLON>-X
       >
   >)
-  genex(CYTHON_CXX $<
+  genexp(CYTHON_CXX $<
     $<STREQUAL:$<TARGET_PROPERTY:CYTHON_OUTPUT_LANGUAGE>,CXX>:--cplus
   >)
 
-  genex(embed-positions $<$<CONFIG:Debug>:--embed-positions>)
-  genex(language $<$<BOOL:$<CXX_COMPILER_ID>:--cplus>)
-  genex(syntax $<$<BOOL:${Python_VERSION_MAJOR}>:-${Python_VERSION_MAJOR}>)
-  genex(embed $<
+  genexp(embed-positions $<$<CONFIG:Debug>:--embed-positions>)
+  genexp(language $<$<BOOL:$<CXX_COMPILER_ID>:--cplus>)
+  genexp(syntax $<$<BOOL:${Python_VERSION_MAJOR}>:-${Python_VERSION_MAJOR}>)
+  genexp(embed $<
     $<STREQUAL:$<TARGET_PROPERTY:${name},TYPE>,EXECUTABLE>:--embed
     $<
       $<BOOL:$<TARGET_PROPERTY:${name},CYTHON_ENTRYPOINT>>:
       =$<TARGET_PROPERTY:${name},CYTHON_ENTRYPOINT>
     >
   >)
-  genex(cleanup $<
+  genexp(cleanup $<
     $<BOOL:$<TARGET_PROPERTY:${name},CYTHON_CLEANUP_LEVEL>:
     --cleanup $<TARGET_PROPERTY:${name},CYTHON_CLEANUP_LEVEL>
   >)
-  genex(debug $<$<CONFIG:Debug>:--gdb>)
-  genex(line-directives $<
+  genexp(debug $<$<CONFIG:Debug>:--gdb>)
+  genexp(line-directives $<
     $<BOOL:$<TARGET_PROPERTY:${name},CYTHON_LINE_DIRECTIVES>>:--line-directives
   >)
   set(output-file ${CMAKE_CURRENT_BINARY_DIR}/IXM/Cython/${name}.${extension})

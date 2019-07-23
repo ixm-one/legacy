@@ -8,22 +8,22 @@ target, as well as a `dist` argument. `package_source` is not created.
 Additionally, we ONLY permit the use of the `install()` command.
 ]]
 function (ixm_project_generate_package)
-  genex(cpack-package-name $<IF:
+  genexp(cpack-package-name $<IF:
     $<BOOL:$<TARGET_PROPERTY:ixm::package,PACKAGE_NAME>>,
     $<TARGET_PROPERTY:ixm::package,PACKAGE_NAME>,
     ${PROJECT_NAME}
   >)
-  genex(cpack-package-vendor $<IF:
+  genexp(cpack-package-vendor $<IF:
     $<BOOL:$<TARGET_PROPERTY:ixm::package,PACKAGE_VENDOR>>,
     $<TARGET_PROPERTY:ixm::package,PACKAGE_VENDOR>,
     "Humanity"
   >)
-  genex(cpack-config-file $<IF:
+  genexp(cpack-config-file $<IF:
       $<BOOL:$<TARGET_PROPERTY:ixm::package,PACKAGE_FILE>>,
       $<TARGET_PROPERTY:ixm::package,PACKAGE_FILE>,
       "${CMAKE_BINARY_DIR}/CPackConfig.cmake"
   >)
-  genex(cpack-input-file $<IF:
+  genexp(cpack-input-file $<IF:
       $<BOOL:$<TARGET_PROPERTY:ixm::package,PACKAGE_CONFIG_FILE>>,
       $<TARGET_PROPERTY:ixm::package,PACKAGE_CONFIG_FILE>
       "${IXM_ROOT}/Templates/cpack.cmake"

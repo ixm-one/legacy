@@ -6,7 +6,7 @@ import(${root}::Submodule) -> ${root}_MODULE_ROOT/Submodule.cmake
 import(${root}::*) -> ${root}_MODULE_ROOT/*.cmake
 ]]
 
-function (ixm_import_find var name)
+function (ixm_import_find out-var name)
   string(REPLACE "::" ";" paths ${name})
   list(LENGTH paths length)
   if (length LESS 2)
@@ -26,7 +26,7 @@ function (ixm_import_find var name)
   string(JOIN "/" paths ${paths})
   file(GLOB files LIST_DIRECTORIES OFF
     "${${root}_MODULE_ROOT}/${paths}.cmake")
-  set(${var} ${files} PARENT_SCOPE)
+  set(${out-var} ${files} PARENT_SCOPE)
 endfunction()
 
 macro (import name)
@@ -46,4 +46,16 @@ macro(module name)
   internal(${name}_MODULE_ROOT
     ${CMAKE_CURRENT_LIST_DIR}
     "Module Root for '${name}'")
+endmacro()
+
+#[[
+Simple wrapper to declare a module root from inside of a blueprint
+And then to import all of its files
+]]
+macro (blueprint name)
+  include_guard()
+  internal(${name}_MODULE_ROOT
+    ${CMAKE_CURRENT_LIST_DIR}
+    "Blueprint Module Root for '${name}'")
+  import(${name}::*)
 endmacro()
