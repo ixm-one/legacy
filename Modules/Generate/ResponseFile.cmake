@@ -21,6 +21,7 @@ function (ixm_generate_response_file target)
   genexp(debug-flags $<$<CONFIG:Debug>:${CMAKE_${LANGUAGE}_FLAGS_DEBUG}>)
   set(flags "${CMAKE_${LANGUAGE}_FLAGS}")
 
+  #TODO: See if this can be pushed into the genexp part as well
   string(JOIN "\n" content
     ${compile-flags}
     ${release-flags}
