@@ -10,7 +10,30 @@ endfunction ()
 
 function (coven_detect_launchers)
   find_package(SCCache)
-  find_package(CCache)
+  set(target SCCache::SCCache)
+
+  if (NOT TARGET SCCache::SCCache)
+    find_package(CCache)
+    set(target CCache::CCache)
+  endif()
+
+  if (NOT TARGET ${target})
+    return()
+  endif()
+
+  get_property(enabled-languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+  foreach (language IN ITEMS CXX C Rust)
+    if (NOT language IN_LIST enabled-languages)
+      continue()
+    endif()
+    if (DEFINED CMAKE_${language}_COMPILER_LAUNCHER)
+      continue()
+    endif()
+    get_property(CMAKE_${language}_COMPILER_LAUNCHER
+      TARGET ${target}
+      PROPERTY IMPORTED_LOCATION)
+    upvar(CMAKE_${language}_COMPILER_LAUNCHER)
+  endforeach()
 endfunction()
 
 function (coven_detect_gohugo out-var)
