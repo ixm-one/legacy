@@ -1,0 +1,10 @@
+include_guard(GLOBAL)
+import(IXM::Event::*)
+
+function (event action name)
+  if (action STREQUAL "ADD")
+  elseif (action STREQUAL "REMOVE")
+  else()
+    error("event(${action}) is an invalid operation")
+  endif()
+endfunction()
