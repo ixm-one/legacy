@@ -16,16 +16,7 @@ function (coven_tests_init)
     else()
       list(APPEND files "${item}")
     endif()
-    get_filename_component(name "${item}" NAME_WE)
-    string(REPLACE " " "-" name "${name}")
-    set(target ${PROJECT_NAME}-test-${name})
-    set(alias ${PROJECT_NAME}::${component}::${name})
-    add_executable(${target} ${files})
-    add_executable(${alias} ALIAS ${target})
-    add_test(${alias} ${target})
-    target_link_libraries(${target}
-      PRIVATE
-        $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
+    coven_common_create_test(test "${item}" ${files})
     set_property(TARGET ${target} PROPERTY
       RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests)
   endforeach()

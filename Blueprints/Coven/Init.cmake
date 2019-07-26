@@ -1,6 +1,8 @@
 blueprint(Coven)
 import(Coven::*)
 
+include(CMakeDependentOption)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 

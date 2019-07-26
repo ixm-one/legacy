@@ -3,29 +3,35 @@ include_guard(GLOBAL)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
+find_package(NuGet QUIET)
+find_package(WiX QUIET)
+
 function (coven_package_init)
   string(MAKE_C_IDENTIFIER "${PROJECT_NAME}" project)
   string(TOUPPER "${project}" project)
-  # Only generate these options if BUILD_PACKAGE is enabled
-  # Additionally, only do these if certain tools have been found.
-  # Basically, we need a 
-  #option(${project}_PACKAGE_ARCHIVE "<DESCRIPTION NEEDED>")
-  #if (NOT WIN32 AND NOT APPLE AND NOT ANDROID)
-  #  option(${project}_PACKAGE_APPIMAGE "<DESCRIPTION NEEDED>")
-  #  option(${project}_PACKAGE_RPM "<DESCRIPTION NEEDED>")
-  #  option(${project}_PACKAGE_DEB "<DESCRIPTION NEEDED>")
-  #endif()
-  #if (APPLE)
-  #  option(${project}_PACKAGE_BUNDLE "<DESCRIPTION NEEDED>")
-  #  option(${project}_PACKAGE_PKG "<DESCRIPTION NEEDED>") 
-  #endif()
-  #if (WIN32)
-  #  option(${project}_PACKAGE_NUGET "")
-  #  option(${project}_PACKAGE_MSI "")
-  #endif()
-  #if (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-  #  option(${project}_PACKAGE_BSD)
-  #endif()
+  set(var BUILD_PACKAGE)
+  set(unix-only "NOT WIN32" "NOT APPLE" "NOT ANDROID")
+
+  cmake_dependent_option(BUILD_PACKAGE_ARCHIVE "Generate tarball" ON
+    "${var}" OFF)
+
+  cmake_dependent_option(BUILD_PACKAGE_APPIMAGE "Generate an AppImage" ON
+    "${unix-only}" OFF)
+  cmake_dependent_option(BUILD_PACKAGE_RPM "Generate an RPM" ON
+    "${unix-only}" OFF)
+  cmake_dependent_option(BUILD_PACKAGE_DEB "Generate a DEB" ON
+    "${unix-only}" OFF)
+
+  cmake_dependent_option(BUILD_PACKAGE_NUGET "Generate a NuGet package" ON
+    "${var};WIN32;NuGet_FOUND" OFF)
+  cmake_dependent_option(BUILD_PACKAGE_MSI "Generate an MSI" ON
+    "${var};WIN32;WiX_FOUND" OFF)
+
+  cmake_dependent_option(BUILD_PACKAGE_BUNDLE "Generate a .app" ON
+    "${var};APPLE" OFF)
+  cmake_dependent_option(BUILD_PACKAGE_PKG "Generate a .pkg" ON
+    "${var};APPLE" OFF)
+
   coven_package_configuration()
 endfunction()
 
