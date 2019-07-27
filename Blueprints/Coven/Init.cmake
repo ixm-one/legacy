@@ -7,6 +7,9 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+if (PROJECT_STANDALONE)
+  option(BUILD_PACKAGE "Configure the project for producing packages")
+endif()
 
 coven_detect_directory(BENCHMARKS "benches")
 coven_detect_directory(EXAMPLES "examples")

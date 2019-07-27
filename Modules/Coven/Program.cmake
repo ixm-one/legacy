@@ -1,15 +1,12 @@
 include_guard(GLOBAL)
 
 function (ixm_coven_program_create)
-  ixm_coven_create_project_program()
-  ixm_coven_create_bin_program()
   ixm_coven_program_dir()
 endfunction()
 
 function (ixm_coven_create_project_program)
   ixm_coven_program_check("src")
   ixm_coven_program_glob(files "src/main.*")
-  ixm_coven_program_add(main ${files})
   set_property(TARGET ${PROJECT_NAME}-main PROPERTY OUTPUT_NAME ${PROJECT_NAME})
 endfunction()
 
@@ -18,7 +15,6 @@ function (ixm_coven_create_bin_program)
   ixm_coven_program_glob(files "src/bin/*")
   foreach (file IN LISTS files)
     get_filename_component(name "${file}" NAME_WE)
-    ixm_coven_program_add(${name} ${file})
   endforeach()
 endfunction()
 
@@ -48,13 +44,3 @@ macro (ixm_coven_program_check directory)
     return()
   endif()
 endmacro()
-
-function (ixm_coven_program_add name)
-  set(target ${PROJECT_NAME}-${name})
-  add_executable(${target})
-  add_executable(${PROJECT_NAME}::${name} ALIAS ${target})
-  set_property(TARGET ${target} PROPERTY OUTPUT_NAME ${name})
-  target_sources(${target} PRIVATE ${ARGN})
-  target_link_libraries(${target}
-    PRIVATE $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-endfunction()

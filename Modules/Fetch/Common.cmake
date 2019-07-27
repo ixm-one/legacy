@@ -34,10 +34,11 @@ function (ixm_fetch_common_check_target)
 endfunction()
 
 function (ixm_fetch_common_exclude)
-  set(EXCLUDE_FROM_ALL EXCLUDE_FROM_ALL PARENT_SCOPE)
+  set(EXCLUDE EXCLUDE_FROM_ALL PARENT_SCOPE)
   if (NOEXCLUDE)
-    unset(EXCLUDE_FROM_ALL PARENT_SCOPE)
+    unset(EXCLUDE PARENT_SCOPE)
   endif()
+  set(EXCLUDE_FROM_ALL EXCLUDE_FROM_ALL PARENT_SCOPE)
 endfunction()
 
 function (ixm_fetch_common_download alias)

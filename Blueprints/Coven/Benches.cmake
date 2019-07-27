@@ -12,6 +12,8 @@ function (coven_benchmark_init)
       glob(files FILES_ONLY "${item}/*")
       if (NOT files)
         continue()
+      else()
+        set(files "${item}")
       endif()
       coven_common_create_test(bench "${item}" ${files})
       set_property(TARGET ${target} PROPERTY

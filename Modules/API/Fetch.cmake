@@ -36,6 +36,7 @@ function (fetch reference)
 
   #[[ PACKAGE ]]
   ixm_fetch_common_options("${OPTIONS}")
+  ixm_fetch_common_exclude()
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${EXCLUDE})
 
   #[[ TARGET ]]
