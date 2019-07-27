@@ -19,4 +19,5 @@ function (coven_common_create_test component item)
   target_link_libraries(${target}
     PRIVATE
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
+  set(target "${target}" PARENT_SCOPE)
 endfunction()

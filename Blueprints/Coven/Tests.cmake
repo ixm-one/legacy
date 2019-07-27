@@ -14,7 +14,7 @@ function (coven_tests_init)
         continue()
       endif()
     else()
-      list(APPEND files "${item}")
+      set(files "${item}")
     endif()
     coven_common_create_test(test "${item}" ${files})
     set_property(TARGET ${target} PROPERTY
