@@ -1,5 +1,6 @@
 include_guard(GLOBAL)
 
+import(IXM::API::Property) # TODO: This needs to be moved so the dependencies are correct...
 import(IXM::Project::*)
 
 # General Project Functions

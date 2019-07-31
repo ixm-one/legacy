@@ -1,11 +1,8 @@
 include_guard(GLOBAL)
 
-# specific name of the application, e.g., Firefox
-define_property(APPIMAGE_NAME SCOPE TARGET) 
-# Generic name of the application, for example 'Web Browser'
-define_property(APPIMAGE_GENERIC_NAME SCOPE TARGET)
-# Don't display the application in menus
-define_property(APPIMAGE_NO_DISPLAY SCOPE TARGET)
+property(DEFINE APPIMAGE_GENERIC_NAME PRIVATE)
+property(DEFINE APPIMAGE_NAME PRIVATE)
+property(DEFINE APPIMAGE_NO_DISPLAY PRIVATE)
 
 define_property(TARGET PROPERTY APPIMAGE_COMMENT
   BRIEF_DOCS "Tooltip for the entry"
