@@ -1,5 +1,20 @@
 include_guard(GLOBAL)
 
+function(notice)
+  if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
+    message(NOTICE "${ARGN}")
+  else()
+    message("[${CMAKE_CURRENT_LIST_FILE}]: ${ARGN}")
+  endif()
+endfunction()
+
+function(trace)
+  if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
+    list(JOIN ARGN " " text)
+    message(TRACE "${text}")
+  endif()
+endfunction()
+
 function(error)
   list(JOIN ARGN " " text)
   message(FATAL_ERROR "${.red}${text}${.default}")

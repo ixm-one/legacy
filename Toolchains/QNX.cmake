@@ -7,10 +7,14 @@ if (NOT DEFINED ENV{QNX_HOST})
   message(STATUS "  Please run the provided QNX environment script.")
 endif()
 
+# x86_64 processor is different on some operating systems
+list(APPEND x86_64 x86_64)
+list(APPEND x86_64 AMD64)
+
 if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
   set(CMAKE_CXX_COMPILER_TARGET gcc_ntoaarch64le)
   set(CMAKE_C_COMPILER_TARGET gcc_ntoaarch64le)
-elseif (CMAKE_SYSTEM_PROCESSOR STREQUAL "AMD64")
+elseif (CMAKE_SYSTEM_PROCESSOR IN_LIST x86_64)
   set(CMAKE_CXX_COMPILER_TARGET gcc_ntox86_64)
   set(CMAKE_C_COMPILER_TARGET gcc_ntox86_64)
 endif()
@@ -25,3 +29,5 @@ endif()
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+
+unset(x86_64)

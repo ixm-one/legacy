@@ -22,7 +22,10 @@ endfunction()
 #[[ Status Print ]]
 function (ixm_fetch_common_status recipe)
   if (NOT QUIET OR NOT IXM_FETCH_QUIET)
-    info("[FETCH]: ${recipe}")
+    info("${recipe}")
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.16 AND NOT IXM_FETCH_NO_INDENT)
+      set(CMAKE_MESSAGE_INDENT "${recipe}: ")
+    endif()
   endif()
 endfunction()
 

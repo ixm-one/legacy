@@ -6,7 +6,9 @@ This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
 function (fetch reference)
-  parse(${ARGN} @ARGS=? ALIAS DICT)
+  parse(${ARGN}
+    @ARGS=? ALIAS DICT
+    @ARGS=* COMPONENT)
 
   #[[ Prepare some basic information for invoking commands ]]
   ixm_fetch_prepare_reference(${reference}) # creates 'provider' and 'package'
@@ -42,4 +44,15 @@ function (fetch reference)
   #[[ TARGET ]]
   ixm_fetch_common_target(${target} ${alias})
   upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+
+  #[[ COMPONENTS ]]
+  foreach (component IN LISTS COMPONENTS)
+    if (NOT TARGET ${PROJECT_NAME}::${component})
+      warning("'${component}' does not exist for ${PROJECT_NAME}")
+      continue()
+    endif()
+    target_link_libraries(${PROJECT_NAME}::${component}
+      INTERFACE
+        ${alias}::${alias})
+  endforeach()
 endfunction()
