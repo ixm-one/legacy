@@ -2,6 +2,10 @@ include_guard(GLOBAL)
 
 import(IXM::Common::*)
 
+set(ixm::log::style TEXT PARENT_SCOPE)
+set(ixm::log::level WARN PARENT_SCOPE)
+set(ixm::log::color ON PARENT_SCOPE)
+
 # This is where all properties, cache values, builtin options, are declared.
 
 # General Global Settings

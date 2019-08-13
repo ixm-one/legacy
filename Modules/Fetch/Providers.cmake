@@ -62,6 +62,7 @@ function (ixm_fetch_bin package out-var)
   else()
     list(APPEND arguments "https://dl.bintray.com/${root}/${name}/${tag}")
   endif()
+  # TODO: Check for env vars for http proxies before setting this
   list(APPEND arguments TLS_VERIFY ON)
   if (USERNAME AND PASSWORD)
     list(APPEND HTTP_USERNAME ${USERNAME})
