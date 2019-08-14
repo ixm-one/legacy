@@ -7,12 +7,10 @@ import(IXM::Project::*)
 # These include overrides, new "target" types, etc.
 
 # Override Commands
-# TODO: Support pulling from IXM's toolchain files by simply stating a name as
-# the value. e.g., -DIXM/CMAKE_TOOLCHAIN_NAME=<target-triple>
 macro (project name)
   # We fix the "someone didn't pass in a build type, oh nooooo" problem.
   if (NOT CMAKE_BUILD_TYPE)
-    warning("CMAKE_BUILD_TYPE not set. Using 'Debug'")
+    log(WARN "CMAKE_BUILD_TYPE not set. Using 'Debug'")
     cache(STRING CMAKE_BUILD_TYPE Debug)
   endif()
   ixm_project_blueprint_prepare(${name} ${ARGN})

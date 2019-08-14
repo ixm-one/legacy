@@ -2,9 +2,27 @@ include_guard(GLOBAL)
 
 import(IXM::Common::*)
 
-set(ixm::log::style TEXT PARENT_SCOPE)
-set(ixm::log::level WARN PARENT_SCOPE)
-set(ixm::log::color ON PARENT_SCOPE)
+# rules for IXM specific settings are:
+# Variables are set as UPPERCASE_VARIABLE_NAMES
+# This applies for all environment, cache, and scoped variables
+# If a variable is for a specific API call, it will be named IXM_<API>_<SETTING>
+# Global properties are `namespaced::via::colons`. If global, they are set
+# as ixm::<api>::<setting>. Emojis might be used to keep properties "safe" from
+# common tampering.
+# Target properties are set as UPPERCASE_VARIABLE_NAMES to stay in line with
+# CMake itself.
+# Blueprint specific properties are set as <blueprint>::<setting>
+# Dictionaries are used for project specific settings. These are sometimes
+# named like `ixm::<api>::<name>`, such as in the case of ixm::fetch::
+# dictionaries. These should be transitioned to something else. e.g.,
+# nothing says these can't be `${PROJECT_NAME}::fetch::<name>`, or similar.
+
+# TODO: These should be cache variables...
+set(IXM_LOG_STRFTIME "%Y-%b-%d@%H:%M:%S" PARENT_SCOPE)
+set(IXM_LOG_FORMAT TEXT PARENT_SCOPE)
+set(IXM_LOG_LEVEL TRACE PARENT_SCOPE)
+set(IXM_LOG_COLOR ON PARENT_SCOPE)
+set(IXM_LOG_ROTATE 5000000 PARENT_SCOPE) # 5MB
 
 # This is where all properties, cache values, builtin options, are declared.
 
@@ -20,8 +38,6 @@ internal(IXM_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 internal(IXM_FETCH_DIR "${IXM_BINARY_DIR}/Fetch")
 internal(IXM_CHECK_DIR "${IXM_BINARY_DIR}/Check")
 internal(IXM_INVOKE_DIR "${IXM_BINARY_DIR}/Invoke")
-
-global(IXM_COLOR_cyan 0 255 255)
 
 global(IXM_PRINT_COLORS "NOT ${WIN32}")
 global(IXM_PRINT_QUIET OFF)

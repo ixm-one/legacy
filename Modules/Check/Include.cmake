@@ -18,6 +18,7 @@ function (ixm_check_include header)
   list(APPEND args INCLUDE_DIRECTORIES)
   list(APPEND args COMPILE_DEFINITIONS)
   list(APPEND args COMPILE_OPTIONS)
+  list(APPEND args COMPILE_FEATURES)
 
   parse(${ARGN}
     @FLAGS QUIET REQUIRED
@@ -54,7 +55,7 @@ function (ixm_check_include header)
     @ONLY)
 
   if (NOT QUIET)
-    info("Looking for include file ${header}")
+    message(STATUS "Looking for include file ${header}")
   endif()
 
   try_compile(${variable}
@@ -82,7 +83,7 @@ function (ixm_check_include header)
   set(result "Looking for include file ${header} - ${found}")
   if (NOT ${variable} AND REQUIRED)
     error("${result}")
-  elseif (NOT QUIET AND ${variable})
-    success("${result}")
+  elseif(NOT QUIET)
+    message(STATUS "${result}")
   endif()
 endfunction()

@@ -83,7 +83,7 @@ function (ixm_check_common_symbol variable name)
     @ONLY)
 
   if (NOT QUIET)
-    info("Looking for ${name}")
+    log(INFO "Looking for (${action}) ${name}")
   endif()
 
   try_compile(${variable}
@@ -114,7 +114,7 @@ function (ixm_check_common_symbol variable name)
 
   set(result "Looking for ${name} - ${found}")
   if (NOT ${variable} AND REQUIRED)
-    error("${result}")
+    log(FATAL "${result}")
   elseif(NOT QUIET AND ${variable})
     success("${result}")
   elseif(NOT QUIET)
