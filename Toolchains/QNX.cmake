@@ -3,13 +3,13 @@
 # IXM will automatically include this file *unless* CMAKE_TOOLCHAIN_FILE is
 # already defined, or if "IXM_CUSTOM_TOOLCHAINS" is false.
 if (NOT DEFINED ENV{QNX_HOST})
-  message(STATUS "QNX_HOST environment variable not found.")
-  message(STATUS "  Please run the provided QNX environment script.")
+  message(FATAL_ERROR [[
+    QNX_HOST environment variable not found.
+    Please run the provided QNX environment script.]])
 endif()
 
 # x86_64 processor is different on some operating systems
-list(APPEND x86_64 x86_64)
-list(APPEND x86_64 AMD64)
+set(x86_64 AMD64 x86_64)
 
 if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
   set(CMAKE_CXX_COMPILER_TARGET gcc_ntoaarch64le)

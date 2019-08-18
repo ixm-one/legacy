@@ -8,7 +8,10 @@ if (CMAKE_HOST_WIN32)
   get_filename_component(arduino-sdk-install-path
     [HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Arduino;Install_Dir]
     ABSOLUTE CACHE)
-  set(CMAKE_SYSROOT "${arduino-sdk-install-path}/hardware/tools/avr")
+  if (EXISTS "${arduino-sdk-install-path}")
+    set(CMAKE_SYSROOT "${arduino-sdk-install-path}/hardware/tools/avr")
+  endif()
+  unset(arduino-sdk-install-path)
 endif()
 
 set(CMAKE_SYSTEM_NAME Arduino)

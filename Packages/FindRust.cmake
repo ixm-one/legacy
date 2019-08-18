@@ -1,0 +1,2 @@
+find(PROGRAM rustc HINTS ENV RUSTC COMPONENT Compiler)
+find(PROGRAM cargo COMPONENT Cargo)

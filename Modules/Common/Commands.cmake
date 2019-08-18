@@ -28,7 +28,7 @@ experience"
 
 function(invoke name)
   if (NOT COMMAND ${name})
-    error("Cannot call invoke() with non-existant command '${name}'")
+    log(FATAL "Cannot call invoke() with non-existant command '${name}'")
   endif()
   set(call "${CMAKE_BINARY_DIR}/IXM/Invoke/${name}.cmake")
   if (NOT EXISTS "${call}")
