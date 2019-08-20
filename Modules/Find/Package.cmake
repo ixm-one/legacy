@@ -1,27 +1,24 @@
 include_guard(GLOBAL)
 include(FindPackageHandleStandardArgs)
 
-variable_watch(CMAKE_FIND_PACKAGE_NAME ixm::find::package)
-
-# Event handler for entering (and exiting) find_package call
-function (ixm::find::package variable access value current stack)
-  if (access STREQUAL MODIFIED_ACCESS)
-    ixm_find_package_constructor(${value})
-  elseif (access STREQUAL REMOVED_ACCESS)
-    ixm_find_package_destructor()
-    get_property(name GLOBAL PROPERTY ixm::find::package)
-    string(TOUPPER ${name} upper)
-    upvar(${name}_FOUND)
-  endif()
-endfunction()
-
 function (ixm_find_package_constructor name)
-  set_property(GLOBAL PROPERTY ixm::find::package ${name})
+  set_property(GLOBAL PROPERTY ixm::find ${name})
 endfunction()
 
 function (ixm_find_package_destructor)
-  get_property(name GLOBAL PROPERTY ixm::find::package)
+  get_property(name GLOBAL PROPERTY ixm::find)
+  dict(JSON ixm::find::${name} INTO "IXM/Find/${name}.json")
   dict(GET ixm::find::${name} REQUIRED required-vars)
+  foreach (var IN LISTS required-vars)
+    # TODO: need to make it so that the "required component" is set but NOT
+    # with the specific target. In other words, we need some way to say "for
+    # each item in COMPONENT, check if true. If they are, set the component_FOUND
+    # to true. Right now we're setting X_<TARGET>_FOUND to true :/
+    if (${var})
+      string(REPLACE "_EXECUTABLE" "" var ${var})
+      set(${var}_FOUND ON)
+    endif()
+  endforeach()
   if (NOT required-vars)
     return()
   endif()

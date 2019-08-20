@@ -34,7 +34,8 @@ function (ixm_generate_response_file target)
 endfunction()
 
 function (ixm_generate_response_file_path out-var target)
-  set(default-path "${CMAKE_CURRENT_BINARY_DIR}/IXM/${target}.rsp")
+  get_property(directory GLOBAL PROPERTY ixm::directory::generate)
+  set(default-path "${directory}/${target}.rsp")
 
   genexp(ifc-response-file $<IF:
     $<BOOL:$<TARGET_PROPERTY:${target},INTERFACE_RESPONSE_FILE>>,

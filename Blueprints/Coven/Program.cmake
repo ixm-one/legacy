@@ -31,7 +31,7 @@ function (coven_program_create_bin_targets)
   foreach (file IN LISTS files)
     get_filename_component(name "${file}" NAME_WE)
     set(target ${PROJECT_NAME}-bin-${name})
-    executable(${target} ${file})
+    add_executable(${target} ${file})
     add_executable(${PROJECT_NAME}::bin::${name} ALIAS ${target})
     target_link_libraries(${target} PRIVATE
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)

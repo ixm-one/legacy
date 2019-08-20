@@ -13,6 +13,7 @@ function (ixm_find_program)
 
   ixm_find_common_append(${variable})
   if (NOT ${variable})
+    log(DEBUG "find(PROGRAM): Could not find '${variable}'")
     return()
   endif()
 

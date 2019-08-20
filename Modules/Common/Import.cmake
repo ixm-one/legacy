@@ -6,6 +6,9 @@ import(${root}::Submodule) -> ${root}_MODULE_ROOT/Submodule.cmake
 import(${root}::*) -> ${root}_MODULE_ROOT/*.cmake
 ]]
 
+# TODO: Support importing modules where ${root}::${root}Name is a thing.
+# This would allow us to set the CMAKE_MODULE_ROOT, and import CMake specific modules
+#
 function (ixm_import_find out-var name)
   string(REPLACE "::" ";" paths ${name})
   list(LENGTH paths length)

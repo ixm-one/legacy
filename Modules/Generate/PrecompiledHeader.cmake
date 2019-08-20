@@ -5,10 +5,13 @@ function (ixm_generate_precompiled_header target)
   parse(${ARGN} @ARGS=? LANGUAGE)
   var(LANGUAGE LANGUAGE CXX)
 
+  get_property(pch TARGET ${target} PROPERTY PRECOMPILED_HEADER)
+  if (NOT pch)
+    return()
+  endif()
+
   ixm_generate_response_file(${target} LANGUAGE ${LANGUAGE})
   ixm_generate_response_file(response-file ${target})
-
-  get_property(pch TARGET ${target} PROPERTY PRECOMPILED_HEADER)
 
   genexp(non-msvc $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>)
 

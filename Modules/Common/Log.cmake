@@ -5,38 +5,6 @@ include_guard(GLOBAL)
 # to make logging easier, each of error/warn/info/debug/trace should call the
 # logging equivalent
 
-function (panic)
-  log(PANIC ${ARGN})
-endfunction()
-
-function (fatal)
-  log(FATAL ${ARGN})
-endfunction()
-
-function (notice)
-  log(NOTICE ${ARGN})
-endfunction()
-
-function (error)
-  log(ERROR ${ARGN})
-endfunction()
-
-function (warn)
-  log(WARN ${ARGN})
-endfunction()
-
-function (info)
-  log(INFO ${ARGN})
-endfunction()
-
-function (debug)
-  log(DEBUG ${ARGN})
-endfunction()
-
-function (trace)
-  log(TRACE ${ARGN})
-endfunction ()
-
 # ERROR > WARN > INFO > DEBUG > TRACE
 # PANIC | FATAL | NOTICE are always shown
 function (log level)

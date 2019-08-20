@@ -1,12 +1,5 @@
 include_guard(GLOBAL)
 
-#Find(LIBRARY BulletMath LinearMath COMPONENT Math)
-#Find(LIBRARY BulletCollision COMPONENT Collision)
-#Find(LIBRARY BulletDynamics COMPONENT Dynamics)
-#Find(LIBRARY BulletSoftbody COMPONENT SoftBody)
-#Find(INCLUDE bullet/btBulletCollisionCommon.h)
-#Find(CONFIRM)
-
 function (ixm_find_library)
   parse(${ARGN}
     @ARGS=? COMPONENT
@@ -29,7 +22,7 @@ function (ixm_find_library)
 
   set(value "${${variable}}")
   mark_as_advanced(${variable})
-  add_library(${library} IMPORTED GLOBAL)
+  add_library(${library} UNKNOWN IMPORTED GLOBAL)
   set_target_properties(${library} PROPERTIES IMPORTED_LOCATION "${value}")
   if (COMPONENT)
     dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} LIBRARY APPEND ${library})

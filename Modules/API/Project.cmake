@@ -6,44 +6,28 @@ import(IXM::Project::*)
 # General Project Functions
 # These include overrides, new "target" types, etc.
 
-# Override Commands
-macro (project name)
-  # We fix the "someone didn't pass in a build type, oh nooooo" problem.
-  if (NOT CMAKE_BUILD_TYPE)
-    log(WARN "CMAKE_BUILD_TYPE not set. Using 'Debug'")
-    cache(STRING CMAKE_BUILD_TYPE Debug)
-  endif()
-  ixm_project_blueprint_prepare(${name} ${ARGN})
-  _project(${name} ${REMAINDER})
-  unset(REMAINDER)
-  ixm_project_common_standalone(${name})
-  ixm_project_common_version(${name})
-  if (DEFINED IXM_CURRENT_BLUEPRINT_NAME)
-    ixm_project_blueprint_load(${IXM_CURRENT_BLUEPRINT_NAME})
-    include(${IXM_CURRENT_BLUEPRINT_FILE})
-    global(${name}_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
-    global(PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
-  endif()
-endmacro()
-
-#[[Adds a executable intended to run in a terminal as a target]]
-function(executable name)
-  set(ixm::add::executable "${name}")
+function (add_executable name)
   parse(${ARGN} @FLAGS CONSOLE SERVICE GUI)
-  add_executable(${name})
+  _add_executable(${name} ${REMAINDER})
+  # TODO: Check if it is IMPORTED or an ALIAS, and handle all REMAINDER settings.
+  if ("ALIAS" IN_LIST ARGN OR "IMPORTED" IN_LIST ARGN)
+    return()
+  endif()
+  set(ixm::events::target::executable "${name}")
   if (REMAINDER)
     target_sources(${name} PRIVATE ${REMAINDER})
   endif()
   if ((CONSOLE AND GUI) OR (CONSOLE AND SERVICE) OR (SERVICE AND GUI))
-    error("Only one of CONSOLE, SERVICE, or GUI is permitted")
+    log(FATAL "Only one of CONSOLE, SERVICE, or GUI is permitted")
   endif()
   if (CONSOLE)
     set_target_properties(${name} PROPERTIES APPIMAGE_TERMINAL ON)
   endif()
   if (SERVICE)
-    # This is just going to setup a few generator expressions to generate
-    # systemd/launchd configuration files.
-    error("SERVICE option is not yet implemented for IXM")
+    # This is going to be used to setup a few generator expressions to generate
+    # systemd/launchd configuration files. Support for Windows Services are not
+    # provided.
+    log(FATAL "SERVICE option is not yet implemented for IXM")
   endif()
   if (GUI)
     set_target_properties(${name}
@@ -52,44 +36,7 @@ function(executable name)
         WIN32_EXECUTABLE ON
         APPIMAGE ON)
   endif()
-  unset(ixm::add::executable)
 endfunction()
-
-function (archive name)
-  set(ixm::add::archive ${name})
-  add_library(${name} STATIC)
-  if (ARGN)
-    target_sources(${name} PRIVATE ${ARGN})
-  endif()
-  unset(ixm::add::archive)
-endfunction()
-
-function (library name)
-  set(ixm::add::library ${name})
-  add_library(${name} SHARED)
-  if (ARGN)
-    target_sources(${name} PRIVATE ${ARGN})
-  endif()
-  unset(ixm::add::library)
-endfunction ()
-
-function (plugin name)
-  set(ixm::add::plugin ${name})
-  add_library(${name} MODULE)
-  if (ARGN)
-    target_sources(${name} PRIVATE ${ARGN})
-  endif()
-  unset(ixm::add::plugin)
-endfunction ()
-
-function (object name)
-  set(ixm::add::object ${name})
-  add_library(${name} OBJECT)
-  if (ARGN)
-    target_sources(${name} PRIVATE ${ARGN})
-  endif()
-  unset(ixm::add::object)
-endfunction ()
 
 #[[
 Creates an OBJECT library, and adds the sources found within the given
@@ -190,7 +137,7 @@ additionally, if it is NOT enabled the value is never fetched.
 function (with name dependency)
   parse(${ARGN} @ARGS=? ALIAS DICT)
   var(alias ALIAS ${name})
-  var(dict DICT ixm::fetch::${name})
+  var(dict DICT ${PROJECT_NAME}::fetch::${name})
   string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
   option(${option} "Build ${PROJECT_NAME} with ${name} support")
   if (${option})
@@ -204,6 +151,10 @@ Better "option()" that also adds several defines and variables so that they are
 available in the configure header for the project. This is placed into a file
 that is generated at generation time, as opposed to configure_file. This speeds
 up project configuration and generation.
+If a feature is "public", then it is added to the header file
+If a feature is "private", then it is added to the given target only
+If a feature is "internal", then it is added as a compile_definition to the
+project's "internal" target, which is linked to *all* project targets privately
 ]]
 function (feature name help)
   string(TOUPPER "${PROJECT_NAME}_ENABLE_${name}" option)
