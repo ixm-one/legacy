@@ -143,7 +143,8 @@ function (with name dependency)
   if (${option})
     fetch(${dependency} ALIAS ${alias} DICT ${dict})
   endif()
-  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+  set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
+  set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
 endfunction()
 
 #[[

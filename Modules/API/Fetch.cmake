@@ -43,7 +43,8 @@ function (fetch reference)
 
   #[[ TARGET ]]
   ixm_fetch_common_target(${target} ${alias})
-  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+  set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
+  set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
 
   #[[ COMPONENTS ]]
   foreach (component IN LISTS COMPONENTS)

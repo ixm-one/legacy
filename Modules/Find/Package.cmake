@@ -26,5 +26,5 @@ function (ixm_find_package_destructor)
     REQUIRED_VARS ${required-vars}
     VERSION_VAR "${name}_VERSION"
     HANDLE_COMPONENTS)
-  upvar(${name}_FOUND)
+  set(${name}_FOUND ${${name}_FOUND} PARENT_SCOPE)
 endfunction()

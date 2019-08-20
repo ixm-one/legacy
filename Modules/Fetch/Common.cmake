@@ -50,7 +50,8 @@ function (ixm_fetch_common_download alias)
   if (NOT ${alias}_POPULATED)
     FetchContent_Populate(${alias})
   endif()
-  upvar(${alias}_SOURCE_DIR ${alias}_BINARY_DIR)
+  set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
+  set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
 endfunction()
 
 #[[ Copies possible patch files for overrides ]]

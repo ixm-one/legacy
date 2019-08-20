@@ -40,7 +40,9 @@ function(invoke name)
   include(${call})
   locals(current)
   list(REMOVE_ITEM current ${old-locals} old-locals)
-  upvar(${current})
+  foreach (var IN LISTS current)
+    set(${var} ${${var}} PARENT_SCOPE)
+  endforeach()
 endfunction()
 
 #[[Works like set() but with a default value if the lookup value is undefined]]
@@ -51,19 +53,6 @@ macro(var var lookup)
   endif()
   set(${var} ${__\@default})
   unset(__@default)
-endmacro()
-
-#[[
-Allows placing variables in the parent_scope without having to continually call
-`set(var ${var} PARENT_SCOPE)` for each one. Instead, we can pass in as many
-as we want :)
-]]
-macro(upvar)
-  foreach(var ${ARGN})
-    if (DEFINED ${var})
-      set(${var} "${${var}}" PARENT_SCOPE)
-    endif()
-  endforeach()
 endmacro()
 
 #[[

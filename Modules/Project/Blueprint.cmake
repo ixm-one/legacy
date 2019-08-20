@@ -4,7 +4,7 @@ include_guard(GLOBAL)
 
 function (ixm_project_blueprint_prepare name)
   parse(${ARGN} @ARGS=? BLUEPRINT)
-  upvar(REMAINDER)
+  set(REMAINDER ${REMAINDER} PARENT_SCOPE)
   # This resets the current blueprint so subprojects don't accidentally use
   # the blueprints when they didn't intend to. Otherwise, it'd break the shit
   # out of everything
@@ -30,7 +30,7 @@ function (ixm_project_blueprint_find name)
       return()
     endif()
   endforeach()
-  error("Could not discover blueprint '${name}'")
+  log(FATAL "Could not discover blueprint '${name}'")
 endfunction ()
 
 function (ixm_project_blueprint_load name)

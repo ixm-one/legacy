@@ -29,10 +29,10 @@ function (coven_detect_launchers)
     if (DEFINED CMAKE_${language}_COMPILER_LAUNCHER)
       continue()
     endif()
-    get_property(CMAKE_${language}_COMPILER_LAUNCHER
+    get_property(launcher
       TARGET ${target}
       PROPERTY IMPORTED_LOCATION)
-    upvar(CMAKE_${language}_COMPILER_LAUNCHER)
+    set(CMAKE_${language}_COMPILER_LAUNCHER ${launcher} PARENT_SCOPE)
   endforeach()
 endfunction()
 

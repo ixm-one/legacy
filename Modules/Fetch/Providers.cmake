@@ -20,10 +20,10 @@ function (ixm_fetch_hub package out-var)
   ixm_fetch_recipe_advanced(${package} HEAD)
   ixm_fetch_platform(
     ${package}
-    ${out-var}
+    github
     "https://github.com"
     "https://codeload.github.com/${root}/${name}/zip/${tag}")
-  upvar(${out-var})
+  set(${out-var} ${github} PARENT_SCOPE)
 endfunction()
 
 # LAB{user/repo@rev-parse}
@@ -31,10 +31,10 @@ function (ixm_fetch_lab package out-var)
   ixm_fetch_recipe_advanced(${package} HEAD)
   ixm_fetch_platform(
     ${package}
-    ${out-var}
+    gitlab
     "https://gitlab.com"
     "${uri}/${root}/${name}/-/archive/${tag}/${name}-${tag}.zip")
-  upvar(${out-var})
+  set(${out-var} ${gitlab} PARENT_SCOPE)
 endfunction()
 
 # BIT{user/repo@rev-parse}
@@ -42,10 +42,10 @@ function (ixm_fetch_bit package out-var)
   ixm_fetch_recipe_advanced(${package} HEAD)
   ixm_fetch_platform(
     ${package}
-    ${out-var}
+    bitbucket
     "https://bitbucket.org"
     "${uri}/${root}/${name}/get/${tag}")
-  set(${out-var} ${arguments} PARENT_SCOPE)
+  set(${out-var} ${bitbucket} PARENT_SCOPE)
 endfunction()
 
 # BIN{subject/repo@file-path}
@@ -54,7 +54,7 @@ function (ixm_fetch_bin package out-var)
   # Additional customization points
   var(tag tag ${PATH})
   if (NOT tag)
-    error("BIN{${package}} requires an explicit path to be given")
+    log(FATAL "BIN{${package}} requires an explicit path to be given")
   endif()
   set(arguments URL)
   if (PREMIUM)

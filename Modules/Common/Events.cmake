@@ -19,7 +19,7 @@ function (cmake::package variable access value current stack)
     ixm_find_package_destructor()
     get_property(name GLOBAL PROPERTY ixm::find)
     string(TOUPPER ${name} upper)
-    upvar(${name}_FOUND)
+    set(${name}_FOUND ${${name}_FOUND} PARENT_SCOPE)
   endif()
 endfunction()
 
