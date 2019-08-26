@@ -35,10 +35,6 @@ set(IXM_LOG_ROTATE 5000000 PARENT_SCOPE) # 5MB
 
 # This is where all properties, cache values, builtin options, are declared.
 
-# General Global Settings
-global(IXM_PRINT_COLORS "NOT ${WIN32}")
-global(IXM_PRINT_QUIET OFF)
-
 # Project Settings
 global(IXM_SOURCE_EXTENSIONS cxx;cpp;c++;cc;c;mm;m)
 global(IXM_CUSTOM_EXTENSIONS)

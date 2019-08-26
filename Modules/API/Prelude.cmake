@@ -16,6 +16,7 @@ set_property(GLOBAL PROPERTY ixm::directory::invoke "${CMAKE_CURRENT_BINARY_DIR}
 set_property(GLOBAL PROPERTY ixm::directory::fetch "${CMAKE_CURRENT_BINARY_DIR}/IXM/Fetch")
 set_property(GLOBAL PROPERTY ixm::directory::check "${CMAKE_CURRENT_BINARY_DIR}/IXM/Check")
 set_property(GLOBAL PROPERTY ixm::directory::find "${CMAKE_CURRENT_BINARY_DIR}/IXM/Find")
+set_property(GLOBAL PROPERTY ixm::directory::log "${CMAKE_CURRENT_BINARY_DIR}/IXM/Logs")
 
 # Toolchain related properties
 set_property(GLOBAL PROPERTY ixm::toolchain::raspberrypi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
@@ -54,6 +55,7 @@ set_property(GLOBAL PROPERTY ixm::command::target
 
 # Check Command Properties
 set_property(GLOBAL PROPERTY ixm::check::integral ixm_check_integral)
+set_property(GLOBAL PROPERTY ixm::check::include ixm_check_include)
 set_property(GLOBAL PROPERTY ixm::check::pointer ixm_check_pointer)
 set_property(GLOBAL PROPERTY ixm::check::struct ixm_check_class)
 set_property(GLOBAL PROPERTY ixm::check::class ixm_check_class)
@@ -120,14 +122,16 @@ set_property(GLOBAL PROPERTY ixm::current::blueprint::name)
 
 # Log Properties
 set_property(GLOBAL PROPERTY ixm::log::strftime "%Y-%b-%d@%H:%M:%S")
-set_property(GLOBAL PROPERTY ixm::log::format "TEXT")
-set_property(GLOBAL PROPERTY ixm::log::level "INFO")
-set_property(GLOBAL PROPERTY ixm::log::color "ON")
+set_property(GLOBAL PROPERTY ixm::log::format TEXT)
+set_property(GLOBAL PROPERTY ixm::log::level INFO)
+set_property(GLOBAL PROPERTY ixm::log::color ON)
 set_property(GLOBAL PROPERTY ixm::log::rotate 5000000) # 5MB
 
 # message()/print override properties
 set_property(GLOBAL PROPERTY ixm::print::quiet OFF)
 set_property(GLOBAL PROPERTY ixm::print::colors ON)
+set_property(GLOBAL PROPERTY ixm::print::install ALWAYS)
+# This is used to set CMAKE_INSTALL_MESSAGE
 
 # Project related properties
 set_property(GLOBAL PROPERTY ixm::extensions::source cxx;cpp;c++;cc;c;mm;m)

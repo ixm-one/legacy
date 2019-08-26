@@ -31,6 +31,7 @@ function (fetch reference)
   endif()
 
   var(target TARGET ${name})
+  var(quiet QUIET OFF)
 
   #### POST
   #[[ PATCH ]]
@@ -39,7 +40,13 @@ function (fetch reference)
   #[[ PACKAGE ]]
   ixm_fetch_common_options("${OPTIONS}")
   ixm_fetch_common_exclude()
+
+  get_property(previous-quiet GLOBAL PROPERTY ixm::print::quiet)
+  set_property(GLOBAL PROPERTY ixm::print::quiet ${quiet})
+
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${EXCLUDE})
+
+  set_property(GLOBAL PROPERTY ixm::print::quiet ${previous-quiet})
 
   #[[ TARGET ]]
   ixm_fetch_common_target(${target} ${alias})
