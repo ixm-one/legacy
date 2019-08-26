@@ -26,7 +26,8 @@ DESCRIPTION
                not set.
 ]]
 function(parse)
-  var(max IXM_MAX_NARGS 9)
+  get_property(max GLOBAL PROPERTY ixm::parse::max)
+  #var(max IXM_MAX_NARGS 9)
   list(APPEND multi "@FLAGS")
   foreach (N RANGE 1 ${max})
     list(APPEND multi "@ARGS=${N}")
@@ -35,7 +36,7 @@ function(parse)
     list(APPEND multi "@ARGS=${var}")
   endforeach()
   if (ARGC EQUAL 0)
-    error("Did you forget to pass ARGN to parse?")
+    log(FATAL "Did you forget to pass ARGN to parse?")
   endif()
   cmake_parse_arguments(_ "" "@PREFIX" "${multi}" ${ARGN})
 
@@ -84,6 +85,7 @@ function(parse)
     endforeach()
   endforeach()
 
+  unset(${__\@PREFIX}REMAINDER PARENT_SCOPE)
   if (DEFINED ARG_UNPARSED_ARGUMENTS)
     set(${__\@PREFIX}REMAINDER ${ARG_UNPARSED_ARGUMENTS} PARENT_SCOPE)
   endif()

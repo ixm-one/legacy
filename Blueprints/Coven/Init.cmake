@@ -6,6 +6,7 @@ include(CMakeDependentOption)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if (PROJECT_STANDALONE)
   option(BUILD_PACKAGE "Configure the project for producing packages")

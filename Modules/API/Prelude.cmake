@@ -133,6 +133,12 @@ set_property(GLOBAL PROPERTY ixm::print::colors ON)
 set_property(GLOBAL PROPERTY ixm::print::install ALWAYS)
 # This is used to set CMAKE_INSTALL_MESSAGE
 
+# parse() properties
+set_property(GLOBAL PROPERTY ixm::parse::max 9)
+
+# inspect() properties
+set_property(GLOBAL PROPERTY ixm::inspect::prefix)
+
 # Project related properties
 set_property(GLOBAL PROPERTY ixm::extensions::source cxx;cpp;c++;cc;c;mm;m)
 set_property(GLOBAL PROPERTY ixm::extensions::custom)

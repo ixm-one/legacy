@@ -3,7 +3,7 @@ include_guard(GLOBAL)
 #[[
 This function replaces the need for `include(CPack)`. It generates a
 CPackConfig.cmake file via `file(GENERATE)`. It ONLY creates a `package`
-target, as well as a `dist` argument. `package_source` is not created.
+target, as well as a `dist` target. `package_source` is not created.
 
 Additionally, we ONLY permit the use of the `install()` command.
 ]]
