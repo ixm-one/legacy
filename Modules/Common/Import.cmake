@@ -46,9 +46,8 @@ ${name}_MODULE_ROOT all in one go.
 ]]
 macro(module name)
   include_guard(GLOBAL)
-  internal(${name}_MODULE_ROOT
-    ${CMAKE_CURRENT_LIST_DIR}
-    "Module Root for '${name}'")
+  set(${name}_MODULE_ROOT "${CMAKE_CURRENT_LIST_DIR}"
+    CACHE INTERNAL "Module Root for '${name}'")
 endmacro()
 
 #[[
@@ -57,8 +56,7 @@ And then to import all of its files
 ]]
 macro (blueprint name)
   include_guard()
-  internal(${name}_MODULE_ROOT
-    ${CMAKE_CURRENT_LIST_DIR}
-    "Blueprint Module Root for '${name}'")
+  set(${name}_MODULE_ROOT "${CMAKE_CURRENT_LIST_DIR}"
+    CACHE INTERNAL "Blueprint Module Root for '${name}'")
   import(${name}::*)
 endmacro()
