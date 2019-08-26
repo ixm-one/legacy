@@ -74,7 +74,8 @@ function (ixm_coven_add_legacy_module directory)
   file(RELATIVE_PATH path "${PROJECT_SOURCE_DIR}/src" "${directory}")
   string(REPLACE "/" "-" target "${PROJECT_NAME}/${path}")
   string(REPLACE "/" "::" alias "${PROJECT_NAME}/${path}")
-  foreach (ext IN LISTS IXM_SOURCE_EXTENSIONS)
+  get_property(extensions GLOBAL PROPERTY ixm::extensions::source)
+  foreach (ext IN LISTS extensions)
     file(GLOB files
       LIST_DIRECTORIES OFF
       CONFIGURE_DEPENDS "${directory}/*.${ext}")
@@ -88,8 +89,9 @@ function (ixm_coven_add_legacy_module directory)
 endfunction()
 
 function (ixm_coven_create_primary_modules)
+  get_property(extensions GLOBAL PROPERTY ixm::extensions::source)
   file(GLOB_RECURSE entries LIST_DIRECTORIES ON "${PROJECT_SOURCE_DIR}/src/*")
-  string(JOIN "|" regex ${IXM_SOURCE_EXTENSIONS})
+  string(JOIN "|" regex ${extensions})
   # Early file removal
   list(FILTER entries EXCLUDE REGEX "${PROJECT_SOURCE_DIR}/src/bin")
   list(FILTER entries EXCLUDE REGEX ".*[.](${regex})")

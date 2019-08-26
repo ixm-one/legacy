@@ -1,7 +1,8 @@
 include_guard(GLOBAL)
 
 function (coven_common_check_main out-var directory)
-  foreach (extension IN LISTS IXM_SOURCE_EXTENSIONS)
+  get_property(extensions GLOBAL PROPERTY ixm::extensions::source)
+  foreach (extension IN LISTS extensions)
     if (EXISTS "${directory}/main.${extension}")
       set(${out-var} ON PARENT_SCOPE)
       return()
