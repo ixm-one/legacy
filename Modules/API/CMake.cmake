@@ -20,11 +20,14 @@ macro (project name)
   ixm_project_common_language(${name} ${REMAINDER})
   _project(${name} ${REMAINDER})
   unset(REMAINDER)
-  # This property setting might be removed in the future...
+  # TODO: This code should be placed into a separate file and
+  # then set to CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE, which is then set by
+  # this function.
   list(APPEND build-types ${CMAKE_CONFIGURATION_TYPES})
   list(APPEND build-types ${IXM_CONFIGURATION_TYPES})
   list(APPEND build-types "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
   list(REMOVE_DUPLICATES build-types)
+  # This property setting might be removed in the future...
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${build-types})
   unset(build-types)
   ixm_project_common_standalone(${name})
