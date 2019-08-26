@@ -11,6 +11,7 @@ function (ixm_check_common_symbol variable name)
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
   get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
 
+  # TODO: Change to generate a UUID with the subcommand as the namespace.
   string(SHA1 current-arghash "${variable} ${name} ${ARGN}")
 
   if (arghash STREQUAL current-arghash AND is-found)
@@ -39,7 +40,8 @@ function (ixm_check_common_symbol variable name)
 
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  set(BUILD_ROOT "${IXM_CHECK_DIR}/Symbols/${project}")
+  get_property(directory GLOBAL PROPERTY ixm::directory::check)
+  set(BUILD_ROOT "${directory}/Symbols/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"

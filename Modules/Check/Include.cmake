@@ -29,7 +29,8 @@ function (ixm_check_include header)
   var(LANGUAGE LANGUAGE CXX)
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  set(BUILD_ROOT "${CMAKE_BINARY_DIR}/IXM/Check/Includes/${project}")
+  get_property(directory GLOBAL PROPERTY ixm::directory::check)
+  set(BUILD_ROOT "${directory}/Includes/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"
@@ -82,8 +83,10 @@ function (ixm_check_include header)
 
   set(result "Looking for include file ${header} - ${found}")
   if (NOT ${variable} AND REQUIRED)
-    error("${result}")
-  elseif(NOT QUIET)
-    message(STATUS "${result}")
+    log(FATAL "${result}")
+  elseif (NOT QUIET AND ${variable})
+    success("${result}")
+  elseif (NOT QUIET)
+    failure("${result}")
   endif()
 endfunction()
