@@ -1,8 +1,30 @@
 include_guard(GLOBAL)
 
-property(DEFINE APPIMAGE_GENERIC_NAME PRIVATE)
-property(DEFINE APPIMAGE_NAME PRIVATE)
-property(DEFINE APPIMAGE_NO_DISPLAY PRIVATE)
+define_property(TARGET PROPERTY APPIMAGE_NAME
+  BRIEF_DOCS "Specific name of the application"
+  FULL_DOCS
+[[
+Specific name of the application, for example, "Mozilla"
+]])
+
+define_property(TARGET PROPERTY APPIMAGE_GENERIC_NAME
+  BRIEF_DOCS "Generic name of the application"
+  FULL_DOCS
+[[
+Generic name of the application, for example, "Web Browser"
+]])
+
+define_property(TARGET PROPERTY APPIMAGE_NO_DISPLAY
+  BRIEF_DOCS "This application exists, but do not show it in the menus"
+  FULL_DOCS
+[[
+`NoDisplay` means "this application exists, but don't display it in the menus".
+This can kind of be useful to e.g., associate this application with MIME types,
+so that it gets launched from a file manager (or other apps), without having a
+menu entry for it (there are tons of good reasons for this, including, e.g.,
+the `netscape -remote` or `kfmclient openURL` kind of stuff)
+]]
+)
 
 define_property(TARGET PROPERTY APPIMAGE_COMMENT
   BRIEF_DOCS "Tooltip for the entry"
