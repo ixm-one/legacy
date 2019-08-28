@@ -7,23 +7,28 @@ endfunction()
 
 function (ixm_find_package_destructor)
   get_property(name GLOBAL PROPERTY ixm::find)
-  dict(JSON ixm::find::${name} INTO "IXM/Find/${name}.json")
-  dict(GET ixm::find::${name} REQUIRED required-vars)
-  foreach (var IN LISTS required-vars)
-    # TODO: need to make it so that the "required component" is set but NOT
-    # with the specific target. In other words, we need some way to say "for
-    # each item in COMPONENT, check if true. If they are, set the component_FOUND
-    # to true. Right now we're setting X_<TARGET>_FOUND to true :/
-    if (${var})
-      string(REPLACE "_EXECUTABLE" "" var ${var})
-      set(${var}_FOUND ON)
-    endif()
-  endforeach()
-  if (NOT required-vars)
+  if (NOT TARGET ixm::find::${name})
     return()
   endif()
+  dict(JSON ixm::find::${name} INTO "IXM/Find/${name}.json")
+  dict(GET ixm::find::${name} REQUIRED required-components)
+  foreach (component IN LISTS required-components)
+    dict(GET ixm::find::${name} ${component} variables)
+    set(found ${name}_${component}_FOUND)
+    set(${found} ON)
+    foreach (variable IN LISTS variables)
+      if (NOT DEFINED ${variable} OR NOT ${variable})
+        set(${found} OFF)
+        break()
+      endif()
+    endforeach()
+  endforeach()
+  dict(GET ixm::find::${name} VARIABLES required-vars)
+  if (required-vars)
+    list(INSERT required-vars 0 REQUIRED_VARS)
+  endif()
   find_package_handle_standard_args(${name}
-    REQUIRED_VARS ${required-vars}
+    ${required-vars}
     VERSION_VAR "${name}_VERSION"
     HANDLE_COMPONENTS)
   set(${name}_FOUND ${${name}_FOUND} PARENT_SCOPE)

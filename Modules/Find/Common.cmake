@@ -41,6 +41,7 @@ function (ixm_find_common_hints var)
 endfunction()
 
 # TODO: Come up with a better name
+# TODO: Put shared behavior into this function, as its not being used correctly
 function (ixm_find_common_append var)
   set(required-component ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_${COMPONENT})
   if (DEFINED ${required-component})

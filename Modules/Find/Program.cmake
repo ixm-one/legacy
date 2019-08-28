@@ -2,6 +2,7 @@ include_guard(GLOBAL)
 
 function (ixm_find_program)
   parse(${ARGN}
+    @FLAGS DEFAULT
     @ARGS=? COMPONENT VERSION
     @ARGS=* FLAGS HINTS)
   ixm_find_common_check(PROGRAM ${ARGN})
@@ -10,6 +11,17 @@ function (ixm_find_program)
 
   set(variable ${name}_EXECUTABLE)
   find_program(${variable} NAMES ${REMAINDER} HINTS ${HINTS} ${hints})
+
+  set(required-component ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_${COMPONENT})
+  set(name ixm::find::${CMAKE_FIND_PACKAGE_NAME})
+
+  if (COMPONENT)
+    dict(INSERT ${name} REQUIRED APPEND ${COMPONENT})
+  endif()
+
+  if (DEFAULT OR NOT COMPONENT)
+    dict(INSERT ${name} VARIABLES APPEND ${variable})
+  endif()
 
   ixm_find_common_append(${variable})
   if (NOT ${variable})
@@ -21,6 +33,9 @@ function (ixm_find_program)
   mark_as_advanced(${variable})
   add_executable(${program} IMPORTED GLOBAL)
   set_target_properties(${program} PROPERTIES IMPORTED_LOCATION "${value}")
+  if (COMPONENT)
+    dict(INSERT ${name} ${COMPONENT} APPEND ${variable})
+  endif()
   ixm_find_program_version(${value})
 endfunction()
 

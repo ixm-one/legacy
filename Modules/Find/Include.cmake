@@ -12,20 +12,34 @@ function (ixm_find_include)
   set(package ${CMAKE_FIND_PACKAGE_NAME})
   if (COMPONENT)
     set(library ${CMAKE_FIND_PACKAGE_NAME}::${COMPONENT})
-    set(package ${package}_${COMPONENT})
+    set(package ${CMAKE_FIND_PACKAGE_NAME}_${COMPONENT})
   endif()
 
   set(variable ${package}_INCLUDE_DIR)
-  #ixm_find_include_hints(hints ${package})
   find_path(${variable} NAMES ${REMAINDER} HINTS ${HINTS} ${hints})
+
+  set(required-component ${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED_${COMPONENT})
+  set(name ixm::find::${CMAKE_FIND_PACKAGE_NAME})
+  if (NOT DEFINED COMPONENT)
+    dict(INSERT ${name} VARIABLES APPEND ${variable})
+  elseif (${required-component})
+    dict(INSERT ${name} REQUIRED APPEND ${COMPONENT})
+  endif()
 
   if (NOT ${variable})
     return()
   endif()
 
+  set(value "${${variable}}")
   mark_as_advanced(${variable})
-  dict(INSERT ixm::find::${CMAKE_FIND_PACKAGE_NAME} APPEND INCLUDE ${variable})
+
+  if (COMPONENT)
+    dict(INSERT ${name} ${COMPONENT} APPEND ${variable})
+  endif()
+
   if (TARGET ${library})
-    target_include_directories(${library} PUBLIC "${${variable}}")
+    set_property(TARGET ${library} APPEND
+      PROPERTY
+        INTERFACE_INCLUDE_DIRECTORIES "${value}")
   endif()
 endfunction()
