@@ -1,0 +1,11 @@
+include_guard(GLOBAL)
+
+#function (dict action name)
+#  ixm_action_find(command COMMAND dict ACTION ${action})
+#  invoke(${command} ${ARGN})
+#  set(returns KEYS GET)
+#  if (action IN_LIST returns)
+#    list(GET ARGN -1 out)
+#    set(${out} ${${out}} PARENT_SCOPE)
+#  endif()
+#endfunction()

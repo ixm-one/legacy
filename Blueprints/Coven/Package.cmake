@@ -14,6 +14,8 @@ function (coven_package_init)
 
   cmake_dependent_option(BUILD_PACKAGE_ARCHIVE "Generate tarball" ON
     "${var}" OFF)
+  cmake_dependent_option(BUILD_PACKAGE_ZIP "Generate zip archive" ON
+    "${var}" OFF)
 
   cmake_dependent_option(BUILD_PACKAGE_APPIMAGE "Generate an AppImage" ON
     "${unix-only}" OFF)

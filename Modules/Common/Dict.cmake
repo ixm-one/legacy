@@ -50,6 +50,7 @@ function (ixm_dict_filepath out path ext)
     set(path "${path}.${ext}")
   endif()
   if (NOT IS_ABSOLUTE "${path}")
+    # TODO: This needs to be made "safer" with get_filename_component(ABSOLUTE)
     set(path "${CMAKE_CURRENT_BINARY_DIR}/${path}")
   endif()
   set(${out} "${path}" PARENT_SCOPE)
@@ -76,6 +77,7 @@ function (ixm_dict_how var message)
   set(${var} ${possible} PARENT_SCOPE)
 endfunction()
 
+# XXX: The file format needs to be adjusted.
 function (ixm_dict_load name)
   parse(${ARGN} @ARGS=1 FROM)
   ixm_dict_create(${name})
@@ -109,6 +111,7 @@ function (ixm_dict_load name)
   endforeach()
 endfunction()
 
+# XXX: The file format needs to be adjusted.
 function (ixm_dict_save name)
   parse(${ARGN} @ARGS=1 INTO)
   if (NOT INTO)
