@@ -9,7 +9,7 @@ function (ixm_find_framework)
   set(include ${name}_INCLUDE)
   set(target ${name}::${name})
 
-  var(header HEADER ${name}.h)
+  assign(header ? HEADER : ${name}.h)
   set(CMAKE_FIND_FRAMEWORK ONLY)
   find_library(${library} NAMES ${name} HINTS ${hints} ${HINTS})
   find_path(${include} NAMES "${name}/${header}" HINTS ${hints} ${HINTS})

@@ -4,6 +4,8 @@ include_guard(GLOBAL)
 # XXX: log settings should be stored as global properties, not variables?
 # to make logging easier, each of error/warn/info/debug/trace should call the
 # logging equivalent
+# TODO: The best way to handle manually outputing to JSON or structured output or color output
+#       would be to rely on an event system or sorts.
 
 # ERROR > WARN > INFO > DEBUG > TRACE
 # PANIC | FATAL | NOTICE are always shown

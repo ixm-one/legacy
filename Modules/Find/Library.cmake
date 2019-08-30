@@ -4,7 +4,7 @@ function (ixm_find_library)
   parse(${ARGN}
     @FLAGS DEFAULT
     @ARGS=? COMPONENT
-    @ARGS=* HINTS)
+    @ARGS=* HINTS INCLUDE)
   ixm_find_common_check(LIBRARY ${ARGN})
   ixm_find_common_names(library)
   ixm_find_common_hints(hints)

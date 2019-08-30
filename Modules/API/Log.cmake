@@ -7,7 +7,7 @@ is dependent on the ixm::print::quiet property
 ]]
 
 function (log level)
-  get_property(current GLOBAL PROPERTY ixm::log::level)
+  attribute(GET current NAME log:level DOMAIN ixm)
   list(APPEND levels PANIC FATAL NOTICE ERROR WARN INFO DEBUG TRACE)
   if (NOT level IN_LIST levels)
     log(FATAL "log(${level}) is not a supported logging level")
@@ -15,6 +15,7 @@ function (log level)
   if (level STREQUAL "NOTICE")
     ixm_log_prepare(text ${ARGN})
     ixm_log_notice("${text}")
+# IXM API Directory Locations
     return()
   elseif (level STREQUAL "FATAL")
     ixm_log_prepare(text ${ARGN})
@@ -58,7 +59,7 @@ endfunction ()
 
 #[[TODO: Handle rotation of files]]
 function (ixm_log_file text)
-  get_property(directory GLOBAL PROPERTY ixm::directory::log)
+  attribute(GET directory NAME path:log DOMAIN ixm)
   file(APPEND "${directory}/${PROJECT_NAME}.log" "${text}\n")
 endfunction()
 

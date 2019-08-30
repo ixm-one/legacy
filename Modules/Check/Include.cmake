@@ -26,10 +26,10 @@ function (ixm_check_include header)
     @ARGS=* EXTRA_CMAKE_FLAGS ${args})
 
   # If no LANGUAGE is given, we assume CXX
-  var(LANGUAGE LANGUAGE CXX)
+  assign(LANGUAGE ? LANGUAGE : CXX)
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  get_property(directory GLOBAL PROPERTY ixm::directory::check)
+  attribute(GET directory NAME path:check DOMAIN ixm)
   set(BUILD_ROOT "${directory}/Includes/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0

@@ -2,6 +2,9 @@ include_guard(GLOBAL)
 
 find_package(Cython)
 
+# TODO: Because of our customization system, having `target(CYTHON)` is a
+# possibility, and it can be done on a per-use basis.
+
 #[[ Checks target for CXX or C to be enabled, then sets the correct language ]]
 function (ixm_cython_check_language name)
   get_property(enabled-languages GLOBAL PROPERTY ENABLED_LANGUAGES)

@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 function (ixm_generate_unity_source target)
   parse(${ARGN} @ARGS=? LANGUAGE)
-  var(LANGUAGE LANGUAGE CXX)
+  assign(LANGUAGE ? LANGUAGE : CXX)
 
 
   genexp(ifc-unity-sources $<TARGET_PROPERTY:${target},INTERFACE_UNITY_SOURCES>)

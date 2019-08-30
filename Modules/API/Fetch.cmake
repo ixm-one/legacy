@@ -15,8 +15,8 @@ function (fetch reference)
   ixm_fetch_prepare_command(${provider}) # creates 'command'
   ixm_fetch_prepare_name(${package}) # creates 'name'
 
-  var(alias ALIAS ${name})
-  var(dict DICT ixm::fetch::${alias})
+  assign(alias ? ALIAS : ${name})
+  assign(dict ? DICT : ixm::fetch::${alias})
 
   ixm_fetch_prepare_dict(${dict})
 
@@ -30,8 +30,8 @@ function (fetch reference)
     ixm_fetch_common_download(${alias} ${arguments})
   endif()
 
-  var(target TARGET ${name})
-  var(quiet QUIET OFF)
+  assign(target ? TARGET : ${name})
+  assign(quiet ? QUIET : OFF)
 
   #### POST
   #[[ PATCH ]]

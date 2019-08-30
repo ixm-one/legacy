@@ -2,7 +2,7 @@ include_guard(GLOBAL)
 
 function (ixm_generate_response_file target)
   parse(${ARGN} @ARGS=? LANGUAGE)
-  var(LANGUAGE LANGUAGE CXX)
+  assign(LANGUAGE ? LANGUAGE : CXX)
 
   ixm_generate_response_file_genexp(include-directories ${target}
     PROPERTY INCLUDE_DIRECTORIES
@@ -34,7 +34,7 @@ function (ixm_generate_response_file target)
 endfunction()
 
 function (ixm_generate_response_file_path out-var target)
-  get_property(directory GLOBAL PROPERTY ixm::directory::generate)
+  attribute(GET directory NAME path:generate DOMAIN ixm)
   set(default-path "${directory}/${target}.rsp")
 
   genexp(ifc-response-file $<IF:
@@ -62,7 +62,7 @@ function (ixm_generate_response_file_genexp out-var target)
     @ARGS=1 PROPERTY
     @ARGS=? PREFIX)
 
-  var(PREFIX PREFIX "")
+  assign(PREFIX ? PREFIX : "")
 
   set(ifc $<TARGET_PROPERTY:${target},INTERFACE_${PROPERTY}>)
   set(val $<TARGET_PROPERTY:${target},${PROPERTY}>)

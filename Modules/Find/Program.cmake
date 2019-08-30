@@ -42,8 +42,8 @@ endfunction()
 #[[ Only ever call this from within ixm_find_program ]]
 function (ixm_find_program_version command)
   if (NOT ${name}_VERSION)
-    var(flags FLAGS "--version")
-    var(regex VERSION "[^0-9]+([0-9]+)[.]([0-9]+)?[.]?([0-9]+)?[.]?([0-9]+)?")
+    assign(flags ? FLAGS : "--version")
+    assign(regex ? VERSION : "[^0-9]+([0-9]+)[.]([0-9]+)?[.]?([0-9]+)?[.]?([0-9]+)?")
     execute_process(COMMAND ${command} ${flags}
       OUTPUT_STRIP_TRAILING_WHITESPACE
       ERROR_STRIP_TRAILING_WHITESPACE

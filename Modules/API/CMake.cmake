@@ -1,6 +1,9 @@
 include_guard(GLOBAL)
 
 #[[ This file holds all overrides for builtin CMake commands ]]
+
+# `project()` has an internal module for use, and it is needed here
+# TODO: This *should* be moved to IXM::CMake
 import(IXM::Project::*)
 
 # Overrides project() to do the following:
@@ -20,6 +23,7 @@ macro (project name)
   ixm_project_common_language(${name} ${REMAINDER})
   _project(${name} ${REMAINDER})
   unset(REMAINDER)
+  # TODO: We need to take all IXM domain properties and put them into the project's
   # TODO: This code should be placed into a separate file and
   # then set to CMAKE_PROJECT_<PROJECT-NAME>_INCLUDE, which is then set by
   # this function.
@@ -49,6 +53,7 @@ global property, we instead attempt to *dynamically* invoke
 on a property and then call that command).
 ]]
 
+# TODO: This will be moved to the target(SOURCES) command
 function (target_sources target)
   #TODO: We need to figure out some way to perfectly recreate the multi-calls
   #to PUBLIC/PRIVATE/INTERFACE.
@@ -98,6 +103,18 @@ function (target_sources target)
   endforeach()
 endfunction()
 
+#[[
+Used to keep track of custom defined properties so that we can copy them between
+targets.
+Additionally, serves as a way to store temporary documentation until it can
+be fully fleshed out in docs.ixm.one
+]]
+#function (define_property)
+#  _define_property(${ARGV})
+#endfunction ()
+
+# With this, we've successfully backported CMAKE_MESSAGE_INDENT, while also
+# allowing users to "silence" textual output.
 function (message)
   get_property(quiet GLOBAL PROPERTY ixm::print::quiet)
   if (NOT quiet)

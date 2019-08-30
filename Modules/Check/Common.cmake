@@ -35,12 +35,12 @@ function (ixm_check_common_symbol variable name)
     @ARGS=* CONTENT EXTRA_CMAKE_FLAGS INCLUDE_HEADERS ${args})
 
   # If no LANGUAGE is given, we assume CXX
-  var(TARGET_TYPE TARGET_TYPE STATIC)
-  var(LANGUAGE LANGUAGE CXX)
+  assign(TARGET_TYPE ? TARGET_TYPE : STATIC)
+  assign(LANGUAGE ? LANGUAGE : CXX)
 
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  get_property(directory GLOBAL PROPERTY ixm::directory::check)
+  attribute(GET directory NAME path:check DOMAIN ixm)
   set(BUILD_ROOT "${directory}/Symbols/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0

@@ -6,38 +6,8 @@ import(IXM::Project::*)
 # General Project Functions
 # These include overrides, new "target" types, etc.
 
-function (add_executable name)
-  parse(${ARGN} @FLAGS CONSOLE SERVICE GUI)
-  _add_executable(${name} ${REMAINDER})
-  # TODO: Check if it is IMPORTED or an ALIAS, and handle all REMAINDER settings.
-  if ("ALIAS" IN_LIST ARGN OR "IMPORTED" IN_LIST ARGN)
-    return()
-  endif()
-  set(ixm::events::target::executable "${name}")
-  if (REMAINDER)
-    target_sources(${name} PRIVATE ${REMAINDER})
-  endif()
-  if ((CONSOLE AND GUI) OR (CONSOLE AND SERVICE) OR (SERVICE AND GUI))
-    log(FATAL "Only one of CONSOLE, SERVICE, or GUI is permitted")
-  endif()
-  if (CONSOLE)
-    set_target_properties(${name} PROPERTIES APPIMAGE_TERMINAL ON)
-  endif()
-  if (SERVICE)
-    # This is going to be used to setup a few generator expressions to generate
-    # systemd/launchd configuration files. Support for Windows Services are not
-    # provided.
-    log(FATAL "SERVICE option is not yet implemented for IXM")
-  endif()
-  if (GUI)
-    set_target_properties(${name}
-      PROPERTIES
-        MACOSX_BUNDLE ON
-        WIN32_EXECUTABLE ON
-        APPIMAGE ON)
-  endif()
-endfunction()
-
+# TODO: This needs to be replicated elsewhere somehow. Possibly via
+# target(UNITY)
 #[[
 Creates an OBJECT library, and adds the sources found within the given
 directory to it. Additionally, a UNITY_BUILD property is set on the target
@@ -136,8 +106,8 @@ additionally, if it is NOT enabled the value is never fetched.
 ]]
 function (with name dependency)
   parse(${ARGN} @ARGS=? ALIAS DICT)
-  var(alias ALIAS ${name})
-  var(dict DICT ${PROJECT_NAME}::fetch::${name})
+  assign(alias ? ALIAS : ${name})
+  assign(dict ? DICT : ${PROJECT_NAME}::fetch::${name})
   string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
   option(${option} "Build ${PROJECT_NAME} with ${name} support")
   if (${option})

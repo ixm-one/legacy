@@ -1,11 +1,22 @@
 include_guard(GLOBAL)
 
 #[[ Prints the current value of the given variables ]]
-#function (inspect)
-#  get_property(prefix GLOBAL PROPERTY ixm::inspect::prefix)
-#  foreach (@var IN LISTS ARGV)
-#  endforeach()
-#endfunction()
+function (inspect)
+  get_property(prefix GLOBAL PROPERTY ixm::inspect::prefix)
+  foreach (@var IN LISTS ARGV)
+    set(CMAKE_MESSAGE_INDENT "${CMAKE_MESSAGE_INDENT}${prefix}${\@var}: ")
+    if (DEFINED ${\@var})
+      list(LENGTH ${\@var} length)
+      if (length GREATER 1)
+        string(JOIN " " ${\@var} ${${\@var}})
+      endif()
+      message("${${\@var}}")
+    else()
+      message("$<UNDEFINED>")
+    endif()
+    unset(CMAKE_MESSAGE_INDENT)
+  endforeach()
+endfunction()
 
 #[[ Sets all variable names in the current directory scope to a list ]]
 function (locals out-var)

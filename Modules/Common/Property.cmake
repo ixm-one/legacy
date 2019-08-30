@@ -7,7 +7,7 @@ function (ixm_property_define name)
     @ARGS=? HELP SCOPE
     @FLAGS PRIVATE)
   set(known-scopes GLOBAL DIRECTORY TARGET SOURCE TEST CACHED_VARIABLE)
-  var(scope SCOPE TARGET) 
+  assign(scope ? SCOPE : TARGET) 
   if (NOT scope IN_LIST known-scopes)
     error("${scope} is not a supported property")
   endif()
