@@ -6,4 +6,11 @@ include_guard(GLOBAL)
 # TODO: We need to override how CTest works so that we can have `test` depend
 # on building all tests!
 function (ixm_target_test name)
+  parse(${ARGN}
+    @ARGS=? ALIAS WORKING_DIRECTORY
+    @ARGS=* CONFIGURATIONS COMMAND)
+  assign(alias ? ALIAS : ${name})
+  add_executable(${name})
+  add_test(NAME ${alias} COMMAND ${name})
+  event(EMIT targe:test ${alias})
 endfunction()

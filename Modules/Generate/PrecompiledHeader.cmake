@@ -43,7 +43,7 @@ function (ixm_generate_precompiled_header target)
     COMMENT "Generating '${pch}' for '${target}'"
     COMMAND_EXPAND_LISTS
     VERBATIM)
-  target_sources(${target}
+  target(SOURCES ${target}
     PRIVATE
       $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER_SOURCE>)
   target_compile_options(${target}

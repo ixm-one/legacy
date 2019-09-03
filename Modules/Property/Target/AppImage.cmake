@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+#attribute(DEFINE APPIMAGE_NAME SCOPE TARGET HELP [[Specific name of the application]])
+
 define_property(TARGET PROPERTY APPIMAGE_NAME
   BRIEF_DOCS "Specific name of the application"
   FULL_DOCS

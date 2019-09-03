@@ -1,13 +1,22 @@
 include_guard(GLOBAL)
 
+import(IXM::Log::*)
+
 #[[
 ERROR > WARN > INFO > DEBUG > TRACE
 PANIC, FATAL, NOTICE are always shown in the log. Whether they are displayed
 is dependent on the ixm::print::quiet property
+
+# TODO: We should use the event system for logging. It'll be more flexible this
+# way.
 ]]
 
+# TODO:
+event(ADD ixm_log_info_output ixm_log_info_file TO log:info)
+event(ADD ixm_log_warn_output ixm_log_file TO log:warn)
+
 function (log level)
-  attribute(GET current NAME log:level DOMAIN ixm)
+  attribute(GET current NAME log:level)
   list(APPEND levels PANIC FATAL NOTICE ERROR WARN INFO DEBUG TRACE)
   if (NOT level IN_LIST levels)
     log(FATAL "log(${level}) is not a supported logging level")
@@ -37,9 +46,9 @@ function (log level)
   elseif (level STREQUAL "DEBUG" AND NOT (current IN_LIST debug-levels))
     ixm_log_debug(${text})
   elseif (level STREQUAL "INFO" AND NOT (current IN_LIST info-levels))
-    ixm_log_info(${text})
+    event(EMIT log:info "${text}")
   elseif (level STREQUAL "WARN" AND NOT (current IN_LIST warn-levels))
-    ixm_log_warn(${text})
+    event(EMIT log:warn "${text}")
   elseif (level STREQUAL "ERROR")
     ixm_log_error(${text})
   endif()
@@ -84,9 +93,22 @@ function (ixm_log_prepare out-var)
   endif()
 endfunction()
 
-function (ixm_log_info text)
-  ixm_log_file("${text}")
+function (ixm_log_info_output text)
   ixm_log_out(STATUS steel-blue "${text}")
+endfunction()
+
+function (ixm_log_warn_output text)
+  ixm_log_out(STATUS gold "${text}")
+endfunction()
+
+function (ixm_log_info_file text)
+  ixm_log_file("${text}")
+endfunction()
+
+function (ixm_log_info text)
+  event(EMIT log:info "steel-blue" "${text}")
+#  ixm_log_file("${text}")
+#  ixm_log_out(STATUS steel-blue "${text}")
 endfunction()
 
 function (ixm_log_warn text)

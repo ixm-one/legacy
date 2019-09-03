@@ -1,14 +1,17 @@
 include_guard(GLOBAL)
 
+import(IXM::API::Core)
+
 function (ixm_attribute_name name)
   if (NOT ARGN)
     return()
   endif()
   parse(${ARGN} @ARGS=? DOMAIN)
-  assign(domain ? DOMAIN PROJECT_NAME : "IXM")
+  assign(domain ? DOMAIN PROJECT_NAME IXM_CURRENT_BLUEPRINT_NAME : "IXM")
   # XXX: Does CMake consider Project and project to be the same name?
   string(TOLOWER "${domain}" domain)
   string(TOLOWER "${name}" name)
+  set(ARGN ${REMAINDER})
   # This can easily be made better
   list(LENGTH ARGN length)
   if (length GREATER 1)

@@ -2,12 +2,17 @@ include_guard(GLOBAL)
 
 import(IXM::Target::*)
 
+# Common arguments:
+# ALIAS <name>
+# COMPONENT <name>
+# ALL (flag)
 function (target subcommand)
-  ixm_action_find(command COMMAND target ACTION ${subcommand})
+  action(command FIND ${subcommand} FOR target)
   invoke(${command} ${ARGN})
 endfunction ()
 
 # Like target_link_libraries, but copies all custom IXM properties
+# TODO: What is the "subcommand" we're going to name this?
 function(target_copy_properties target)
   get_property(interface-properties GLOBAL PROPERTY IXM_INTERFACE_PROPERTIES)
   get_property(private-properties GLOBAL PROPERTY IXM_PRIVATE_PROPERTIES)

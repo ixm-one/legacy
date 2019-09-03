@@ -6,6 +6,7 @@ This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
 function (fetch reference)
+  void(ALIAS DICT COMPONENT)
   parse(${ARGN}
     @ARGS=? ALIAS DICT
     @ARGS=* COMPONENT)

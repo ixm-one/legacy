@@ -4,12 +4,14 @@ import(IXM::Attribute::*)
 
 # This is the only command that truly can't be dynamic due to restrictions
 #[[
-TODO: This can be extended to take multiple NAMEs and TARGETs
 attribute(NAME <name> [DOMAIN <domain>] [<ACTION>] <values...>)
 attribute(TARGET <target> PROPERTY <property> [<ACTION>] <values...>)
 attribute(RESTORE <name> [DOMAIN <domain>])
 attribute(DEFINE <name>...) # TODO: Finish this part up
 attribute(GET <out-var> (NAME <name> [DOMAIN <domain>] | TARGET <target> PROPERTY <property>))
+
+target(NAME), target(TARGET), target(RESTORE) will eventually be updated to
+take multiple inputs for mutation
 ]]
 function (attribute action)
   if (action STREQUAL "NAME")

@@ -75,6 +75,8 @@ list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 
+# Hardcoded Reserved Properties
+
 # Blueprint Attributes
 attribute(NAME blueprint:file)
 attribute(NAME blueprint:name)
@@ -94,13 +96,6 @@ attribute(NAME toolchain:arduino ASSIGN "${IXM_ROOT}/Toolchains/Arduino.cmake")
 attribute(NAME toolchain:android ASSIGN "${IXM_ROOT}/Toolchains/Android.cmake")
 attribute(NAME toolchain:rpi ASSIGN "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
 attribute(NAME toolchain:qnx ASSIGN "${IXM_ROOT}/Toolchains/QNX.cmake")
-
-# Toolchain related properties
-set_property(GLOBAL PROPERTY ixm::toolchain::raspberrypi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-set_property(GLOBAL PROPERTY ixm::toolchain::android "${IXM_ROOT}/Toolchains/Android.cmake")
-set_property(GLOBAL PROPERTY ixm::toolchain::arduino "${IXM_ROOT}/Toolchains/Arduino.cmake")
-set_property(GLOBAL PROPERTY ixm::toolchain::rpi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-set_property(GLOBAL PROPERTY ixm::toolchain::qnx "${IXM_ROOT}/Toolchains/QNX.cmake")
 
 # Command Attributes
 
@@ -128,9 +123,6 @@ attribute(NAME dict:json ASSIGN ixm_dict_json)
 attribute(NAME dict:keys ASSIGN ixm_dict_keys)
 attribute(NAME dict:set ASSIGN ixm_dict_set) # This should be deprecated. It's not as useful...
 attribute(NAME dict:get ASSIGN ixm_dict_get)
-
-attribute(NAME dict:keys/returns ASSIGN ON)
-attribute(NAME dict:get/returns ASSIGN ON)
 
 # event() Attributes
 attribute(NAME event:emit ASSIGN ixm_event_emit)
@@ -160,6 +152,14 @@ attribute(NAME find:include ASSIGN ixm_find_include)
 attribute(NAME generate:unity ASSIGN ixm_generate_unity_build)
 attribute(NAME generate:pch ASSIGN ixm_generate_precompiled_header)
 attribute(NAME generate:rsp ASSIGN ixm_generate_response_file)
+
+#attribute(NAME generate:protobuf ASSIGN ixm_generate_protobuf)
+#attribute(NAME generate:proto ASSIGN ixm_generate_protobuf)
+
+#attribute(NAME generate:bison ASSIGN ixm_generate_bison)
+#attribute(NAME generate:flex ASSIGN ixm_generate_flex)
+#attribute(NAME generate:yacc ASSIGN ixm_generate_bison)
+#attribute(NAME generate:lex ASSIGN ixm_generate_lex)
 
 # inspect() Attributes
 #attribute(NAME inspect:prefix)

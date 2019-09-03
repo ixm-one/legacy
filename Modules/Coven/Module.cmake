@@ -81,7 +81,7 @@ function (ixm_coven_generate_unity path)
     ${COMMENT}
     "$<$<BOOL:${sources}>:#include <$<JOIN:${sources},$<ANGLE-R>\n#include<>>>")
   file(GENERATE OUTPUT ${src} CONTENT ${content} CONDITION $<BOOL:${flag}>)
-  target_sources(${target}
+  target(SOURCES ${target}
     PRIVATE
       $<IF:$<BOOL:${flag}>,${src},${sources}>)
 endfunction()
@@ -105,7 +105,7 @@ function (ixm_coven_generate_pch path)
     PRIVATE
       $<$<CXX_COMPILER_ID:GNU>:-Winvalid-pch>
       $<$<CXX_COMPILER_ID:GNU>:-include ${hdr}>)
-  target_sources(${target}
+  target(SOURCES ${target}
     PRIVATE
       $<$<BOOL:${flag}>,${rsp}>)
   set_property(SOURCE ${src} APPEND PROPERTY OBJECT_DEPENDS ${rsp} ${pch})

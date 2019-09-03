@@ -9,11 +9,25 @@ All commands contained in this API file are for authoring commands with.
 Hence the file's name :)
 ]]
 
+# Used to locate a command's subactions
+function (action out-var)
+  parse(${ARGN} @ARGS=1 FIND FOR)
+  attribute(GET command NAME "${FOR}:${FIND}")
+  if (NOT command)
+    log(FATAL "${FOR}(${FIND} is not a valid subcommand")
+  endif()
+  if (NOT COMMAND ${command})
+    log(FATAL "Attribute for ${FOR}(${FIND}) does not refer to a valid command")
+  endif()
+  set(${out-var} ${command} PARENT_SCOPE)
+endfunction()
+
 #[[
 set(), but with fallbacks. Fancier ternary
 assign(<var> ? LOOKUP1 LOOKUP2 : "DEFAULT" "VALUES")
 ]]
 function (assign out-var)
+  void(? :)
   parse(${ARGN} @ARGS=* ? :)
   foreach (@value IN LISTS ?)
     if (DEFINED ${\@value})
@@ -21,13 +35,30 @@ function (assign out-var)
       return()
     endif()
   endforeach()
-  set(${out-var} ${\:} PARENT_SCOPE)
+  if (DEFINED :)
+    set(${out-var} ${\:} PARENT_SCOPE)
+  endif()
 endfunction()
+
+#[[
+Unsets all variables in the calling scope
+]]
+macro(void)
+  foreach (@void ${ARGV})
+    unset(${\@void})
+  endforeach()
+endmacro()
 
 #[[
 This function is used to condense a multiline generator expression into a
 single line. If a newline is needed make sure the entire generator expression
 section is a "quoted" argument
+
+TODO: Consider expanding its usage to generate two TARGET_PROPERTY expressions.
+This could be done by having a [PROPERTY <property>] argument. If present,
+we can run string(CONFIGURE @ONLY) on the expression. This would allow us to
+generate an interface and private property lookup in one statement.
+This would save a TON of time.
 ]]
 function (genexp out-var)
   if (NOT ARGN)
@@ -42,7 +73,7 @@ function (invoke name)
   if (NOT COMMAND ${name})
     log(FATAL "Cannot call invoke() with non-existant command '${name}'")
   endif()
-  attribute(GET directory NAME path:invoke DOMAIN ixm)
+  attribute(GET directory NAME path:invoke)
   set(call "${directory}/${name}.cmake")
   if (NOT EXISTS "${call}")
     string(CONFIGURE [[@name@(${ARGN})]] content @ONLY)
@@ -82,7 +113,8 @@ DESCRIPTION
                not set.
 ]]
 function(parse)
-  get_property(max GLOBAL PROPERTY ixm::parse::max)
+  void(max)
+  get_property(max GLOBAL PROPERTY ixm::🈯::parse::max)
   if (NOT max)
     set(max 9)
   endif()
@@ -126,6 +158,7 @@ function(parse)
     if (length LESS 1)
       log(FATAL "argument '${arg}': expected at least one argument")
     endif()
+    set(${__\@PREFIX}${arg} ${ARG_${arg}} PARENT_SCOPE)
   endforeach()
 
   foreach (N RANGE 1 ${max})
@@ -159,6 +192,7 @@ function (failure)
 endfunction()
 
 # [[ It's been kept around for a while, but we don't *really* need it ]]
+#[[ Use log(NOTICE) instead ]]
 function(print)
   list(JOIN ARGN " " text)
   message(STATUS "${text}")

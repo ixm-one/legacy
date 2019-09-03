@@ -4,7 +4,6 @@ function (ixm_generate_unity_source target)
   parse(${ARGN} @ARGS=? LANGUAGE)
   assign(LANGUAGE ? LANGUAGE : CXX)
 
-
   genexp(ifc-unity-sources $<TARGET_PROPERTY:${target},INTERFACE_UNITY_SOURCES>)
   genexp(unity-sources $<TARGET_PROPERTY:${target},UNITY_SOURCES>)
 

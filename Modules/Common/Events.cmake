@@ -3,6 +3,8 @@ include_guard(GLOBAL)
 This file marks all the "builtin" events that come from CMake operations.
 This is done because we don't really have control over some CMake builtin
 commands. We do for others however :)
+
+# TODO: Move this to API/CMake.cmake
 ]]
 
 variable_watch(CMAKE_FIND_PACKAGE_NAME cmake::package)

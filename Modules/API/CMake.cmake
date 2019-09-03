@@ -5,6 +5,7 @@ include_guard(GLOBAL)
 # `project()` has an internal module for use, and it is needed here
 # TODO: This *should* be moved to IXM::CMake
 import(IXM::Project::*)
+import(IXM::Common::Log)
 
 # Overrides project() to do the following:
 # 1) Set CMAKE_BUILD_TYPE if not defined
@@ -13,6 +14,8 @@ import(IXM::Project::*)
 #    This means that, instead of setting the C++ standard manually,
 #    You can declare it inside of LANGUAGES, i.e., CXX14.
 # 3 has yet to be implemented
+# TODO: Should we consider the first call to project() to be the top level?
+# Or should we use CMAKE_PROJECT_NAME? This will affect PROJECT_STANDALONE/"PROJECT_TOPLEVEL"
 macro (project name)
   if (NOT CMAKE_BUILD_TYPE)
     log(WARN "CMAKE_BUILD_TYPE not set. Using 'Debug'")
@@ -20,6 +23,9 @@ macro (project name)
   endif()
   ixm_project_blueprint_prepare(${name} ${ARGN})
   # FIXME: We're doing a lot of hacks to get the language values out...
+  # Additionally, this is where we should inject support for "enabling"
+  # known 'language' packages. This could be done using a temporary
+  # append/insert to CMAKE_MODULE_PATH for a Languages/FindXXX.cmake set of files.
   ixm_project_common_language(${name} ${REMAINDER})
   _project(${name} ${REMAINDER})
   unset(REMAINDER)
@@ -43,65 +49,6 @@ macro (project name)
     set_property(GLOBAL PROPERTY PROJECT_SUBPROJECT_DIR ${PROJECT_SOURCE_DIR})
   endif()
 endmacro()
-
-
-#[[
-Extends the buildint targets_sources function to accept globa parameters
-automatically. If a file's extension is found to be in the ixm::sources::custom
-global property, we instead attempt to *dynamically* invoke
-`target_sources_${ext}`. (This may change before the alpha to perform a lookup
-on a property and then call that command).
-]]
-
-# TODO: This will be moved to the target(SOURCES) command
-function (target_sources target)
-  #TODO: We need to figure out some way to perfectly recreate the multi-calls
-  #to PUBLIC/PRIVATE/INTERFACE.
-  parse(${ARGN}
-    @FLAGS RECURSE
-    @ARGS=* INTERFACE PUBLIC PRIVATE)
-  set(glob GLOB)
-  if (RECURSE)
-    set(glob GLOB_RECURSE)
-  endif()
-  if (NOT (INTERFACE OR PUBLIC OR PRIVATE))
-    log(FATAL "target_sources require at least"
-      "PRIVATE, PUBLIC, or INTERFACE as the second parameter")
-  endif()
-  get_property(custom-extensions GLOBAL PROPERTY ixm::sources::custom)
-  foreach (visibility IN ITEMS PRIVATE PUBLIC INTERFACE)
-    if (NOT DEFINED ${visibility})
-      continue()
-    endif()
-    # Handle globbing for this specific visibility
-    foreach (entry IN LISTS ${visibility})
-      string(FIND "${entry}" "*" glob-indicator)
-      if (glob-indicator GREATER -1)
-        file(${glob} entry CONFIGURE_DEPENDS ${entry})
-      endif()
-      list(APPEND sources ${entry})
-    endforeach()
-    foreach (extension IN LISTS custom-extensions)
-      set(${extension}-sources ${sources})
-      list(FILTER ${extension}-sources INCLUDE REGEX ".*[.]${extension}$")
-      list(LENGTH ${extension}-sources length)
-      if (length GREATER 0)
-        list(APPEND extensions ${extension})
-        list(REMOVE_ITEM sources ${${extension}-sources})
-      endif()
-    endforeach()
-    foreach (extension IN LISTS extensions)
-      if (NOT COMMAND target_sources_${extension})
-        log(FATAL "'target_sources_${extension}' is not a valid command")
-      endif()
-      invoke(target_sources_${extension}
-        ${target}
-        ${visibility}
-        ${${extension}-sources})
-    endforeach()
-    _target_sources(${target} ${visibility} ${sources})
-  endforeach()
-endfunction()
 
 #[[
 Used to keep track of custom defined properties so that we can copy them between

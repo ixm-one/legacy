@@ -9,9 +9,6 @@
   <a href="https://docs.ixm.one" target="_blank" rel="noopener noreferrer">
     <img height="28" src="https://api.netlify.com/api/v1/badges/b1e01271-ec5f-4a43-8ed6-f7d79ab777d3/deploy-status">
   </a>
-  <a href="https://www.patreon.com/slurpsmadrips" target="_blank" rel="noopener noreferrer">
-    <img height="28" alt="Become a Patron!" src="https://c5.patreon.com/external/logo/become_a_patron_button.png">
-  </a>
   <a href="https://ko-fi.com/V7V66HAG" target="_blank" rel="noopener noreferrer">
     <img height="28" alt="Buy Me a Coffee at ko-fi.com" src="https://az743702.vo.msecnd.net/cdn/kofi5.png" />
   </a>

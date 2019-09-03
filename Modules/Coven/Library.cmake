@@ -36,7 +36,7 @@ function (ixm_coven_library_primary)
     endforeach()
     if (files)
       add_library(${PROJECT_NAME})
-      target_sources(${PROJECT_NAME} PRIVATE ${files})
+      target(SOURCES ${PROJECT_NAME} PRIVATE ${files})
       target_include_directories(${PROJECT_NAME}
         PUBLIC
           $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

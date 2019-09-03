@@ -8,6 +8,7 @@ include_guard(GLOBAL)
 # properties defined. As a result, we need to make this gets handled correctly.
 # TODO: Support protobuf plugins
 function (ixm_generate_protobuf_sources target)
+  log(FATAL "This command is not properly implemented")
   set(MKDIR_COMMAND ${CMAKE_COMMAND} -E make_directory)
   set(error-format $<$<CXX_COMPILER_ID:MSVC>:--error_format=msvs>)
   genexp(output-directory $<TARGET_PROPERTY:${target},PROTOBUF_OUTPUT_DIR>)

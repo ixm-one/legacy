@@ -1,7 +1,43 @@
 include_guard(GLOBAL)
 
+# TODO: This either needs to be deleted, or we need to put *just* project
+# specific commands in here
+
 import(IXM::API::Property) # TODO: This needs to be moved so the dependencies are correct...
 import(IXM::Project::*)
+
+#[[
+Wrapper around fetch() API so that the given <name> is used as an ALIAS, but
+additionally, if it is NOT enabled the value is never fetched.
+]]
+function (with name dependency)
+  parse(${ARGN} @ARGS=? ALIAS DICT)
+  assign(alias ? ALIAS : ${name})
+  assign(dict ? DICT : ${PROJECT_NAME}::fetch::${name})
+  string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
+  option(${option} "Build ${PROJECT_NAME} with ${name} support")
+  if (${option})
+    fetch(${dependency} ALIAS ${alias} DICT ${dict})
+  endif()
+  set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
+  set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
+endfunction()
+
+#[[
+Better "option()" that also adds several defines and variables so that they are
+available in the configure header for the project. This is placed into a file
+that is generated at generation time, as opposed to configure_file. This speeds
+up project configuration and generation.
+If a feature is "public", then it is added to the header file
+If a feature is "private", then it is added to the given target only
+If a feature is "internal", then it is added as a compile_definition to the
+project's "internal" target, which is linked to *all* project targets privately
+]]
+function (feature name help)
+  string(TOUPPER "${PROJECT_NAME}_ENABLE_${name}" option)
+  option("${option}" "Build ${PROJECT_NAME} with ${name} enabled")
+  dict(INSERT ixm::${PROJECT_NAME} FEATURE APPEND ${name})
+endfunction()
 
 # General Project Functions
 # These include overrides, new "target" types, etc.
@@ -33,7 +69,6 @@ be built when the condition is satisfied.
 
 add_submodule(project::submodule
   WHEN $<PLATFORM_ID:Windows>)
-
 ]]
 function (add_submodule name type)
   set(valid-types SPLAYED HIERARCHY)
@@ -76,9 +111,9 @@ function (add_submodule name type)
   if (parent-type STREQUAL INTERFACE_LIBRARY)
     set(visibility INTERFACE)
   endif()
-  target_sources(${parent}
+  target(SOURCES ${parent}
       ${visibility} $<TARGET_OBJECTS:${target}>)
-  target_sources(${target} PRIVATE ${unity-if})
+  target(SOURCES ${target} PRIVATE ${unity-if})
 
   set_target_properties(${target}
     PROPERTIES
@@ -100,35 +135,3 @@ nothing.
 Lastly, if a submodule with no sources is added, we let CMake complain.
 ]]
 
-#[[
-Wrapper around fetch() API so that the given <name> is used as an ALIAS, but
-additionally, if it is NOT enabled the value is never fetched.
-]]
-function (with name dependency)
-  parse(${ARGN} @ARGS=? ALIAS DICT)
-  assign(alias ? ALIAS : ${name})
-  assign(dict ? DICT : ${PROJECT_NAME}::fetch::${name})
-  string(TOUPPER "${PROJECT_NAME}_WITH_${name}" option)
-  option(${option} "Build ${PROJECT_NAME} with ${name} support")
-  if (${option})
-    fetch(${dependency} ALIAS ${alias} DICT ${dict})
-  endif()
-  set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
-  set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
-endfunction()
-
-#[[
-Better "option()" that also adds several defines and variables so that they are
-available in the configure header for the project. This is placed into a file
-that is generated at generation time, as opposed to configure_file. This speeds
-up project configuration and generation.
-If a feature is "public", then it is added to the header file
-If a feature is "private", then it is added to the given target only
-If a feature is "internal", then it is added as a compile_definition to the
-project's "internal" target, which is linked to *all* project targets privately
-]]
-function (feature name help)
-  string(TOUPPER "${PROJECT_NAME}_ENABLE_${name}" option)
-  option("${option}" "Build ${PROJECT_NAME} with ${name} enabled")
-  dict(INSERT ixm::${PROJECT_NAME} FEATURE APPEND ${name})
-endfunction()

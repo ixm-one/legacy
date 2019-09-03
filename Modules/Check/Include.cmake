@@ -29,7 +29,7 @@ function (ixm_check_include header)
   assign(LANGUAGE ? LANGUAGE : CXX)
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  attribute(GET directory NAME path:check DOMAIN ixm)
+  attribute(GET directory NAME path:check)
   set(BUILD_ROOT "${directory}/Includes/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
@@ -46,6 +46,12 @@ function (ixm_check_include header)
 
   string(REGEX REPLACE "(.+)" "#include <\\1>" IXM_CHECK_PREAMBLE "${header}")
   
+  if (NOT QUIET)
+    print("Looking for include file '${header}'")
+    #execute_process(COMMAND
+    #  ${CMAKE_COMMAND} -E echo_append "-- Looking for include file <${header}>")
+  endif()
+
   configure_file(
     "${IXM_ROOT}/Templates/Check/CMakeLists.txt"
     "${BUILD_ROOT}/CMakeLists.txt"
@@ -55,16 +61,14 @@ function (ixm_check_include header)
     "${BUILD_ROOT}/main.cxx"
     @ONLY)
 
-  if (NOT QUIET)
-    message(STATUS "Looking for include file ${header}")
-  endif()
-
+  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
   try_compile(${variable}
     "${BUILD_ROOT}/build"
     "${BUILD_ROOT}"
     "${project}"
     CMAKE_FLAGS ${cmake-flags}
     OUTPUT_VARIABLE output)
+  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
 
   set(logfile "CMakeOutput.log")
   set(status "passed")
@@ -80,13 +84,16 @@ function (ixm_check_include header)
   file(APPEND "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${logfile}"
     "Determining if include file '${header}' exists ${status} with the following output:\n"
     "${output}")
+  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
 
   set(result "Looking for include file ${header} - ${found}")
   if (NOT ${variable} AND REQUIRED)
     log(FATAL "${result}")
   elseif (NOT QUIET AND ${variable})
     success("${result}")
+    #execute_process(COMMAND ${CMAKE_COMMAND} -E echo " ${.lime}${found}${.default}")
   elseif (NOT QUIET)
     failure("${result}")
+    #execute_process(COMMAND ${CMAKE_COMMAND} -E echo " ${.crimson}${found}${.default}")
   endif()
 endfunction()
