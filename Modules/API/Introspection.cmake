@@ -65,3 +65,13 @@ function (locals out-var)
   ixm_introspection_filter(variables ${ARGN} VALUES ${variables})
   set(${out-var} ${variables} PARENT_SCOPE)
 endfunction()
+
+#[[ sets all targets in the current directory (and below) to a list ]]
+function (targets out-var)
+  get_property(directories DIRECTORY PROPERTY SUBDIRECTORIES)
+  foreach (directory IN LISTS directories ITEMS CMAKE_CURRENT_SOURCE_DIR)
+    get_property(targets DIRECTORY ${directories} PROPERTY BUILDSYSTEM_TARGETS)
+    list(APPEND @targets ${targets})
+  endforeach()
+  set(${out-var} ${\@targets} PARENT_SCOPE)
+endfunction()

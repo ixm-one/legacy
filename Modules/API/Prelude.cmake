@@ -75,9 +75,40 @@ list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Languages")
 list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 
-# Hardcoded Reserved Properties
+# First we set properties. These are intrinsic for us to run, but more
+# importantly are just used to reduce hardcoding lists.
 
-# Blueprint Attributes
+#setting(NAME RaspberryPi CATEGORY Toolchain VALUE ...)
+#setting(GET CMAKE_TOOLCHAIN_FILE KEY ${CMAKE_SYSTEM_NAME} FROM Toolchain)
+#setting(GET directory KEY Generate FROM Path)
+
+#trait(SET "${IXM_ROOT}/Toolchains/RaspberryPi.cmake" TO RPi RaspberryPi)
+#trait(GET CMAKE_TOOLCHAIN_FILE FROM ${CMAKE_SYSTEM_NAME})
+
+set_property(GLOBAL PROPERTY ixm:toolchain:raspberrypi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain:arduino "${IXM_ROOT}/Toolchains/Arduino.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain:android "${IXM_ROOT}/Toolchains/Android.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain:rpi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain:qnx "${IXM_ROOT}/Toolchains/QNX.cmake")
+
+# Attributes are defined for user customization. Not everything can be
+# customized but we provide hooks for some specific calls so that things like
+# fetching dependencies or printing output can be customized.
+# Other than that, we really can't provide many customization points for
+# performance reasons :<
+
+#attribute(DEFINE blueprint:file HELP "Current Blueprint File")
+#attribute(DEFINE blueprint:name HELP "Current Blueprint Name")
+#
+#attribute(DEFINE path:generate DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Generate")
+#attribute(DEFINE path:target DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Target")
+#attribute(DEFINE path:invoke DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Invoke")
+#attribute(DEFINE path:fetch DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Fetch")
+#attribute(DEFINE path:check DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Check")
+#attribute(DEFINE path:find DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Find")
+#attribute(DEFINE path:log DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Logs")
+
+# TODO: These need to be properties. They are not customizable.
 attribute(NAME blueprint:file)
 attribute(NAME blueprint:name)
 
@@ -90,46 +121,10 @@ attribute(NAME path:check ASSIGN "${CMAKE_CURRENT_BINARY_DIR}/IXM/Check")
 attribute(NAME path:find ASSIGN "${CMAKE_CURRENT_BINARY_DIR}/IXM/Find")
 attribute(NAME path:log ASSIGN "${CMAKE_CURRENT_BINARY_DIR}/IXM/Logs")
 
-# Toolchain Attributes
-attribute(NAME toolchain:raspberrypi ASSIGN "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-attribute(NAME toolchain:arduino ASSIGN "${IXM_ROOT}/Toolchains/Arduino.cmake")
-attribute(NAME toolchain:android ASSIGN "${IXM_ROOT}/Toolchains/Android.cmake")
-attribute(NAME toolchain:rpi ASSIGN "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-attribute(NAME toolchain:qnx ASSIGN "${IXM_ROOT}/Toolchains/QNX.cmake")
-
 # Command Attributes
 
-# check() Attributes
-attribute(NAME check:integral ASSIGN ixm_check_integral)
-attribute(NAME check:include ASSIGN ixm_check_include)
-attribute(NAME check:pointer ASSIGN ixm_check_pointer)
-attribute(NAME check:struct ASSIGN ixm_check_class)
-attribute(NAME check:class ASSIGN ixm_check_class)
-attribute(NAME check:union ASSIGN ixm_check_union)
-attribute(NAME check:enum ASSIGN ixm_check_enum)
-
-attribute(NAME check:alignof ASSIGN ixm_check_alignof)
-attribute(NAME check:sizeof ASSIGN ixm_check_sizeof)
-
-# dict() Attributes
-attribute(NAME dict:transform ASSIGN ixm_dict_transform)
-attribute(NAME dict:insert ASSIGN ixm_dict_insert)
-attribute(NAME dict:remove ASSIGN ixm_dict_remove)
-attribute(NAME dict:clear ASSIGN ixm_dict_clear)
-attribute(NAME dict:merge ASSIGN ixm_dict_merge)
-attribute(NAME dict:load ASSIGN ixm_dict_load)
-attribute(NAME dict:save ASSIGN ixm_dict_save)
-attribute(NAME dict:json ASSIGN ixm_dict_json)
-attribute(NAME dict:keys ASSIGN ixm_dict_keys)
-attribute(NAME dict:set ASSIGN ixm_dict_set) # This should be deprecated. It's not as useful...
-attribute(NAME dict:get ASSIGN ixm_dict_get)
-
-# event() Attributes
-attribute(NAME event:emit ASSIGN ixm_event_emit)
-attribute(NAME event:add ASSIGN ixm_event_add)
-attribute(NAME event:rm ASSIGN ixm_event_rm)
-
-# fetch() Attributes
+# fetch() Attributes -- These will stay dynamic.
+# However, they will not be attributes...
 attribute(NAME fetch:hub ASSIGN ixm_fetch_hub)
 attribute(NAME fetch:lab ASSIGN ixm_fetch_lab)
 attribute(NAME fetch:bit ASSIGN ixm_fetch_bit)
@@ -142,7 +137,7 @@ attribute(NAME fetch:svn ASSIGN ixm_fetch_svn)
 attribute(NAME fetch:cvs ASSIGN ixm_fetch_cvs)
 attribute(NAME fetch:hg ASSIGN ixm_fetch_hg)
 
-# find() Attributes
+# find() Attributes # TODO: Hard code these.
 attribute(NAME find:framework ASSIGN ixm_find_framework)
 attribute(NAME find:program ASSIGN ixm_find_program)
 attribute(NAME find:library ASSIGN ixm_find_library)
@@ -152,14 +147,6 @@ attribute(NAME find:include ASSIGN ixm_find_include)
 attribute(NAME generate:unity ASSIGN ixm_generate_unity_build)
 attribute(NAME generate:pch ASSIGN ixm_generate_precompiled_header)
 attribute(NAME generate:rsp ASSIGN ixm_generate_response_file)
-
-#attribute(NAME generate:protobuf ASSIGN ixm_generate_protobuf)
-#attribute(NAME generate:proto ASSIGN ixm_generate_protobuf)
-
-#attribute(NAME generate:bison ASSIGN ixm_generate_bison)
-#attribute(NAME generate:flex ASSIGN ixm_generate_flex)
-#attribute(NAME generate:yacc ASSIGN ixm_generate_bison)
-#attribute(NAME generate:lex ASSIGN ixm_generate_lex)
 
 # inspect() Attributes
 #attribute(NAME inspect:prefix)
@@ -241,19 +228,6 @@ set_property(GLOBAL PROPERTY ixm::check::enum ixm_check_enum)
 
 set_property(GLOBAL PROPERTY ixm::check::alignof ixm_check_alignof)
 set_property(GLOBAL PROPERTY ixm::check::sizeof ixm_check_sizeof)
-
-# Dict Command Properties
-set_property(GLOBAL PROPERTY ixm::dict::transform ixm_dict_transform)
-set_property(GLOBAL PROPERTY ixm::dict::insert ixm_dict_insert)
-set_property(GLOBAL PROPERTY ixm::dict::remove ixm_dict_remove)
-set_property(GLOBAL PROPERTY ixm::dict::clear ixm_dict_clear)
-set_property(GLOBAL PROPERTY ixm::dict::merge ixm_dict_merge)
-set_property(GLOBAL PROPERTY ixm::dict::load ixm_dict_load)
-set_property(GLOBAL PROPERTY ixm::dict::save ixm_dict_save)
-set_property(GLOBAL PROPERTY ixm::dict::json ixm_dict_json)
-set_property(GLOBAL PROPERTY ixm::dict::keys ixm_dict_keys)
-set_property(GLOBAL PROPERTY ixm::dict::set ixm_dict_set)
-set_property(GLOBAL PROPERTY ixm::dict::get ixm_dict_get)
 
 # Event Command Properties
 set_property(GLOBAL PROPERTY ixm::event::remove ixm_event_remove)

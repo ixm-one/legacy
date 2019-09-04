@@ -50,16 +50,6 @@ macro (project name)
   endif()
 endmacro()
 
-#[[
-Used to keep track of custom defined properties so that we can copy them between
-targets.
-Additionally, serves as a way to store temporary documentation until it can
-be fully fleshed out in docs.ixm.one
-]]
-#function (define_property)
-#  _define_property(${ARGV})
-#endfunction ()
-
 # With this, we've successfully backported CMAKE_MESSAGE_INDENT, while also
 # allowing users to "silence" textual output.
 function (message)

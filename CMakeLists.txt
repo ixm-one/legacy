@@ -13,5 +13,7 @@ import(IXM::API::Prelude)
 import(IXM::API::*)
 
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  attribute(GET CMAKE_TOOLCHAIN_FILE NAME toolchain:${CMAKE_SYSTEM_NAME})
+  string(TOLOWER "${CMAKE_SYSTEM_NAME}" cmake-system-name)
+  get_property(CMAKE_TOOLCHAIN_FILE GLOBAL PROPERTY ixm:toolchain:${cmake-system-name})
+  unset(cmake-system-name)
 endif()
