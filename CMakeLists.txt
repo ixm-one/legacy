@@ -5,9 +5,12 @@ set_property(GLOBAL PROPERTY imx::🈯::parse::max 9)
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM installation root")
 set(IXM_MODULE_ROOT "${IXM_ROOT}/Modules" CACHE INTERNAL "Root module for IXM")
 set(CMake_MODULE_ROOT "${CMAKE_ROOT}/Modules" CACHE INTERNAL "Root module for CMake")
+# TODO: Include Prelude here, or just manually set all of it in this file.
 include("${IXM_ROOT}/Modules/API/Import.cmake")
 
 import(IXM::API::Attribute)
+import(IXM::API::Introspection)
+import(IXM::API::Aspect)
 import(IXM::API::Prelude)
 
 import(IXM::API::*)

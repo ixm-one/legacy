@@ -85,11 +85,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 #trait(SET "${IXM_ROOT}/Toolchains/RaspberryPi.cmake" TO RPi RaspberryPi)
 #trait(GET CMAKE_TOOLCHAIN_FILE FROM ${CMAKE_SYSTEM_NAME})
 
-set_property(GLOBAL PROPERTY ixm:toolchain:raspberrypi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-set_property(GLOBAL PROPERTY ixm:toolchain:arduino "${IXM_ROOT}/Toolchains/Arduino.cmake")
-set_property(GLOBAL PROPERTY ixm:toolchain:android "${IXM_ROOT}/Toolchains/Android.cmake")
-set_property(GLOBAL PROPERTY ixm:toolchain:rpi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
-set_property(GLOBAL PROPERTY ixm:toolchain:qnx "${IXM_ROOT}/Toolchains/QNX.cmake")
+#aspect(GET toolchain:raspberrypi AS CMAKE_TOOLCHAIN_FILE)
+#aspect(SET toolchain:qnx WITH "${IXM_ROOT}/Toolchains/QNX.cmake")
+#aspect(GET toolchain:${CMAKE_SYSTEM_NAME} AS CMAKE_TOOLCHAIN_FILE)
+
+aspect(SET toolchain:qnx WITH "${IXM_ROOT}/Toolchains/QNX.cmake")
+
+set_property(GLOBAL PROPERTY ixm:toolchain/raspberrypi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain/arduino "${IXM_ROOT}/Toolchains/Arduino.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain/android "${IXM_ROOT}/Toolchains/Android.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain/rpi "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
+set_property(GLOBAL PROPERTY ixm:toolchain/qnx "${IXM_ROOT}/Toolchains/QNX.cmake")
+
+set_property(GLOBAL PROPERTY ixm:blueprint/file)
+set_property(GLOBAL PROPERTY ixm:blueprint/name)
 
 # Attributes are defined for user customization. Not everything can be
 # customized but we provide hooks for some specific calls so that things like
@@ -107,10 +116,6 @@ set_property(GLOBAL PROPERTY ixm:toolchain:qnx "${IXM_ROOT}/Toolchains/QNX.cmake
 #attribute(DEFINE path:check DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Check")
 #attribute(DEFINE path:find DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Find")
 #attribute(DEFINE path:log DEFAULT "${CMAKE_CURRENT_BINARY_DIR}/IXM/Logs")
-
-# TODO: These need to be properties. They are not customizable.
-attribute(NAME blueprint:file)
-attribute(NAME blueprint:name)
 
 # Path Attributes
 attribute(NAME path:generate ASSIGN "${CMAKE_CURRENT_BINARY_DIR}/IXM/Generate")
@@ -143,7 +148,7 @@ attribute(NAME find:program ASSIGN ixm_find_program)
 attribute(NAME find:library ASSIGN ixm_find_library)
 attribute(NAME find:include ASSIGN ixm_find_include)
 
-# generate() Attributes
+# generate() Attributes -- Remove these attributes. They aren't useful in practice :/
 attribute(NAME generate:unity ASSIGN ixm_generate_unity_build)
 attribute(NAME generate:pch ASSIGN ixm_generate_precompiled_header)
 attribute(NAME generate:rsp ASSIGN ixm_generate_response_file)
