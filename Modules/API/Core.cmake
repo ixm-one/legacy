@@ -10,33 +10,33 @@ Hence the file's name :)
 ]]
 
 # Used to locate a command's subactions
-function (action out-var)
+function (action @action:result)
   parse(${ARGN} @ARGS=1 FIND FOR)
-  attribute(GET command NAME "${FOR}:${FIND}")
-  if (NOT command)
-    log(FATAL "${FOR}(${FIND} is not a valid subcommand")
+  aspect(GET "${FOR}:${FIND}" AS @action:command)
+  if (NOT @action:command)
+    log(FATAL "${FOR}(${FIND}) is not a valid subcommand")
   endif()
-  if (NOT COMMAND ${command})
-    log(FATAL "Attribute for ${FOR}(${FIND}) does not refer to a valid command")
+  if (NOT COMMAND "${\@action\:command}")
+    log(FATAL "Aspect for ${FOR}(${FIND}) does not refer to a valid command")
   endif()
-  set(${out-var} ${command} PARENT_SCOPE)
+  set(${\@action\:result} ${\@action\:command} PARENT_SCOPE)
 endfunction()
 
 #[[
 set(), but with fallbacks. Fancier ternary
 assign(<var> ? LOOKUP1 LOOKUP2 : "DEFAULT" "VALUES")
 ]]
-function (assign out-var)
+function (assign @assign:result)
   void(? :)
   parse(${ARGN} @ARGS=* ? :)
-  foreach (@value IN LISTS ?)
-    if (DEFINED ${\@value})
-      set(${out-var} ${${\@value}} PARENT_SCOPE)
+  foreach (@assign:value IN LISTS ?)
+    if (DEFINED ${\@assign\:value})
+      set(${\@assign\:result} ${${\@assign\:value}} PARENT_SCOPE)
       return()
     endif()
   endforeach()
   if (DEFINED :)
-    set(${out-var} ${\:} PARENT_SCOPE)
+    set(${\@assign\:result} ${\:} PARENT_SCOPE)
   endif()
 endfunction()
 
@@ -60,12 +60,12 @@ we can run string(CONFIGURE @ONLY) on the expression. This would allow us to
 generate an interface and private property lookup in one statement.
 This would save a TON of time.
 ]]
-function (genexp out-var)
+function (genexp @genexp:result)
   if (NOT ARGN)
     log(FATAL "genexp() requires at least one parameter")
   endif()
   string(REPLACE ";" "" genexp ${ARGN})
-  set(${out-var} "${genexp}" PARENT_SCOPE)
+  set(${\@genexp\:result} "${genexp}" PARENT_SCOPE)
 endfunction()
 
 #[[ Allows dynamically calling a CMake command ]]
@@ -73,8 +73,8 @@ function (invoke name)
   if (NOT COMMAND ${name})
     log(FATAL "Cannot call invoke() with non-existant command '${name}'")
   endif()
-  attribute(GET directory NAME path:invoke)
-  set(call "${directory}/${name}.cmake")
+  aspect(GET path:invoke AS @invoke:directory)
+  set(call "${\@invoke\:directory}/${name}.cmake")
   if (NOT EXISTS "${call}")
     string(CONFIGURE [[@name@(${ARGN})]] content @ONLY)
     file(WRITE "${call}" "${content}")

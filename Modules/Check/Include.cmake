@@ -29,7 +29,7 @@ function (ixm_check_include header)
   assign(LANGUAGE ? LANGUAGE : CXX)
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  attribute(GET directory NAME path:check)
+  aspect(GET path:check AS directory)
   set(BUILD_ROOT "${directory}/Includes/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0

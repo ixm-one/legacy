@@ -3,7 +3,6 @@ include_guard(GLOBAL)
 import(IXM::Find::*)
 
 # Meant for packages and items stored on the host system
-# TODO: This should use the 'dynamic' calls in some fashion.
 function(find action)
   ixm_find_common_check(${action} ${ARGN})
   if (action STREQUAL "FRAMEWORK")

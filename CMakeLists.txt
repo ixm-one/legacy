@@ -8,15 +8,14 @@ set(CMake_MODULE_ROOT "${CMAKE_ROOT}/Modules" CACHE INTERNAL "Root module for CM
 # TODO: Include Prelude here, or just manually set all of it in this file.
 include("${IXM_ROOT}/Modules/API/Import.cmake")
 
-import(IXM::API::Attribute)
+import(IXM::API::Core)
 import(IXM::API::Introspection)
 import(IXM::API::Aspect)
+
 import(IXM::API::Prelude)
 
 import(IXM::API::*)
 
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  string(TOLOWER "${CMAKE_SYSTEM_NAME}" cmake-system-name)
-  get_property(CMAKE_TOOLCHAIN_FILE GLOBAL PROPERTY ixm:toolchain:${cmake-system-name})
-  unset(cmake-system-name)
+  aspect(GET toolchain:${CMAKE_SYSTEM_NAME} AS CMAKE_TOOLCHAIN_FILE)
 endif()

@@ -34,7 +34,7 @@ function (ixm_generate_response_file target)
 endfunction()
 
 function (ixm_generate_response_file_path out-var target)
-  attribute(GET directory NAME path:generate DOMAIN ixm)
+  aspect(GET path:generate AS directory)
   set(default-path "${directory}/${target}.rsp")
 
   genexp(ifc-response-file $<IF:

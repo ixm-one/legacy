@@ -40,7 +40,7 @@ function (ixm_check_common_symbol variable name)
 
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
-  attribute(GET directory NAME path:check DOMAIN ixm)
+  aspect(GET path:check AS directory)
   set(BUILD_ROOT "${directory}/Symbols/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
