@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-import(IXM::Dict::*)
+import(IXM::Common::Dict)
 
 function (dict @dict:action name)
   if (@dict:action STREQUAL "LOAD")

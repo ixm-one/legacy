@@ -1,7 +1,5 @@
 include_guard(GLOBAL)
 
-import(IXM::Log::*)
-
 #[[
 ERROR > WARN > INFO > DEBUG > TRACE
 PANIC, FATAL, NOTICE are always shown in the log. Whether they are displayed
@@ -66,7 +64,7 @@ function (ixm_log_json timestamp level message)
   list(APPEND elements [["file": "@CMAKE_CURRENT_LIST_FILE@"]])
   list(JOIN elements "," object)
   string(CONFIGURE "{${object}}" text @ONLY)
-  file(APPEND "${directory}/${PROJECT_NAME}.json" "${text}\n")
+  file(APPEND "${directory}/${PROJECT_NAME}.jsonl" "${text}\n")
 endfunction()
 
 function (ixm_log_file timestamp level message)
