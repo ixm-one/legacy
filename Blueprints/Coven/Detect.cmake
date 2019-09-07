@@ -5,7 +5,7 @@ function (coven_detect_directory var dir)
   if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/${dir}")
     set(detected ON)
   endif()
-  dict(INSERT coven::detect::${PROJECT_NAME} ${var} ${detected})
+  dict(ASSIGN coven::detect::${PROJECT_NAME} ${var} ${detected})
 endfunction ()
 
 function (coven_detect_launchers)

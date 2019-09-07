@@ -36,7 +36,7 @@ project's "internal" target, which is linked to *all* project targets privately
 function (feature name help)
   string(TOUPPER "${PROJECT_NAME}_ENABLE_${name}" option)
   option("${option}" "Build ${PROJECT_NAME} with ${name} enabled")
-  dict(INSERT ixm::${PROJECT_NAME} FEATURE APPEND ${name})
+  dict(APPEND ixm::${PROJECT_NAME} FEATURE ${name})
 endfunction()
 
 # General Project Functions

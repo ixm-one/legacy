@@ -43,10 +43,8 @@ function (ixm_project_blueprint_load name)
   get_property(file GLOBAL PROPERTY IXM_CURRENT_BLUEPRINT_FILE)
   get_property(path GLOBAL PROPERTY IXM_CURRENT_BLUEPRINT_NAME)
 
-  # TODO: change this to ${PROJECT_NAME}::blueprint FILE/NAME
-  dict(SET ixm::${PROJECT_NAME}
-    BLUEPRINT_FILE "${file}"
-    BLUEPRINT_NAME "${name}")
+  dict(ASSIGN ${PROJECT_NAME}::blueprint FILE "${file}")
+  dict(ASSIGN ${PROJECT_NAME}::blueprint NAME "${name}")
   set(IXM_CURRENT_BLUEPRINT_FILE "${file}" PARENT_SCOPE)
 endfunction()
 
