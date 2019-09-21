@@ -56,10 +56,9 @@ function (ixm_import_find out-var name)
   list(REMOVE_AT paths 0)
   string(JOIN "/" paths ${paths})
   list(APPEND directories "${${root}_MODULE_ROOT}/${paths}.cmake")
-  # This part allows us to optionally look for ${root}{paths}.cmake
-  string(TOLOWER "${root}" prefix)
-  get_property(prefixed-root GLOBAL PROPERTY ixm::import::${prefix})
-  if (prefixed-root STREQUAL "PREFIX")
+  # Hard code for CMake. This allows us to use `CMakeDependentOption`
+  # as CMake::DependentOption
+  if (root STREQUAL "CMake")
     list(APPEND directories "${${root}_MODULE_ROOT}/${root}${paths}.cmake")
   endif()
   file(GLOB files LIST_DIRECTORIES OFF ${directories})

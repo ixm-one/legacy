@@ -6,10 +6,11 @@ This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
 function (fetch reference)
-  void(ALIAS DICT COMPONENT)
+  void(ALIAS DICT COMPONENT VERBOSE TARGET)
   parse(${ARGN}
-    @ARGS=? ALIAS DICT
-    @ARGS=* COMPONENT)
+    @FLAGS VERBOSE
+    @ARGS=? ALIAS DICT TARGET
+    @ARGS=* COMPONENT TARGETS)
 
   #[[ Prepare some basic information for invoking commands ]]
   ixm_fetch_prepare_reference(${reference}) # creates 'provider' and 'package'
@@ -32,7 +33,7 @@ function (fetch reference)
   endif()
 
   assign(target ? TARGET : ${name})
-  assign(quiet ? QUIET : OFF)
+  assign(verbose ? VERBOSE : OFF)
 
   #### POST
   #[[ PATCH ]]
@@ -42,12 +43,9 @@ function (fetch reference)
   ixm_fetch_common_options("${OPTIONS}")
   ixm_fetch_common_exclude()
 
-  get_property(previous-quiet GLOBAL PROPERTY ixm::print::quiet)
-  set_property(GLOBAL PROPERTY ixm::print::quiet ${quiet})
-
+  ixm_fetch_common_verbose(previous-quiet)
   add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${EXCLUDE})
-
-  set_property(GLOBAL PROPERTY ixm::print::quiet ${previous-quiet})
+  aspect(SET print:quiet WITH ${previous-quiet})
 
   #[[ TARGET ]]
   ixm_fetch_common_target(${target} ${alias})

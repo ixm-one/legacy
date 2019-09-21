@@ -1,0 +1,13 @@
+include_guard(GLOBAL)
+
+function (console type name)
+  string(ASCII 27 esc)
+  if (type STREQUAL "STYLE" AND NOT DEFINED CACHE{.${name}})
+    cmake_parse_arguments("" "" "" "WITH" ${ARGN})
+    set(.${name} "${esc}[${_WITH}m" CACHE INTERNAL "")
+  elseif (type STREQUAL "COLOR" AND NOT DEFINED CACHE{.${name}})
+    cmake_parse_arguments("" "" "" "WITH" ${ARGN})
+    set(.${name} "${esc}[38;2;${_WITH}m" CACHE INTERNAL "")
+  elseif (type STREQUAL "STRIP")
+  endif()
+endfunction()

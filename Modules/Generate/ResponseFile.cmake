@@ -19,14 +19,19 @@ function (ixm_generate_response_file target)
 
   genexp(release-flags $<$<CONFIG:Release>:${CMAKE_${LANGUAGE}_FLAGS_RELEASE}>)
   genexp(debug-flags $<$<CONFIG:Debug>:${CMAKE_${LANGUAGE}_FLAGS_DEBUG}>)
-  set(flags "${CMAKE_${LANGUAGE}_FLAGS}")
+  genexp(flags $<$<COMPILE_LANGUAGE:${LANGUAGE}>:${CMAKE_${LANGUAGE}_FLAGS}>)
 
+  list(APPEND compile-flags ${release-flags})
+  list(APPEND compile-flags ${debug-flags})
+  list(APPEND compile-flags ${flags})
+
+  genexp(content $<JOIN:${compile-flags},\\n>)
   #TODO: See if this can be pushed into the genexp part as well
-  string(JOIN "\n" content
-    ${compile-flags}
-    ${release-flags}
-    ${debug-flags}
-    ${flags})
+  #string(JOIN "\n" content
+  #  ${compile-flags}
+  #  ${release-flags}
+  #  ${debug-flags}
+  #  ${flags})
 
   ixm_generate_response_file_path(response-file ${target})
 
@@ -67,8 +72,8 @@ function (ixm_generate_response_file_genexp out-var target)
   set(ifc $<TARGET_PROPERTY:${target},INTERFACE_${PROPERTY}>)
   set(val $<TARGET_PROPERTY:${target},${PROPERTY}>)
 
-  genexp(ifc $<$<BOOL:${ifc}>:${PREFIX}$<JOIN:${ifc},"\n${PREFIX}">>)
-  genexp(val $<$<BOOL:${val}>:${PREFIX}$<JOIN:${val},"\n${PREFIX}">>)
+  genexp(ifc $<$<BOOL:${ifc}>:${PREFIX}$<JOIN:${ifc},\n${PREFIX}>\n>)
+  genexp(val $<$<BOOL:${val}>:${PREFIX}$<JOIN:${val},\n${PREFIX}>\n>)
 
   genexp(expression $<IF:
     $<STREQUAL:$<TARGET_PROPERTY:${target},TYPE>,INTERFACE_LIBRARY>,

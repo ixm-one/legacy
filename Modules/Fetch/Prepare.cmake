@@ -21,8 +21,7 @@ endfunction()
 
 #[[ Gets the 'command' for the given provider ]]
 function (ixm_fetch_prepare_command provider)
-  string(TOLOWER "${provider}" provider)
-  get_property(command GLOBAL PROPERTY ixm::fetch::${provider})
+  aspect(GET fetch:${provider} AS command)
   if (NOT command)
     log(FATAL "Could not find global property 'ixm::fetch::${provider}'")
   endif()

@@ -19,7 +19,7 @@ function (ixm_target_sources target)
   void(RECURSE INTERFACE PUBLIC PRIVATE)
   parse(${ARGN}
     @FLAGS RECURSE
-    @ARGS=+ INTERFACE PUBLIC PRIVATE)
+    @ARGS=* INTERFACE PUBLIC PRIVATE)
   set(glob GLOB)
   if (RECURSE)
     set(glob GLOB_RECURSE)

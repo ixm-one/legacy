@@ -85,6 +85,7 @@ endfunction()
 #[[ Create target aliases if necessary ]]
 function(ixm_fetch_common_target target alias)
   if (DEFINED TARGETS)
+    inspect(target)
     add_library(${target} INTERFACE)
     target_link_libraries(${target} INTERFACE ${TARGETS})
   endif()
@@ -96,13 +97,26 @@ function(ixm_fetch_common_target target alias)
   endif()
   # Used for bookkeeping
   foreach (target IN LISTS TARGETS)
-    if (NOT TARGET ${alias}::${target})
+    get_target_property(aliased ${target} ALIASED_TARGET)
+    if (aliased AND NOT TARGET ${alias}::${target})
       add_library(${alias}::${target} ALIAS ${target})
     endif()
   endforeach()
 endfunction()
 
+#[[ Used to "silence" output before add_subdirectory ]]
+function (ixm_fetch_common_verbose previous)
+  aspect(GET print:quiet AS previous-quiet)
+  if (VERBOSE)
+    aspect(SET print:quiet WITH OFF)
+  else()
+    aspect(SET print:quiet WITH ON)
+  endif()
+  set(${previous} ${previous-quiet})
+endfunction()
+
 #[[ Sets all policies in a key-value pair system ]]
+# FIXME: Currently not being used...
 function (ixm_fetch_common_policies)
   set(policies ${ARGN})
   if (NOT policies)

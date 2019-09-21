@@ -33,7 +33,7 @@ function (ixm_generate_precompiled_header target)
   genexp(non-msvc $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>)
 
   add_custom_command(
-    OUTPUT ${pch}
+    OUTPUT $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER>
     DEPENDS ${response-file}
     COMMAND "${CMAKE_CXX_COMPILER}"
       "@${response-file}"

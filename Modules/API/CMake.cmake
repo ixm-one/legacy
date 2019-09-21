@@ -1,11 +1,7 @@
 include_guard(GLOBAL)
 
 #[[ This file holds all overrides for builtin CMake commands ]]
-
-# `project()` has an internal module for use, and it is needed here
-# TODO: This *should* be moved to IXM::CMake
 import(IXM::Project::*)
-import(IXM::Common::Log)
 
 # Overrides project() to do the following:
 # 1) Set CMAKE_BUILD_TYPE if not defined
@@ -19,7 +15,7 @@ import(IXM::Common::Log)
 macro (project name)
   if (NOT CMAKE_BUILD_TYPE)
     log(WARN "CMAKE_BUILD_TYPE not set. Using 'Debug'")
-    set(CMAKE_BUILD_TYPE CACHE STRING "Choose the type of build")
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build")
   endif()
   ixm_project_blueprint_prepare(${name} ${ARGN})
   # FIXME: We're doing a lot of hacks to get the language values out...
@@ -53,7 +49,7 @@ endmacro()
 # With this, we've successfully backported CMAKE_MESSAGE_INDENT, while also
 # allowing users to "silence" textual output.
 function (message)
-  get_property(quiet GLOBAL PROPERTY ixm::print::quiet)
+  aspect(GET print:quiet AS quiet)
   if (NOT quiet)
     if (CMAKE_VERSION VERSION_LESS 3.16 AND CMAKE_MESSAGE_INDENT)
       list(INSERT ARGV 0 "${CMAKE_MESSAGE_INDENT}")

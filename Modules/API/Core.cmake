@@ -24,7 +24,7 @@ endfunction()
 
 #[[
 set(), but with fallbacks. Fancier ternary
-assign(<var> ? LOOKUP1 LOOKUP2 : "DEFAULT" "VALUES")
+assign(<var> ? LOOKUP1 LOOKUP2 [: "DEFAULT" "VALUES"])
 ]]
 function (assign @assign:result)
   void(? :)
@@ -113,25 +113,18 @@ DESCRIPTION
                not set.
 ]]
 function(parse)
-  void(max)
-  get_property(max GLOBAL PROPERTY ixm::🈯::parse::max)
-  if (NOT max)
-    set(max 9)
-  endif()
-  list(APPEND multi "@FLAGS")
-  foreach (N RANGE 1 ${max})
-    list(APPEND multi "@ARGS=${N}")
-  endforeach()
-  foreach (var IN ITEMS + ? *)
-    list(APPEND multi "@ARGS=${var}")
-  endforeach()
+  set(multi @FLAGS
+            @ARGS=? @ARGS=* @ARGS=+
+            @ARGS=1 @ARGS=2 @ARGS=3
+            @ARGS=4 @ARGS=5 @ARGS=6
+            @ARGS=7 @ARGS=8 @ARGS=9)
   if (ARGC EQUAL 0)
     log(FATAL "Did you forget to pass ARGN to parse?")
   endif()
   cmake_parse_arguments(_ "" "@PREFIX" "${multi}" ${ARGN})
 
   set(ARGS ${__\@ARGS\=1} ${__\@ARGS\=\?})
-  foreach (N RANGE 2 ${max})
+  foreach (N RANGE 2 9)
     list(APPEND NARGS ${__\@ARGS\=${N}})
   endforeach()
   list(APPEND NARGS ${__\@ARGS\=\*} ${__\@ARGS\=\+})
@@ -149,23 +142,16 @@ function(parse)
     endif()
   endforeach()
 
-  # TODO: Might want to make this a macro, given its complexity
   foreach (arg IN LISTS __\@ARGS\=\+)
-    if (NOT DEFINED ARG_${arg}) # This is needed to mimic the python parse
-      continue()
-    endif()
     list(LENGTH ARG_${arg} length)
     if (length LESS 1)
-      log(FATAL "argument '${arg}': expected at least one argument")
+      log(FATAL "argument '${arg}': expected *at least one* argument")
     endif()
     set(${__\@PREFIX}${arg} ${ARG_${arg}} PARENT_SCOPE)
   endforeach()
 
-  foreach (N RANGE 1 ${max})
+  foreach (N RANGE 1 9)
     foreach (arg IN LISTS __\@ARGS\=${N})
-      if (NOT DEFINED ARG_${arg})
-        continue()
-      endif()
       list(LENGTH ARG_${arg} length)
       if (length EQUAL ${N})
         set(${__\@PREFIX}${arg} ${ARG_${arg}} PARENT_SCOPE)
@@ -183,12 +169,12 @@ endfunction()
 
 #[[ Used to indicate success within the check() API ]]
 function(success)
-  print("${.lime}${ARGN}${.default}")
+  print("${.lime}${ARGN}${.reset}")
 endfunction()
 
 #[[ Used to indicate failure within the check() API ]]
 function (failure)
-  print("${.crimson}${ARGN}${.default}")
+  print("${.crimson}${ARGN}${.reset}")
 endfunction()
 
 # [[ It's been kept around for a while, but we don't *really* need it ]]

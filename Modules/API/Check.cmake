@@ -12,6 +12,6 @@ There are several types of checks
 5) Does my code run? (not available when cross-compiling)
 ]]
 function (check action)
-  ixm_action_find(command COMMAND check ACTION ${action})
+  action(command FIND ${action} FOR check)
   invoke(${command} ${ARGN})
 endfunction()
