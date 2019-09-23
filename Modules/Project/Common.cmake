@@ -31,11 +31,10 @@ endfunction()
 function (ixm_project_common_language name)
   parse(${ARGN}
     @ARGS=* LANGUAGES
-    @ARGS=? VERSION DESCRIPTION HOMEPAGE_URL
-    )
+    @ARGS=? VERSION DESCRIPTION HOMEPAGE_URL)
   foreach (language IN LISTS LANGUAGES)
     string(REGEX MATCH "^([A-Z]*)([0-9]*)$" matched ${language})
-    if (DEFINED CMAKE_MATCH_2)
+    if (DEFINED CMAKE_MATCH_2 AND NOT DEFINED CMAKE_${CMAKE_MATCH_1}_STANDARD)
       set(CMAKE_${CMAKE_MATCH_1}_STANDARD ${CMAKE_MATCH_2})
     endif()
     list(APPEND languages ${CMAKE_MATCH_1})
@@ -53,4 +52,13 @@ function (ixm_project_common_language name)
     list(APPEND REMAINDER HOMEPAGE_URL ${HOMEPAGE_URL})
   endif()
   set(REMAINDER ${REMAINDER} ${languages} PARENT_SCOPE)
+endfunction()
+
+function (ixm_project_common_build_type)
+  list(APPEND build-types ${CMAKE_CONFIGURATION_TYPES})
+  list(APPEND build-types ${IXM_CONFIGURATION_TYPES})
+  list(APPEND build-types "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
+  list(REMOVE_DUPLICATES build-types)
+  # This property setting might be removed in the future...
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${build-types})
 endfunction()
