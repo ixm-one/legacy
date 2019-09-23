@@ -9,6 +9,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
 include("${IXM_ROOT}/Modules/API/Import.cmake")
 import(IXM::API::*)
 
+o# Disables in source tree builds. Most projects do this to *some* degree
+set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+
 # These are used for bookkeeping and RAII
 variable_watch(CMAKE_FIND_PACKAGE_NAME cmake::package)
 variable_watch(CMAKE_CURRENT_LIST_DIR cmake::directory)
