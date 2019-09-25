@@ -6,18 +6,21 @@ function (coven_benchmark_init)
   if (NOT ${project}_BUILD_BENCHMARKS)
     return()
   endif()
-  glob(items "${PROJECT_SOURCE_DIR}/benches/*")
+  file(GLOB items
+    LIST_DIRECTORIES ON
+    CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/benches/*")
   foreach (item IN LISTS items)
     if (IS_DIRECTORY "${item}")
-      glob(files FILES_ONLY "${item}/*")
+      file(GLOB files CONFIGURE_DEPENDS "${item}/*")
       if (NOT files)
         continue()
-      else()
-        set(files "${item}")
       endif()
-      coven_common_create_test(bench "${item}" ${files})
-      set_property(TARGET ${target} PROPERTY
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/benches)
+    else()
+      set(files "${item}")
     endif()
+    coven_common_create_test(bench "${item}" ${files})
+    set_property(TARGET ${target} PROPERTY
+      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/benches)
   endforeach ()
 endfunction()

@@ -35,25 +35,6 @@ macro(ixm_coven_module_vars path)
   endif()
 endmacro()
 
-#[[ Generates a response file for creating a precompiled header ]]
-macro (ixm_coven_module_rsp path)
-  set(INCLUDE_DIRECTORIES "$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>")
-  set(COMPILE_DEFINITIONS "$<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>")
-  set(COMPILE_OPTIONS "$<TARGET_PROPERTY:${target},COMPILE_OPTIONS>")
-  set(COMPILE_FLAGS "$<TARGET_PROPERTY:${target},COMPILE_FLAGS>")
-  set(INCLUDE_DIRECTORIES "$<$<BOOL:${INCLUDE_DEFINITIONS}>:-D$<JOIN:${INCLUDE_DEFINITIONS},\n-I>>")
-  set(COMPILE_DEFINITIONS "$<$<BOOL:${COMPILE_DEFINITIONS}>:-D$<JOIN:${COMPILE_DEFINITIONS},\n-D>>")
-  set(COMPILE_OPTIONS "$<$<BOOL:${COMPILE_OPTIONS}>:$<JOIN:${COMPILE_OPTIONS},\n>>")
-  set(COMPILE_FLAGS "$<$<BOOL:${COMPILE_FLAGS}>:$<JOIN:${COMPILE_FLAGS},\n>>")
-  string(JOIN "\n" content
-    ${CMAKE_CXX_FLAGS}
-    ${INCLUDE_DIRECTORIES}
-    ${COMPILE_DEFINITIONS}
-    ${COMPILE_OPTIONS}
-    ${COMPILE_FLAGS})
-  file(GENERATE OUTPUT ${rsp} CONTENT ${content})
-endmacro()
-
 #[[
   Given a path, it generates an OBJECT library that represents the sources for
   a given directory. This is used to generate a unity build, or to keep sources

@@ -3,13 +3,20 @@ import(Coven::*)
 
 include(CMakeDependentOption)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if (PROJECT_STANDALONE)
   option(BUILD_PACKAGE "Configure the project for producing packages")
+endif()
+
+if (NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY
+    MultiThreaded<$<$CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>)
 endif()
 
 coven_detect_directory(BENCHMARKS "benches")

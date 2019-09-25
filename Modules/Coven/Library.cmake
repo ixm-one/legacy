@@ -1,59 +1,6 @@
 include_guard(GLOBAL)
 
 function (ixm_coven_library_create)
-  ixm_coven_library_primary()
-  if (NOT TARGET ${PROJECT_NAME})
-    add_library(${PROJECT_NAME} INTERFACE)
-    target_include_directories(${PROJECT_NAME}
-      INTERFACE
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
-  endif()
-  add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-endfunction()
-
-function (ixm_coven_library_primary)
-    if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
-      return()
-    endif()
-    file(GLOB_RECURSE files CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/*")
-    file(GLOB mains CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/main.*")
-    file(GLOB bins CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/bin/*")
-    if (mains OR bins)
-      list(REMOVE_ITEM files ${mains} ${bins})
-    endif()
-
-    if (NOT files)
-      return()
-    endif()
-
-    foreach (entry IN LISTS files)
-      if (IS_DIRECTORY "${entry}")
-        list(APPEND directories "${entry}")
-      else()
-        list(APPEND files "${entry}")
-      endif()
-    endforeach()
-    if (files)
-      add_library(${PROJECT_NAME})
-      target(SOURCES ${PROJECT_NAME} PRIVATE ${files})
-      target_include_directories(${PROJECT_NAME}
-        PUBLIC
-          $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-          $<INSTALL_INTERFACE:include>)
-    endif()
-    if (NOT directories)
-      return()
-    endif()
-    foreach (directory IN LISTS directories)
-      glob(mains "${directory}/main.*")
-      if (mains)
-        continue()
-      endif()
-      get_filename_component(directory ${directory} NAME)
-      glob(srcs FILES_ONLY "${PROJECT_SOURCE_DIR}/src/${directory}/*")
-      add_submodule(${PROJECT_NAME}::${directory} HIERARCHY ${srcs})
-    endforeach()
 endfunction()
 
 function (ixm_coven_create_project_library)
