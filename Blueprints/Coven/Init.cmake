@@ -37,5 +37,3 @@ coven_docs_init()
 coven_options_init()
 coven_install_init()
 coven_package_init()
-
-include(${Coven_MODULE_ROOT}/../Coven.cmake)

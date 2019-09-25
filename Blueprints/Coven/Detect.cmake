@@ -45,6 +45,12 @@ function (coven_detect_gohugo out-var)
   endforeach()
 endfunction ()
 
+function (coven_detect_hyde out-var)
+  if (EXISTS "${PROJECT_SOURCE_DIR}/.hyde-config")
+    find_package(Hyde)
+  endif()
+endfunction()
+
 function (coven_detect_jekyll out-var)
   if (EXISTS "${PROJECT_SOURCE_DIR}/docs/_config.yml")
     find_package(Jekyll)

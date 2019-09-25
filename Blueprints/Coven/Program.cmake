@@ -45,7 +45,10 @@ function (coven_program_create_bin_targets)
 endfunction()
 
 function (coven_program_create_dir_targets)
-  glob(mains FILES_ONLY "${PROJECT_SOURCE_DIR}/src/*/main.*")
+  file(GLOB mains
+    LIST_DIRECTORIES OFF
+    CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/src/*/main.*")
   if (NOT mains)
     return()
   endif()
