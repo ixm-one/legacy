@@ -2,6 +2,7 @@ blueprint(Coven)
 import(Coven::*)
 
 include(CMakeDependentOption)
+include(CTest)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -9,6 +10,10 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# This is used for forward compatibility with 3.16
+if (NOT DEFINED CMAKE_UNITY_BUILD)
+  set(CMAKE_UNITY_BUILD OFF)
+endif()
 
 if (PROJECT_STANDALONE)
   option(BUILD_PACKAGE "Configure the project for producing packages")

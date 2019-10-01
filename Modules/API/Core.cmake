@@ -49,25 +49,6 @@ macro(void)
   endforeach()
 endmacro()
 
-#[[
-This function is used to condense a multiline generator expression into a
-single line. If a newline is needed make sure the entire generator expression
-section is a "quoted" argument
-
-TODO: Consider expanding its usage to generate two TARGET_PROPERTY expressions.
-This could be done by having a [PROPERTY <property>] argument. If present,
-we can run string(CONFIGURE @ONLY) on the expression. This would allow us to
-generate an interface and private property lookup in one statement.
-This would save a TON of time.
-]]
-function (genexp @genexp:result)
-  if (NOT ARGN)
-    log(FATAL "genexp() requires at least one parameter")
-  endif()
-  string(REPLACE ";" "" genexp ${ARGN})
-  set(${\@genexp\:result} "${genexp}" PARENT_SCOPE)
-endfunction()
-
 #[[ Allows dynamically calling a CMake command ]]
 function (invoke name)
   if (NOT COMMAND ${name})

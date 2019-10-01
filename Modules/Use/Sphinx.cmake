@@ -30,10 +30,10 @@ function (add_documentation name type)
   if (NOT ${type} IN_LIST possible)
     error("add_documentation(${type} is invalid. Use one of: ${possible}")
   endif()
-  genexp(compile-definitions
+  string(CONCAT compile-definitions
     $<TARGET_PROPERTY:${name},INTERFACE_COMPILE_DEFINITIONS>)
-  genexp(compile-options $<TARGET_PROPERTY:${name},COMPILE_OPTIONS>)
-  genexp(sphinx-sources $<TARGET_PROPERTY:${name},SPHINX_SOURCES>)
+  string(CONCAT compile-options $<TARGET_PROPERTY:${name},COMPILE_OPTIONS>)
+  string(CONCAT sphinx-sources $<TARGET_PROPERTY:${name},SPHINX_SOURCES>)
   add_custom_target(${name})
   set_target_properties(${name}
     PROPERTIES
@@ -41,16 +41,16 @@ function (add_documentation name type)
       SPHINX_BUILDER_TYPE ${type}
       BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/sphinx/${type}
       SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-  genexp(COMPILE_DEFINITIONS $<
+  string(CONCAT COMPILE_DEFINITIONS $<
     $<BOOL:${compile-definitions}>:
     -D$<JOIN:${compile-definitions},$<SEMICOLON>-D>
   >)
-  genexp(COMPILE_OPTIONS $<
+  string(CONCAT COMPILE_OPTIONS $<
     $<BOOL:${compile-options}>:$<JOIN:${compile-options},$<SEMICOLON>>
   >)
-  genexp(SOURCES $<$<BOOL:${sphinx-sources}>:${sphinx-sources}>)
-  set(SOURCEDIR $<TARGET_PROPERTY:${name},SOURCE_DIR>)
-  set(BINARYDIR $<TARGET_PROPERTY:${name},BINARY_DIR>)
+  string(CONCAT SOURCES $<$<BOOL:${sphinx-sources}>:${sphinx-sources}>)
+  string(CONCAT source-dir $<TARGET_PROPERTY:${name},SOURCE_DIR>)
+  string(CONCAT binary-dir $<TARGET_PROPERTY:${name},BINARY_DIR>)
   set(OUTPUTS $<TARGET_PROPERTY:${name},SPHINX_${type}_OUTPUTS>)
 
   add_custom_command(

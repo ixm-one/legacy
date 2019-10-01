@@ -1,0 +1,1 @@
+find(PROGRAM rpmbuild)

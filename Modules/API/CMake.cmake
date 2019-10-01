@@ -40,3 +40,34 @@ function (message)
     _message(${ARGV})
   endif()
 endfunction()
+
+# Provided for forwards compatibility
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.16)
+  return()
+endif()
+
+# TODO: Call generate(PCH) on <target>
+function (target_precompile_headers target)
+  void(REUSE_FROM INTERFACE PUBLIC PRIVATE)
+  cmake_parse_arguments("" "" "REUSE_FROM" "INTERFACE;PUBLIC;PRIVATE" ${ARGN})
+  if (_REUSE_FROM AND (_INTERFACE OR _PUBLIC OR _PRIVATE))
+    log(FATAL "Cannot use REUSE_FROM signature with additional arguments")
+  endif()
+  if (_REUSE_FROM)
+    list(LENGTH _REUSE_FROM length)
+    if (length GREATER 1)
+      log(FATAL "Only one target may be passed to REUSE_FROM")
+    endif()
+    set_property(TARGET ${target}
+      PROPERTY
+        PRECOMPILE_HEADERS_REUSE_FROM ${_REUSE_FROM})
+    add_dependencies(${target} ${_REUSE_FROM})
+    return()
+  endif()
+  set_property(TARGET ${target}
+    APPEND PROPERTY
+      INTERFACE_PRECOMPILE_HEADERS ${_INTERFACE} ${_PUBLIC})
+  set_property(TARGET ${target}
+    APPEND PROPERTY
+      PRECOMPILE_HEADERS ${_PRIVATE} ${_PUBLIC})
+endfunction()

@@ -1,4 +1,12 @@
 include_guard(GLOBAL)
 
-function (ixm_target_import)
+function (ixm_target_import name)
+  void(FROM)
+  parse(${ARGN} @ARGS=1 FROM)
+  if (NOT FROM)
+    log(FATAL "target(IMPORT) requires a location")
+  endif()
+  add_library(${name} UNKNOWN IMPORTED)
+  set_property(TARGET ${name} PROPERTY IMPORTED_LOCATION "${FROM}")
+  event(EMIT target:import ${name})
 endfunction()

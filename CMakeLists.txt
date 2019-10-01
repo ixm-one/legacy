@@ -116,6 +116,10 @@ set_property(GLOBAL PROPERTY ixm::target::compile ixm_target_compile)
 set_property(GLOBAL PROPERTY ixm::target::link ixm_target_link)
 set_property(GLOBAL PROPERTY ixm::target::list ixm_target_list)
 
+if (CMAKE_HOST_WIN32 AND (NOT "$ENV{ConEmuANSI}") AND (NOT CMAKE_GENERATOR STREQUAL "Ninja"))
+  return()
+endif()
+
 console(STYLE reset WITH 0)
 console(STYLE bold WITH 1)
 console(STYLE dim WITH 2)

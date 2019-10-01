@@ -73,8 +73,7 @@ endfunction()
 
 # URL{name}
 function (ixm_fetch_url package out-var)
-
-  error("Not yet implemented")
+  log(ERROR "Not Yet Implemented")
   #ixm_fetch_web_package(${package} ${ARGN} PROVIDER "ANY")
 endfunction()
 

@@ -94,13 +94,13 @@ function (add_submodule name type)
   add_library(${name} ALIAS ${target})
 
   set(unity-file "${CMAKE_CURRENT_BINARY_DIR}/src/${path}")
-  genexp(unity-if
+  string(CONCAT unity-if
     $<IF:$<BOOL:$<TARGET_PROPERTY:${target},UNITY_BUILD>>,
          ${unity-file},
          $<TARGET_PROPERTY:${target},UNITY_SOURCES>>)
 
   # OLD!
-  genexp(unity
+  string(CONCAT unity
     $<IF:$<BOOL:${IXM_UNITY_BUILD}>,
          ${IXM_UNITY_BUILD},
          ON>)

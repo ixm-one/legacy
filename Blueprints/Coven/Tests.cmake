@@ -23,4 +23,5 @@ function (coven_tests_init)
     set_property(TARGET ${target} PROPERTY
       RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tests)
   endforeach()
+  add_library(${PROJECT_NAME}::test INTERFACE IMPORTED)
 endfunction()

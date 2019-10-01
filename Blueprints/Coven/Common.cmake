@@ -16,7 +16,8 @@ function (coven_common_create_test component item)
   set(target "${PROJECT_NAME}-${component}-${name}")
   set(alias "${PROJECT_NAME}::${component}::${name}")
   add_executable(${target} ${ARGN})
-  add_test(${alias} ALIAS ${target})
+  add_executable(${alias} ALIAS ${target})
+  add_test(NAME ${alias} COMMAND ${alias})
   target_link_libraries(${target}
     PRIVATE
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>

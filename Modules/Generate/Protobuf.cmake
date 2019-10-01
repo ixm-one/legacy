@@ -8,7 +8,7 @@
 ## properties defined. As a result, we need to make this gets handled correctly.
 ## TODO: Support protobuf plugins
 #function (ixm_generate_protobuf_sources target source)
-#  genexp(protobuf-path $<JOIN:
+#  string(CONCAT protobuf-path $<JOIN:
 #    $<TARGET_PROPERTY:${target},PROTOBUF_PATH>,$<SEMICOLON>--proto_path=
 #  >
 #  aspect(GET path:generate AS directory)
@@ -31,12 +31,12 @@
 #  log(FATAL "This command is not properly implemented")
 #  set(MKDIR_COMMAND ${CMAKE_COMMAND} -E make_directory)
 #  set(error-format $<$<CXX_COMPILER_ID:MSVC>:--error_format=msvs>)
-#  genexp(output-directory $<TARGET_PROPERTY:${target},PROTOBUF_OUTPUT_DIR>)
-#  genexp(proto-path $<TARGET_PROPERTY:${target},PROTOBUF_PATH>)
-#  genexp(proto-path $<
+#  string(CONCAT output-directory $<TARGET_PROPERTY:${target},PROTOBUF_OUTPUT_DIR>)
+#  string(CONCAT proto-path $<TARGET_PROPERTY:${target},PROTOBUF_PATH>)
+#  string(CONCAT proto-path $<
 #    $<BOOL:${proto-path}>:--proto_path=$<JOIN:${proto-path}>
 #  >)
-#  genexp(output-directory $<IF:
+#  string(CONCAT output-directory $<IF:
 #    $<BOOL:${output-directory}>,
 #    ${output-directory},
 #    ${CMAKE_CURRENT_BINARY_DIR}/IXM/protobuf/${target}

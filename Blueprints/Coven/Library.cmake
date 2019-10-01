@@ -17,8 +17,8 @@ function (coven_library_create_library_target)
     LIST_DIRECTORIES OFF
     CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/src/*")
-  list(FILTER files EXCLUDE REGEX "${PROJECT_SOURCE_DIR}/src/main[.].*$")
-  list(FILTER files EXCLUDE REGEX "${PROJECT_SOURCE_DIR}/src/bin$")
+  list(FILTER files EXCLUDE REGEX "^${PROJECT_SOURCE_DIR}/src/main[.].*$")
+  list(FILTER files EXCLUDE REGEX "^${PROJECT_SOURCE_DIR}/src/bin/.*$")
   if (NOT files)
     return()
   endif()
@@ -54,6 +54,7 @@ function (coven_library_create_object_targets)
     endif()
     list(APPEND directories "${entry}")
   endforeach()
+  list(FILTER directories EXCLUDE REGEX "^${PROJECT_SOURCE_DIR}/src/bin$")
   foreach (directory IN LISTS directories)
     file(GLOB sources CONFIGURE_DEPENDS "${directory}/*")
     if (NOT sources)
@@ -61,40 +62,53 @@ function (coven_library_create_object_targets)
     endif()
     get_filename_component(name "${directory}" NAME)
     add_library(${PROJECT_NAME}-${name} OBJECT)
-    target_sources(${PROJECT_NAME}-${name} PRIVATE ${sources})
+    set_property(TARGET ${PROJECT_NAME}-${name} PROPERTY EXCLUDE_FROM_ALL ON)
+    target(SOURCES ${PROJECT_NAME}-${name} PRIVATE ${sources})
     target_include_directories(${PROJECT_NAME}-${name}
+      PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
       PRIVATE
         $<BUILD_INTERFACE:${directory}>)
     if (NOT TARGET ${PROJECT_NAME})
       add_library(${PROJECT_NAME})
     endif()
-    target_sources(${PROJECT_NAME} PRIVATE $<TARGET_OBJECTS:${PROJECT_NAME}-${name}>)
+    string(CONCAT when $<IF:
+      $<BOOL:$<TARGET_PROPERTY:${PROJECT_NAME}-${name},WHEN>>,
+      $<TARGET_GENEX_EVAL:
+        ${PROJECT_NAME}-${name},
+        $<TARGET_PROPERTY:${PROJECT_NAME}-${name},WHEN>
+      >,
+      $<BOOL:ON>
+    >)
+    target_sources(${PROJECT_NAME}
+      PRIVATE
+        $<${when}:$<TARGET_OBJECTS:${PROJECT_NAME}-${name}>>)
   endforeach()
 endfunction()
 
 function (coven_library_msvc_runtime output)
-  genexp(msvc-runtime-static-debug $<
+  string(CONCAT msvc-runtime-static-debug $<
     $<AND:
       $<BOOL:${MSVC}>,
       $<VERSION_LESS:${CMAKE_VERSION},3.15>,
       $<STREQUAL:$<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>,MultiThreadedDebug>
     >:-MTd
   >)
-  genexp(msvc-runtime-shared-debug $<
+  string(CONCAT msvc-runtime-shared-debug $<
     $<AND:
       $<BOOL:${MSVC}>,
       $<VERSION_LESS:${CMAKE_VERSION},3.15>,
       $<STREQUAL:$<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>,MultiThreadedDebugDLL>
     >:-MDd
   >)
-  genexp(msvc-runtime-static $<
+  string(CONCAT msvc-runtime-static $<
     $<AND:
       $<BOOL:${MSVC}>,
       $<VERSION_LESS:${CMAKE_VERSION},3.15>,
       $<STREQUAL:$<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>,MultiThreaded>
       >:-MT
   >)
-  genexp(msvc-runtime-shared $<
+  string(CONCAT msvc-runtime-shared $<
     $<AND:
       $<BOOL:${MSVC}>,
       $<VERSION_LESS:${CMAKE_VERSION},3.15>,

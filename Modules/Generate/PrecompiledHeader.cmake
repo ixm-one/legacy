@@ -30,7 +30,7 @@ function (ixm_generate_precompiled_header target)
   ixm_generate_response_file(${target} LANGUAGE ${LANGUAGE})
   ixm_generate_response_file(response-file ${target})
 
-  genexp(non-msvc $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>)
+  set(non-msvc "$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>")
 
   add_custom_command(
     OUTPUT $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER>
@@ -48,5 +48,7 @@ function (ixm_generate_precompiled_header target)
       $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER_SOURCE>)
   target_compile_options(${target}
     PRIVATE
+      $<$<CXX_COMPILER_ID:MSVC>:/FI$<TARGET_PROPERTY:${target},PRECOMPILED_HEADER>>
+      $<$<NOT:$<CXX_COMPILER_ID:MSVC>:-include $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER>>
       $<$<NOT:$<CXX_COMPILER_ID:MSVC>:-Winvalid-pch>>)
 endfunction()

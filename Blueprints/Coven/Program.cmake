@@ -35,12 +35,13 @@ function (coven_program_create_bin_targets)
     add_executable(${PROJECT_NAME}::bin::${name} ALIAS ${target})
     target_link_libraries(${target} PRIVATE
       $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-    set_property(TARGET ${target} PROPERTY OUTPUT_NAME ${name})
-    list(APPEND to-install ${target})
-    # XXX: These should only be installed if PROJECT_STANDALONE is true
+    set_target_properties(${target}
+      PROPERTIES
+        OUTPUT_NAME ${name}
+        EXPORT_NAME ${name})
+    dict(APPEND coven::${PROJECT_NAME} INSTALL ${target})
   endforeach()
   if (PROJECT_STANDALONE)
-    install(TARGETS ${to-install})
   endif()
 endfunction()
 
@@ -53,6 +54,18 @@ function (coven_program_create_dir_targets)
     return()
   endif()
   foreach (main IN LISTS mains)
-    file(RELATIVE_PATH main ${PROJECT_SOURCE_DIR} ${main})
+    file(RELATIVE_PATH main "${PROJECT_SOURCE_DIR}/src" ${main})
+    get_filename_component(name "${main}" DIRECTORY)
+    set(target ${PROJECT_NAME}-${name})
+    add_executable(${target} ${file})
+    add_executable(${PROJECT_NAME}::${name} ALIAS ${target})
+    target_link_libraries(${target}
+      PRIVATE
+        $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
+    set_target_properties(${target}
+      PROPERTIES
+        OUTPUT_NAME ${name}
+        EXPORT_NAME ${name})
+    dict(APPEND coven::${PROJECT_NAME} INSTALL ${target})
   endforeach()
 endfunction()
