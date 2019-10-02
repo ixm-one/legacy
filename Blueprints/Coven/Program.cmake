@@ -1,49 +1,9 @@
 include_guard(GLOBAL)
 
 function (coven_program_init)
-  coven_program_create_main_target()
   coven_program_create_bin_targets()
   coven_program_create_dir_targets()
 endfunction ()
-
-function (coven_program_create_main_target)
-  if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
-    return()
-  endif()
-  file(GLOB files CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/main.*")
-  if (NOT files)
-    return()
-  endif()
-  set(target ${PROJECT_NAME}-main)
-  add_executable(${target})
-  add_executable(${PROJECT_NAME}::main ALIAS ${target})
-  target_sources(${target} PRIVATE ${files})
-  target_link_libraries(${target}
-    PRIVATE $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-  set_property(TARGET ${PROJECT_NAME}-main PROPERTY OUTPUT_NAME ${PROJECT_NAME})
-endfunction()
-
-function (coven_program_create_bin_targets)
-  if (NOT IS_DIRECTORY "${PROJECT_SOURCE_DIR}/src/bin")
-    return()
-  endif()
-  file(GLOB files CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/bin/*")
-  foreach (file IN LISTS files)
-    get_filename_component(name "${file}" NAME_WE)
-    set(target ${PROJECT_NAME}-bin-${name})
-    add_executable(${target} ${file})
-    add_executable(${PROJECT_NAME}::bin::${name} ALIAS ${target})
-    target_link_libraries(${target} PRIVATE
-      $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>)
-    set_target_properties(${target}
-      PROPERTIES
-        OUTPUT_NAME ${name}
-        EXPORT_NAME ${name})
-    dict(APPEND coven::${PROJECT_NAME} INSTALL ${target})
-  endforeach()
-  if (PROJECT_STANDALONE)
-  endif()
-endfunction()
 
 function (coven_program_create_dir_targets)
   file(GLOB mains

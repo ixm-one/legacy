@@ -2,6 +2,7 @@ blueprint(Coven)
 import(Coven::*)
 
 include(CMakeDependentOption)
+include(GNUInstallDirs)
 include(CTest)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -31,8 +32,10 @@ coven_detect_directory(DOCS "docs")
 
 coven_detect_launchers()
 
-coven_program_init()
-coven_library_init()
+coven_project_init()
+
+#coven_program_init()
+#coven_library_init()
 
 coven_benchmark_init()
 coven_examples_init()
