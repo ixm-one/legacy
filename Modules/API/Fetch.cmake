@@ -55,12 +55,12 @@ function (fetch reference)
 
   #[[ COMPONENTS ]]
   foreach (component IN LISTS COMPONENT)
-    if (NOT TARGET ${PROJECT_NAME}::${component})
-      log(WARN "'${component}' does not exist for ${PROJECT_NAME}")
-      continue()
+    if (TARGET ${PROJECT_NAME}::${component})
+      target_link_libraries(${PROJECT_NAME}::${component}
+        INTERFACE
+          ${alias}::${alias})
+    else()
+      log(WARN "COMPONENT '${component}' does not exist for project ${PROJECT_NAME}")
     endif()
-    target_link_libraries(${PROJECT_NAME}::${component}
-      INTERFACE
-        ${alias}::${alias})
   endforeach()
 endfunction()

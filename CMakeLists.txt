@@ -21,8 +21,30 @@ variable_watch(CMAKE_CURRENT_LIST_DIR cmake::directory)
 set_property(GLOBAL PROPERTY ixm::blueprint::file)
 set_property(GLOBAL PROPERTY ixm::blueprint::name)
 
+# XXX: This should honestly be removed.
 set_property(GLOBAL PROPERTY ixm::extensions::source cxx;cpp;c++;cc;c;mm;m)
 set_property(GLOBAL PROPERTY ixm::extensions::custom)
+
+# This isn't being used by IXM at the moment, but will be in the future for...
+# reasons 😈
+if (CMAKE_HOST_APPLE)
+  set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{HOME}/Library/Application Support/ixm")
+  set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{HOME}/Library/Caches/ixm")
+elseif (CMAKE_HOST_WIN32)
+  set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{APPDATA}/ixm")
+  set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{LOCALAPPDATA}/ixm")
+else ()
+  if (DEFINED ENV{XDG_CONFIG_HOME})
+    set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{XDG_CONFIG_HOME}/ixm")
+  else()
+    set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{HOME}/.config/ixm")
+  endif()
+  if (DEFINED ENV{XDG_CACHE_HOME})
+    set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{XDG_CACHE_HOME}/ixm")
+  else()
+    set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{HOME}/.cache")
+  endif()
+endif()
 
 # Toolchain Aspects
 aspect(SET toolchain:raspberrypi WITH "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
