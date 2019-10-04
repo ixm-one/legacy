@@ -10,7 +10,7 @@ Hence the file's name :)
 ]]
 
 # Used to locate a command's subactions
-function (action @action:result)
+function (action result)
   parse(${ARGN} @ARGS=1 FIND FOR)
   aspect(GET "${FOR}:${FIND}" AS @action:command)
   if (NOT @action:command)
@@ -19,7 +19,7 @@ function (action @action:result)
   if (NOT COMMAND "${\@action\:command}")
     log(FATAL "Aspect for ${FOR}(${FIND}) does not refer to a valid command")
   endif()
-  set(${\@action\:result} ${\@action\:command} PARENT_SCOPE)
+  set(${result} ${\@action\:command} PARENT_SCOPE)
 endfunction()
 
 #[[

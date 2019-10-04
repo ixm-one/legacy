@@ -25,26 +25,28 @@ set_property(GLOBAL PROPERTY ixm::blueprint::name)
 set_property(GLOBAL PROPERTY ixm::extensions::source cxx;cpp;c++;cc;c;mm;m)
 set_property(GLOBAL PROPERTY ixm::extensions::custom)
 
-# This isn't being used by IXM at the moment, but will be in the future for...
-# reasons 😈
-if (CMAKE_HOST_APPLE)
-  set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{HOME}/Library/Application Support/ixm")
-  set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{HOME}/Library/Caches/ixm")
-elseif (CMAKE_HOST_WIN32)
-  set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{APPDATA}/ixm")
-  set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{LOCALAPPDATA}/ixm")
-else ()
-  if (DEFINED ENV{XDG_CONFIG_HOME})
-    set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{XDG_CONFIG_HOME}/ixm")
-  else()
-    set_property(GLOBAL PROPERTY ixm::fs::config "$ENV{HOME}/.config/ixm")
-  endif()
-  if (DEFINED ENV{XDG_CACHE_HOME})
-    set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{XDG_CACHE_HOME}/ixm")
-  else()
-    set_property(GLOBAL PROPERTY ixm::fs::cache "$ENV{HOME}/.cache")
-  endif()
+# FIXME: Allow users to specify XDG_CONFIG_HOME default if desired, rather than
+# this default path
+if (CMAKE_HOST_APPLE AND NOT DEFINED ENV{XDG_CONFIG_HOME})
+  set(ENV{XDG_CONFIG_HOME} "$ENV{HOME}/Library/Application Support")
 endif()
+
+if (CMAKE_HOST_APPLE AND NOT DEFINED ENV{XDG_CACHE_HOME})
+  set(ENV{XDG_CACHE_HOME} "$ENV{HOME}/Library/Caches")
+endif()
+
+assign(fs-config-home ? ENV{APPDATA} ENV{XDG_CONFIG_HOME} : "$ENV{HOME}/.config")
+assign(fs-cache-home ? ENV{LOCALAPPDATA} ENV{XDG_CACHE_HOME} : "$ENV{HOME}/.cache")
+
+set_property(GLOBAL PROPERTY ixm::fs::config "${fs-config-home}/ixm")
+set_property(GLOBAL PROPERTY ixm::fs::cache "${fs-cache-home}/ixm")
+
+# This is temporary. They SHOULD be set to a cache variable of some kind?
+set_property(GLOBAL PROPERTY ixm::lint::msvc::macro-redefined 4005)
+set_property(GLOBAL PROPERTY ixm::lint::msvc::sign-compare 4018)
+set_property(GLOBAL PROPERTY ixm::lint::msvc::unused-parameter 4100)
+set_property(GLOBAL PROPERTY ixm::lint::msvc::dllexport-explicit-instantian-decl 4910)
+set_property(GLOBAL PROPERTY ixm::lint::msvc::deprecated-declarations 4996)
 
 # Toolchain Aspects
 aspect(SET toolchain:raspberrypi WITH "${IXM_ROOT}/Toolchains/RaspberryPi.cmake")
