@@ -1,9 +1,5 @@
 include_guard(GLOBAL)
 
-import(IXM::Common::Action)
-import(IXM::Common::Dict)
-import(IXM::Common::Glob)
-
 #[[
 All commands contained in this API file are for authoring commands with.
 Hence the file's name :)
@@ -29,11 +25,12 @@ assign(<var> ? LOOKUP1 LOOKUP2 [: "DEFAULT" "VALUES"])
 function (assign result)
   void(? :)
   parse(${ARGN} @ARGS=* ? :)
+  matches(?)
   foreach (value IN LISTS ?)
     if (DEFINED ${value})
-      if ("${value}" MATCHES "ENV{([^}]+)}")
+      if ("${value}" MATCHES "^ENV{([^}]+)}$")
         set(${result} $ENV{${CMAKE_MATCH_1}} PARENT_SCOPE)
-      elseif (value MATCHES "CACHE{([^}]+)}")
+      elseif (value MATCHES "^CACHE{([^}]+)}$")
         set(${result} $CACHE{${CMAKE_MATCH_1}} PARENT_SCOPE)
       else()
         set(${result} ${${value}} PARENT_SCOPE)

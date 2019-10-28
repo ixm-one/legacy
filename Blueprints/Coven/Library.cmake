@@ -16,15 +16,14 @@ function (coven_library_create output)
   set(${output} ${name} PARENT_SCOPE)
 endfunction()
 
-# TODO: move this to target as target(MSVC) subcommand.
+# TODO: move this to target as target(MSVC) subcommand?
 function (coven_library_msvc_runtime target)
   set(msvc-rt $<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>)
-  string(CONCAT is-msvc $<OR:
-    $<BOOL:${MSVC}>,
-    $<STREQUAL:${CMAKE_CXX_SIMULATE_ID},MSVC>
-  >)
   string(CONCAT should-backport $<AND:
-    ${is-msvc},
+    $<OR:
+      $<BOOL:${MSVC}>,
+      $<STREQUAL:${CMAKE_CXX_SIMULATE_ID},MSVC>
+    >,
     $<VERSION_LESS:${CMAKE_VERSION},3.15>
   >)
   string(CONCAT static-debug $<
@@ -47,7 +46,7 @@ function (coven_library_msvc_runtime target)
   >)
   string(CONCAT shared $<
     $<AND:
-      ${should-backport}
+      ${should-backport},
       $<STREQUAL:${msvc-rt},MultiThreadedDLL>
     >:-MD
   >)

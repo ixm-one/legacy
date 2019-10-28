@@ -1,5 +1,6 @@
 include_guard(GLOBAL)
 
+# XXX: Currently unused?
 function (ixm_dict_contains dict key result)
   ixm_dict_noop(${dict})
   ixm_dict_keys(${dict} keys)
@@ -19,7 +20,6 @@ endfunction()
 
 function (ixm_dict_keys dict result)
   ixm_dict_noop(${dict})
-  string(ASCII 192 C0)
-  get_property(values TARGET ${dict} PROPERTY "INTERFACE_${C0}")
+  get_property(values TARGET ${dict} PROPERTY "INTERFACE_${+C0}")
   set(${result} ${values} PARENT_SCOPE)
 endfunction()

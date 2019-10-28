@@ -33,7 +33,7 @@ endfunction()
 
 function (ixm_generate_response_file_path out-var target)
   aspect(GET path:generate AS directory)
-  set(default-path "${directory}/${target}.rsp")
+  set(default-path "${directory}/$<MAKE_C_IDENTIFIER:${target}>.rsp")
 
   string(CONCAT ifc-response-file $<IF:
     $<BOOL:$<TARGET_PROPERTY:${target},INTERFACE_RESPONSE_FILE>>,

@@ -29,9 +29,7 @@ function (ixm_generate_precompiled_header target)
 
   ixm_generate_response_file(${target} LANGUAGE ${LANGUAGE})
   ixm_generate_response_file(response-file ${target})
-
   set(non-msvc "$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-x c++-header -o>")
-
   add_custom_command(
     OUTPUT $<TARGET_PROPERTY:${target},PRECOMPILED_HEADER>
     DEPENDS ${response-file}

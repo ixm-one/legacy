@@ -39,6 +39,12 @@ function (macros out-var)
   set(${out-var} ${macros} PARENT_SCOPE)
 endfunction ()
 
+function (tests out-var)
+  get_property(tests DIRECTORY PROPERTY TESTS)
+  ixm_introspection_filter(tests ${ARGN} VALUES ${tests})
+  set(${out-var} ${tests} PARENT_SCOPE)
+endfunction()
+
 #[[
 Sets out-var to a list of all commands in the current build. This is a
 "hidden" property, so it's basically a crapshoot if it will ever go away
@@ -73,4 +79,27 @@ function (targets out-var)
     list(APPEND @targets ${targets})
   endforeach()
   set(${out-var} ${\@targets} PARENT_SCOPE)
+endfunction()
+
+#[[
+Preserves CMAKE_MATCH_<N> and CMAKE_MATCH_COUNT as MATCH{<N>} and MATCH{COUNT}.
+Will also replace instances of CMAKE_MATCH_<N> as strings with the MATCH{}
+equivalent. NOTE: This function *does* unset CMAKE_MATCH_<N> and
+CMAKE_MATCH_COUNT in the calling scope.
+]]
+function (matches out-var)
+  void(MATCH{COUNT})
+  set(MATCH{COUNT} ${CMAKE_MATCH_COUNT} PARENT_SCOPE)
+  unset(CMAKE_MATCH_COUNT PARENT_SCOPE)
+  foreach (n RANGE MATCH{COUNT})
+    unset(MATCH{${n}} PARENT_SCOPE)
+    set(MATCH{${n}} ${CMAKE_MATCH_${n}} PARENT_SCOPE)
+    unset(CMAKE_MATCH_${n} PARENT_SCOPE)
+  endforeach()
+  set(regex "^CMAKE_MATCH_([0-9]|COUNT)$")
+  list(TRANSFORM ${out-var}
+    REPLACE "${regex}" "MATCH{\\1}"
+    REGEX "${regex}"
+    OUTPUT_VARIABLE result)
+  set(${out-var} ${result} PARENT_SCOPE)
 endfunction()

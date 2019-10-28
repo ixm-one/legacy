@@ -6,9 +6,11 @@ This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
 function (fetch reference)
-  void(ALIAS DICT COMPONENT VERBOSE TARGET TARGETS OPTIONS POLICIES PATCH)
+  void(VERBOSE CLONE)
+  void(ALIAS DICT TARGET PATCH)
+  void(COMPONENT TARGETS OPTIONS POLICIES)
   parse(${ARGN}
-    @FLAGS VERBOSE
+    @FLAGS VERBOSE CLONE
     @ARGS=? ALIAS DICT TARGET PATCH
     @ARGS=* COMPONENT TARGETS OPTIONS POLICIES)
 
