@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM install root")
 set(IXM_MODULE_ROOT "${IXM_ROOT}/Modules" CACHE INTERNAL "IXM Module Root")
 set(CMake_MODULE_ROOT "${CMAKE_ROOT}/Modules" CACHE INTERNAL "CMake Module Root")
@@ -7,7 +8,10 @@ list(APPEND CMAKE_MODULE_PATH "${IXM_ROOT}/Packages")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
 
 include("${IXM_ROOT}/Modules/API/Import.cmake")
+list(PREPEND CMAKE_MODULE_PATH "${IXM_MODULE_ROOT}/API")
+include(CMake)
 import(IXM::API::*)
+list(POP_FRONT CMAKE_MODULE_PATH)
 
 # Disables in source tree builds. Most projects do this to *some* degree
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -16,30 +20,42 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 # These are used for bookkeeping and RAII
 variable_watch(CMAKE_FIND_PACKAGE_NAME cmake::package)
 variable_watch(CMAKE_CURRENT_LIST_DIR cmake::directory)
-
 # Not used for external customization
 set_property(GLOBAL PROPERTY ixm::blueprint::file)
 set_property(GLOBAL PROPERTY ixm::blueprint::name)
 
-# XXX: This should honestly be removed.
-set_property(GLOBAL PROPERTY ixm::extensions::source cxx;cpp;c++;cc;c;mm;m)
-set_property(GLOBAL PROPERTY ixm::extensions::custom)
-
-# FIXME: Allow users to specify XDG_CONFIG_HOME default if desired, rather than
-# this default path
-if (CMAKE_HOST_APPLE AND NOT DEFINED ENV{XDG_CONFIG_HOME})
-  set(ENV{XDG_CONFIG_HOME} "$ENV{HOME}/Library/Application Support")
-endif()
-
-if (CMAKE_HOST_APPLE AND NOT DEFINED ENV{XDG_CACHE_HOME})
-  set(ENV{XDG_CACHE_HOME} "$ENV{HOME}/Library/Caches")
+# Application Directory Settings
+if (CMAKE_HOST_APPLE)
+  if (NOT DEFINED ENV{XDG_CONFIG_HOME})
+    set(ENV{XDG_CONFIG_HOME} "$ENV{HOME}/Library/Application Support")
+  endif()
+  
+  if (NOT DEFINED ENV{XDG_CACHE_HOME})
+    set(ENV{XDG_CACHE_HOME} "$ENV{HOME}/Library/Caches")
+  endif()
+  
+  if (NOT DEFINED ENV{XDG_DATA_HOME})
+    set(ENV{XDG_DATA_HOME} "$ENV{HOME}/Library")
+  endif()
 endif()
 
 assign(fs-config-home ? ENV{APPDATA} ENV{XDG_CONFIG_HOME} : "$ENV{HOME}/.config")
 assign(fs-cache-home ? ENV{LOCALAPPDATA} ENV{XDG_CACHE_HOME} : "$ENV{HOME}/.cache")
+assign(fs-data-home ? ENV{LOCALAPPDATA} ENV{XDG_DATA_HOME} : "$ENV{HOME}/.local/share")
 
 set_property(GLOBAL PROPERTY ixm::fs::config "${fs-config-home}/ixm")
 set_property(GLOBAL PROPERTY ixm::fs::cache "${fs-cache-home}/ixm")
+set_property(GLOBAL PROPERTY ixm::fs::data "${fs-data-home}/ixm")
+
+if (CMAKE_HOST_WIN32)
+  if (NOT DEFINED ENV{XDG_CACHE_HOME})
+    set_property(GLOBAL APPEND_STRING PROPERTY ixm::fs::cache "/cache")
+  endif()
+  if (NOT DEFINED ENV{XDG_DATA_HOME})
+    set_property(GLOBAL APPEND_STRING PROPERTY ixm::fs::data "/data")
+  endif()
+endif()
+
 
 # This is temporary. They SHOULD be set to a cache variable of some kind?
 set_property(GLOBAL PROPERTY ixm::lint::msvc::macro-redefined 4005)
@@ -64,12 +80,10 @@ aspect(SET path:check WITH "${CMAKE_BINARY_DIR}/IXM/Check")
 aspect(SET path:find WITH "${CMAKE_BINARY_DIR}/IXM/Find")
 aspect(SET path:log WITH "${CMAKE_BINARY_DIR}/IXM/Logs")
 
-string(TOLOWER "${CMAKE_SYSTEM_NAME}" cmake-system-name)
-aspect(GET toolchain:${cmake-system-name} AS CMAKE_TOOLCHAIN_FILE)
-unset(cmake-system-name)
-
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  aspect(GET toolchain:${CMAKE_SYSTEM_NAME} AS CMAKE_TOOLCHAIN_FILE)
+  string(TOLOWER "${CMAKE_SYSTEM_NAME}" cmake-system-name)
+  aspect(GET toolchain:${cmake-system-name} AS CMAKE_TOOLCHAIN_FILE)
+  unset(cmake-system-name)
 endif()
 
 # API Aspects
@@ -99,10 +113,8 @@ aspect(SET fetch:cvs WITH ixm_fetch_cvs)
 aspect(SET fetch:hg WITH ixm_fetch_hg)
 
 # generate() aspects
-aspect(SET generate:pch WITH ixm_generate_precompiled_header)
 aspect(SET generate:rsp WITH ixm_generate_response_file)
 
-aspect(SET generate:unity WITH ixm_generate_unity_build)
 aspect(SET generate:bison WITH ixm_generate_bison)
 aspect(SET generate:flex WITH ixm_generate_flex)
 aspect(SET generate:yacc WITH ixm_generate_bison)

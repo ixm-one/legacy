@@ -5,19 +5,33 @@ All commands contained in this API file are for authoring commands with.
 Hence the file's name :)
 ]]
 
-# Used to locate a command's subactions
-function (action result)
-  parse(${ARGN} @ARGS=1 FIND FOR)
-  aspect(GET "${FOR}:${FIND}" AS @action:command)
-  if (NOT @action:command)
-    log(FATAL "${FOR}(${FIND}) is not a valid subcommand")
+#[[
+  aspect(GET <aspect> AS <variable>)
+  aspect(SET <aspect> WITH <value>...)
+]]
+function(aspect action name)
+  void(WITH AS)
+  if (action STREQUAL "SET")
+    parse(${ARGN} @ARGS=+ WITH)
+    string(TOLOWER "${name}" name)
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY 🈯::${name} ${WITH})
+  elseif (action STREQUAL "GET")
+    parse(${ARGN} @ARGS=? AS)
+    assign(as ? AS : "${name}")
+    string(TOLOWER "${name}" name)
+    get_property(current DIRECTORY PROPERTY 🈯::${name})
+    get_property(root DIRECTORY "${CMAKE_SOURCE_DIR}" PROPERTY 🈯::${name})
+    if (DEFINED PROJECT_SOURCE_DIR)
+      get_property(project DIRECTORY "${PROJECT_SOURCE_DIR}" PROPERTY 🈯::${name})
+    endif()
+    get_property(ixm DIRECTORY "${ixm_SOURCE_DIR}" PROPERTY 🈯::${name})
+    assign(value ? root project current ixm)
+    if (NOT DEFINED value)
+      return()
+    endif()
+    set(${as} ${value} PARENT_SCOPE)
   endif()
-  if (NOT COMMAND "${\@action\:command}")
-    log(FATAL "Aspect for ${FOR}(${FIND}) does not refer to a valid command")
-  endif()
-  set(${result} ${\@action\:command} PARENT_SCOPE)
 endfunction()
-
 #[[
 set(), but with fallbacks. Fancier ternary
 assign(<var> ? LOOKUP1 LOOKUP2 [: "DEFAULT" "VALUES"])
@@ -43,9 +57,7 @@ function (assign result)
   endif()
 endfunction()
 
-#[[
-Unsets all variables in the calling scope
-]]
+#[[ Unsets all variables in the calling scope ]]
 macro(void)
   foreach (@void ${ARGV})
     unset(${\@void})
@@ -149,21 +161,4 @@ function(parse)
   if (DEFINED ARG_UNPARSED_ARGUMENTS)
     set(${__\@PREFIX}REMAINDER ${ARG_UNPARSED_ARGUMENTS} PARENT_SCOPE)
   endif()
-endfunction()
-
-#[[ Used to indicate success within the check() API ]]
-function(success)
-  print("${.lime}${ARGN}${.reset}")
-endfunction()
-
-#[[ Used to indicate failure within the check() API ]]
-function (failure)
-  print("${.crimson}${ARGN}${.reset}")
-endfunction()
-
-# [[ It's been kept around for a while, but we don't *really* need it ]]
-#[[ Use log(NOTICE) instead ]]
-function(print)
-  list(JOIN ARGN " " text)
-  message(STATUS "${text}")
 endfunction()

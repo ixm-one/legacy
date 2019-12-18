@@ -1,0 +1,6 @@
+find(LIBRARY crypt COMPONENT Cryptography)
+find(LIBRARY gcc_s COMPONENT Unwind)
+find(LIBRARY pam COMPONENT Authentication)
+find(LIBRARY dl COMPONENT DynamicLoader)
+find(LIBRARY rt COMPONENT Realtime)
+find(LIBRARY m COMPONENT Math)

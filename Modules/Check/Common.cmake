@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+# DNS UUID 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+
 function (ixm_check_common_symbol_prepare out name)
   string(TOUPPER "${name}" item)
   string(REPLACE "::" ":" item "${item}")
@@ -7,20 +9,16 @@ function (ixm_check_common_symbol_prepare out name)
   set(${out} ${variable} PARENT_SCOPE)
 endfunction()
 
+# TODO: This entire thing needs a *massive* overhaul. It's very tricky, and
+# could with a little work, be cleaned up and made more generic. It would
+# require breaking it up into multiple arguments however
 function (ixm_check_common_symbol variable name)
-  get_property(is-found CACHE ${variable} PROPERTY VALUE)
-  get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
-
-  # TODO: Change to generate a UUID with the subcommand as the namespace.
-  string(SHA1 current-arghash "${variable} ${name} ${ARGN}")
-
-  if (arghash STREQUAL current-arghash AND is-found)
-    return()
-  endif()
-
-  set(${variable}_ARGHASH ${current-arghash} CACHE INTERNAL "${variable} hash")
-  unset(${variable} CACHE)
-
+  # TODO: every option we depend on needs to be set to 'option=<value>'
+  # and then joined via &. This way we can represent the entire parameter list as a URI
+  # Is this a good idea? No. But this is CMake. There are no good ideas
+  # Additionally, setting *all* of these into a dictionary, then hashing the
+  # file would allow us to do a quicker check without the UUID bullshit.
+  # TODO: All options *must* be voided for safety reasons because "~*~CMAKE~*~ UwU"
   list(APPEND args INCLUDE_DIRECTORIES)
   list(APPEND args COMPILE_DEFINITIONS)
   list(APPEND args COMPILE_FEATURES)
@@ -30,9 +28,34 @@ function (ixm_check_common_symbol variable name)
   list(APPEND args LINK_OPTIONS)
 
   parse(${ARGN}
-    @FLAGS QUIET REQUIRED
+    @FLAGS QUIET
     @ARGS=? LANGUAGE TARGET_TYPE
-    @ARGS=* CONTENT EXTRA_CMAKE_FLAGS INCLUDE_HEADERS ${args})
+    @ARGS=* CONTENT EXTRA_CMAKE_FLAGS INCLUDE_HEADERS WHEN ${args})
+
+  assign(WHEN ? WHEN : ON)
+  if (NOT (${WHEN}))
+    return()
+  endif()
+
+  get_property(is-found CACHE ${variable} PROPERTY VALUE)
+  get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
+
+  # TODO: Update this to pull from the ixm::blueprint::name property?
+  get_property(IXM_CURRENT_BLUEPRINT_NAME DIRECTORY PROPERTY ixm::blueprint::name)
+  assign(blueprint ? IXM_CURRENT_BLUEPRINT_NAME : "cmake")
+  string(TOLOWER "${blueprint}." blueprint)
+  set(uri "one.ixm.${blueprint}/${PROJECT_NAME}/check/${name}/${ARGN}")
+  string(UUID current-arghash
+    NAMESPACE 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+    NAME "${uri}"
+    TYPE SHA1)
+
+  if (arghash STREQUAL current-arghash AND is-found)
+    return()
+  endif()
+
+  set(${variable}_ARGHASH ${current-arghash} CACHE INTERNAL "${variable} hash")
+  unset(${variable} CACHE)
 
   # If no LANGUAGE is given, we assume CXX
   assign(TARGET_TYPE ? TARGET_TYPE : STATIC)
@@ -41,7 +64,7 @@ function (ixm_check_common_symbol variable name)
   string(TOLOWER ${variable} project)
   string(REPLACE "_" "-" project ${project})
   aspect(GET path:check AS directory)
-  set(BUILD_ROOT "${directory}/Symbols/${project}")
+  set(BUILD_ROOT "${directory}/${IXM_CURRENT_CHECK_ACTION}/${project}")
 
   list(INSERT EXTRA_CMAKE_FLAGS 0
     "CMAKE_${LANGUAGE}_COMPILER:FILEPATH=${CMAKE_${LANGUAGE}_COMPILER}"
@@ -66,9 +89,10 @@ function (ixm_check_common_symbol variable name)
       endif()
     endforeach()
     foreach (header IN LISTS INCLUDE_HEADERS)
-      ixm_check_common_symbol_prepare(variable ${header})
+      ixm_check_common_symbol_prepare(header-variable ${header})
+      set(CMAKE_MESSAGE_INDENT "  ${CMAKE_MESSAGE_INDENT}")
       check(INCLUDE ${header} ${flags} LANGUAGE ${LANGUAGE})
-      if (NOT ${variable})
+      if (NOT ${header-variable})
         return()
       endif()
     endforeach()
@@ -89,7 +113,8 @@ function (ixm_check_common_symbol variable name)
     @ONLY)
 
   if (NOT QUIET)
-    log(INFO "Looking for (${action}) ${name}")
+    string(TOLOWER "${action}" type)
+    message(CHECK_START "Looking for (${type}) ${.bold}${name}${.reset}")
   endif()
 
   try_compile(${variable}
@@ -101,12 +126,14 @@ function (ixm_check_common_symbol variable name)
 
   set(logfile "CMakeOutput.log")
   set(status "passed")
-  set(found "found")
+  set(found "${.lime}found${.reset}")
+  set(check PASS)
 
   if (NOT ${variable})
     set(logfile "CMakeError.log")
     set(status "failed")
-    set(found "not found")
+    set(found "${.crimson}not found${.reset}")
+    set(check FAIL)
   endif()
 
   set(${variable} ${${variable}} CACHE INTERNAL "Have ${name}")
@@ -118,12 +145,7 @@ function (ixm_check_common_symbol variable name)
     file(REMOVE_RECURSE "${BUILD_ROOT}/build")
   endif()
 
-  set(result "Looking for ${name} - ${found}")
-  if (NOT ${variable} AND REQUIRED)
-    log(FATAL "${result}")
-  elseif(NOT QUIET AND ${variable})
-    success("${result}")
-  elseif(NOT QUIET)
-    failure("${result}")
+  if (NOT QUIET)
+    message(CHECK_${check} "${found}")
   endif()
 endfunction()

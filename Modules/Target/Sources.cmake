@@ -1,14 +1,17 @@
 include_guard(GLOBAL)
 
-#[[ This replaces our target_sources override ]]
-#[[ As a result, we have a bit more say in things, *and* events can received
-from multiple operations, instead of us dynamically calling `target_sources_<ext>`.
-This means we can have something like target://sources/<ext> and then execute
-each one in a list. :D
+#[[
+For every extension in DIRECTORY property ixm::sources::custom
+call `aspect(GET sources:<extension>)`. If nothing is returned OR if NOT COMMAND,
+check `if (COMMAND target_sources_<extension>)`. If it does not exist, error.
+Otherwise, call the command with
+1) target name
+2) visibility level
+3) each source file found via the unrolled glob expression (if possible)
 ]]
 
 #[[
-Extends the buildint targets_sources function to accept globa parameters
+Extends the builtin targets_sources function to accept global parameters
 automatically. If a file's extension is found to be in the ixm::sources::custom
 global property, we instead attempt to *dynamically* invoke
 `target_sources_${ext}`. (This may change before the alpha to perform a lookup

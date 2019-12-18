@@ -6,13 +6,11 @@ This does all the work of extracting the provider name, getting the command
 itself, and then invoking said provider command with the requested arguments.
 ]]
 function (fetch reference)
-  void(VERBOSE CLONE)
-  void(ALIAS DICT TARGET PATCH)
-  void(COMPONENT TARGETS OPTIONS POLICIES)
+  void(ALIAS DICT COMPONENT VERBOSE OPTIONS POLICIES IMPORTS PATCH CLONE)
   parse(${ARGN}
     @FLAGS VERBOSE CLONE
-    @ARGS=? ALIAS DICT TARGET PATCH
-    @ARGS=* COMPONENT TARGETS OPTIONS POLICIES)
+    @ARGS=? ALIAS DICT PATCH
+    @ARGS=* COMPONENT OPTIONS POLICIES IMPORTS)
 
   #[[ Prepare some basic information for invoking commands ]]
   ixm_fetch_prepare_reference(${reference}) # creates 'provider' and 'package'
@@ -35,6 +33,7 @@ function (fetch reference)
 
   assign(target ? TARGET : ${name})
   assign(verbose ? VERBOSE : OFF)
+  assign(imports ? IMPORTS)
 
   #### POST
   #[[ PATCH ]]
@@ -47,11 +46,17 @@ function (fetch reference)
 
   ixm_fetch_common_verbose(previous-quiet)
   set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-  add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${EXCLUDE})
+  get_property(included GLOBAL PROPERTY ixm::fetch::${alias} SET)
+  if (NOT included)
+    add_subdirectory(${${alias}_SOURCE_DIR} ${${alias}_BINARY_DIR} ${EXCLUDE})
+  endif()
+  set_property(GLOBAL PROPERTY ixm::fetch::${alias} ON)
   aspect(SET print:quiet WITH ${previous-quiet})
 
-  #[[ TARGET ]]
-  ixm_fetch_common_target(${target} ${alias})
+  if (imports)
+    ixm_fetch_common_imports(${imports} ${alias})
+  endif()
+
   set(${alias}_SOURCE_DIR ${${alias}_SOURCE_DIR} PARENT_SCOPE)
   set(${alias}_BINARY_DIR ${${alias}_BINARY_DIR} PARENT_SCOPE)
 

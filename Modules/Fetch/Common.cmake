@@ -93,6 +93,16 @@ function (ixm_fetch_common_patch alias)
   configure_file(${patch} ${src} COPYONLY)
 endfunction()
 
+#[[ import targets into an alias if possible ]]
+function(ixm_fetch_common_imports imports alias)
+  if (NOT TARGET ${alias}::${alias})
+    add_library(${alias}::${alias} INTERFACE IMPORTED)
+    target_link_libraries(${alias}::${alias} INTERFACE ${imports})
+  else()
+    log(WARN "Unnecessary IMPORTS for ${alias}")
+  endif()
+endfunction()
+
 #[[ Create target aliases if necessary ]]
 function(ixm_fetch_common_target target alias)
   if (DEFINED TARGETS)

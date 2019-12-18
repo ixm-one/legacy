@@ -16,7 +16,7 @@ function (coven_library_create output)
   set(${output} ${name} PARENT_SCOPE)
 endfunction()
 
-# TODO: move this to target as target(MSVC) subcommand?
+# TODO: Remove when bumping to 3.16
 function (coven_library_msvc_runtime target)
   set(msvc-rt $<TARGET_PROPERTY:MSVC_RUNTIME_LIBRARY>)
   string(CONCAT should-backport $<AND:

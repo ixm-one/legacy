@@ -1,18 +1,5 @@
 include_guard(GLOBAL)
 
-function (ixm::event::handler variable access value current stack)
-  if (access STREQUAL "MODIFIED_ACCESS")
-    get_property(handlers GLOBAL PROPERTY ${variable})
-    foreach (handler IN LISTS handlers)
-      if (NOT COMMAND ${handler})
-        log(WARNING "Skipping event handler '${handler}' for event '${variable}'. Not a COMMAND")
-        continue()
-      endif()
-      invoke(${handler} ${value})
-    endforeach()
-  endif()
-endfunction()
-
 function (cmake::package variable access value current stack)
   if (NOT variable STREQUAL "CMAKE_FIND_PACKAGE_NAME")
     log(FATAL "cmake::package may only be used on CMAKE_FIND_PACKAGE_NAME")
@@ -28,6 +15,10 @@ function (cmake::package variable access value current stack)
   endif()
 endfunction()
 
+# TODO: need to handle a specific case where `enable_testing()` is called in a
+# directory that is NOT the root directory. This can be disabled by setting
+# `CMAKE_TESTING_ENABLED to OFF
+# We can then generate our own RUN_TESTS or `tests` target :D
 function (cmake::directory variable access value current stack)
   if (NOT variable STREQUAL "CMAKE_CURRENT_LIST_DIR")
     log(FATAL "cmake::directory may only be used on CMAKE_CURRENT_LIST_DIR")

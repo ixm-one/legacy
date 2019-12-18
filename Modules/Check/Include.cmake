@@ -21,7 +21,7 @@ function (ixm_check_include header)
   list(APPEND args COMPILE_FEATURES)
 
   parse(${ARGN}
-    @FLAGS QUIET REQUIRED
+    @FLAGS QUIET
     @ARGS=? LANGUAGE
     @ARGS=* EXTRA_CMAKE_FLAGS ${args})
 
@@ -47,9 +47,7 @@ function (ixm_check_include header)
   string(REGEX REPLACE "(.+)" "#include <\\1>" IXM_CHECK_PREAMBLE "${header}")
   
   if (NOT QUIET)
-    print("Looking for include file '${header}'")
-    #execute_process(COMMAND
-    #  ${CMAKE_COMMAND} -E echo_append "-- Looking for include file <${header}>")
+    message(CHECK_START "Looking for include file '${.bold}${header}${.reset}'")
   endif()
 
   configure_file(
@@ -61,39 +59,24 @@ function (ixm_check_include header)
     "${BUILD_ROOT}/main.cxx"
     @ONLY)
 
-  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
   try_compile(${variable}
     "${BUILD_ROOT}/build"
     "${BUILD_ROOT}"
     "${project}"
     CMAKE_FLAGS ${cmake-flags}
     OUTPUT_VARIABLE output)
-  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
 
-  set(logfile "CMakeOutput.log")
-  set(status "passed")
-  set(found "found")
-
+  set(found "${.lime}found${.reset}")
+  set(check PASS)
   if (NOT ${variable})
-    set(logfile "CMakeError.log")
-    set(status "failed")
-    set(found "not found")
+    set(found "${.crimson}not found${.reset}")
+    set(check FAIL)
   endif()
 
   set(${variable} ${${variable}} CACHE INTERNAL "Have ${header}")
-  file(APPEND "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${logfile}"
-    "Determining if include file '${header}' exists ${status} with the following output:\n"
-    "${output}")
-  #execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append ".")
+  ixm_cmake_log(${check} "include file '${header}'" "${output}")
 
-  set(result "Looking for include file ${header} - ${found}")
-  if (NOT ${variable} AND REQUIRED)
-    log(FATAL "${result}")
-  elseif (NOT QUIET AND ${variable})
-    success("${result}")
-    #execute_process(COMMAND ${CMAKE_COMMAND} -E echo " ${.lime}${found}${.default}")
-  elseif (NOT QUIET)
-    failure("${result}")
-    #execute_process(COMMAND ${CMAKE_COMMAND} -E echo " ${.crimson}${found}${.default}")
+  if (NOT QUIET)
+    message(CHECK_${check} ${found})
   endif()
 endfunction()

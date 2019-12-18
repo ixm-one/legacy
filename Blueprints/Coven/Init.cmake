@@ -1,14 +1,14 @@
 blueprint(Coven)
 import(Coven::*)
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(CTest)
 
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED ON) # Removes CDash targets.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/.cmake")
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # This is used for forward compatibility with 3.16
@@ -24,6 +24,9 @@ if (NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
   set(CMAKE_MSVC_RUNTIME_LIBRARY
     MultiThreaded<$<$CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>)
 endif()
+
+coven_check_ubsan()
+coven_check_asan()
 
 coven_detect_directory(BENCHMARKS "benches")
 coven_detect_directory(EXAMPLES "examples")
