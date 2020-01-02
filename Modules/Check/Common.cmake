@@ -9,6 +9,18 @@ function (ixm_check_common_symbol_prepare out name)
   set(${out} ${variable} PARENT_SCOPE)
 endfunction()
 
+function (ixm_check_common_uuid output name)
+  get_property(blueprint DIRECTORY PROPERTY ixm::blueprint::name)
+  assign(blueprint ? blueprint : "cmake")
+  string(TOLOWER "${blueprint}" blueprint)
+  set(uri "one.ixm.${blueprint}/${PROJECT_NAME}/check/${name}/${ARGN}")
+  string(UUID uuid
+    NAMESPACE 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+    NAME "${uri}"
+    TYPE SHA1)
+  set(${output} ${uuid} PARENT_SCOPE)
+endfunction()
+
 # TODO: This entire thing needs a *massive* overhaul. It's very tricky, and
 # could with a little work, be cleaned up and made more generic. It would
 # require breaking it up into multiple arguments however
@@ -124,28 +136,23 @@ function (ixm_check_common_symbol variable name)
     CMAKE_FLAGS ${cmake-flags}
     OUTPUT_VARIABLE output)
 
-  set(logfile "CMakeOutput.log")
-  set(status "passed")
   set(found "${.lime}found${.reset}")
   set(check PASS)
 
   if (NOT ${variable})
-    set(logfile "CMakeError.log")
-    set(status "failed")
     set(found "${.crimson}not found${.reset}")
     set(check FAIL)
   endif()
 
   set(${variable} ${${variable}} CACHE INTERNAL "Have ${name}")
-  file(APPEND "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${logfile}"
-    "Determining if '${name}' exists ${status} with the following output:\n"
-    "${output}")
+  ixm_cmake_log(${check} ${name} ${output})
+
+  if (NOT QUIET)
+    message(CHECK_${check} "${found}")
+  endif()
 
   if (NOT ${variable})
     file(REMOVE_RECURSE "${BUILD_ROOT}/build")
   endif()
 
-  if (NOT QUIET)
-    message(CHECK_${check} "${found}")
-  endif()
 endfunction()

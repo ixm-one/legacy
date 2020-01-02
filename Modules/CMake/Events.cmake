@@ -23,6 +23,8 @@ function (cmake::directory variable access value current stack)
   if (NOT variable STREQUAL "CMAKE_CURRENT_LIST_DIR")
     log(FATAL "cmake::directory may only be used on CMAKE_CURRENT_LIST_DIR")
   endif()
+  # TODO: We need to remove the "plugability" of this, as invoke() MUST be
+  # removed before the alpha release
   if (access STREQUAL "MODIFIED_ACCESS" AND value)
     get_property(events GLOBAL PROPERTY ixm::events::configure::begin)
     foreach (event IN LISTS events)

@@ -13,6 +13,9 @@ include(CMake)
 import(IXM::API::*)
 list(POP_FRONT CMAKE_MODULE_PATH)
 
+set(IXM_STDOUT_LOG "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/CMakeOutput.log" CACHE INTERNAL "")
+set(IXM_STDERR_LOG "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/CMakeError.log" CACHE INTERNAL "")
+
 # Disables in source tree builds. Most projects do this to *some* degree
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)

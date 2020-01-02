@@ -5,6 +5,12 @@ All commands contained in this API file are for authoring commands with.
 Hence the file's name :)
 ]]
 
+function (assert)
+  if (NOT (${ARGN}))
+    message(FATAL_ERROR "ASSERTION FAILED: '${ARGN}' evaluated to false")
+  endif()
+endfunction()
+
 #[[
   aspect(GET <aspect> AS <variable>)
   aspect(SET <aspect> WITH <value>...)

@@ -7,14 +7,14 @@ include_guard(GLOBAL)
 # Replicates the CMakeError/CMakeOutput logging behavior
 function (ixm_cmake_log state entity)
   if (state STREQUAL "PASS")
-    set(file "CMakeOutput.log")
+    set(file "${IXM_STDOUT_LOG}")
     set(act "passed")
   elseif (state STREQUAL "FAIL")
-    set(file "CMakeError.log")
+    set(file "${IXM_STDERR_LOG}")
     set(act "failed")
   else()
     return()
   endif()
-  file(APPEND "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${file}"
+  file(APPEND "${file}"
     "Determining if ${entity} exists ${act} with the following output:\n" ${ARGN})
 endfunction()
