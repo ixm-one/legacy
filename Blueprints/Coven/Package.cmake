@@ -6,7 +6,9 @@ include(GNUInstallDirs)
 find_package(NuGet QUIET)
 find_package(WiX QUIET)
 
+# TODO: Stabilize this API
 function (coven_package_init)
+  return()
   string(MAKE_C_IDENTIFIER "${PROJECT_NAME}" project)
   string(TOUPPER "${project}" project)
   set(var BUILD_PACKAGE)

@@ -7,14 +7,10 @@ include(CMakeDependentOption)
 include(GNUInstallDirs)
 include(CTest)
 
-set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED ON) # Removes CDash targets.
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED ON) # Removes CDash targets
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# This is used for forward compatibility with 3.16
-if (NOT DEFINED CMAKE_UNITY_BUILD)
-  set(CMAKE_UNITY_BUILD OFF)
-endif()
 
 if (PROJECT_STANDALONE)
   option(BUILD_PACKAGE "Configure the project for producing packages")
@@ -25,14 +21,10 @@ if (NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
     MultiThreaded<$<$CONFIG:Debug>:Debug>$<$<BOOL:${BUILD_SHARED_LIBS}>:DLL>)
 endif()
 
-coven_check_ubsan()
-coven_check_asan()
-
-coven_detect_directory(BENCHMARKS "benches")
-coven_detect_directory(EXAMPLES "examples")
-coven_detect_directory(TESTS "tests")
-coven_detect_directory(DOCS "docs")
-
+coven_detect_directory(benchmarks "benches")
+coven_detect_directory(examples "examples")
+coven_detect_directory(tests "tests")
+coven_detect_directory(docs "docs")
 coven_detect_launchers()
 
 coven_project_init()

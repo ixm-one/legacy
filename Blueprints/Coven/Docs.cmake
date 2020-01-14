@@ -1,5 +1,6 @@
 include_guard(GLOBAL)
 
+# NOT YET IMPLEMENTED
 function (coven_docs_init)
   # FIXME: The output vars are currently not used...
   coven_detect_hyde(hyde-config) # Relies on Jekyll, so we need to do this one first

@@ -49,7 +49,6 @@ function (coven_project_library)
   # This needs to be a separate command...
   coven_library_create(name)
   target(SOURCES ${name} PRIVATE ${files})
-  coven_library_msvc_runtime(${name})
 endfunction()
 
 #[[Generates object libraries]]

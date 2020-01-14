@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
 function (ixm_check_include header)
-  ixm_check_common_symbol_prepare(variable ${header})
+  ixm_check_common_prepare(variable ${header})
   get_property(is-found CACHE ${variable} PROPERTY VALUE)
   get_property(arghash CACHE ${variable}_ARGHASH PROPERTY VALUE)
 

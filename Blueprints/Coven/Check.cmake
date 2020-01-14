@@ -3,6 +3,8 @@ include_guard(GLOBAL)
 include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
 
+# TODO: Move this to check(SANITIZER) for the check API. It doesn't belong
+# in Coven.
 function (coven_check_asan)
   #  void(old)
   #  if (DEFINED CMAKE_TRY_COMPILE_TARGET_TYPE)

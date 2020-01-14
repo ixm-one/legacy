@@ -1,0 +1,80 @@
+include_guard(GLOBAL)
+
+function (coven_tests_init)
+  coven_component_check(tests)
+  file(GLOB entries CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/tests/*")
+  foreach (entry IN LISTS entries)
+    coven_component_files(files "${entry}")
+    if (files)
+      coven_component_executable(test "${entry}")
+      target(SOURCES ${target} PRIVATE ${files})
+      add_test(NAME ${alias} COMMAND ${alias})
+      set_property(TARGET ${target}
+        PROPERTY
+          RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/tests")
+    endif()
+  endforeach()
+endfunction()
+
+function (coven_benchmark_init)
+  coven_component_check(benchmarks)
+  file(GLOB entries CONFIGURE DEPENDS "${PROJECT_SOURCE_DIR}/benches/*")
+  foreach (entry IN entries)
+    coven_component_files(files "${entry}")
+    if (files)
+      coven_component_executable(bench "${entry}")
+      target(SOURCES ${target} PRIVATE ${files})
+      add_test(NAME ${alias} COMMAND ${alias})
+      set_property(TARGET ${target}
+        PROPERTY
+          RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/benches")
+    endif()
+  endforeach()
+endfunction()
+
+function (coven_examples_init)
+  coven_component_check(examples)
+  file(GLOB entries CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/examples/*")
+  foreach (entry IN LISTS entries)
+    coven_component_files(files "${entry}")
+    if (files)
+      coven_component_executable(example "${entry}")
+      target(SOURCES ${target} PRIVATE ${files})
+      set_property(TARGET ${target}
+        PROPERTY
+          RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/examples")
+    endif()
+  endforeach()
+endfunction()
+
+function (coven_component_executable component item)
+  get_filename_component(name "${item}" NAME_WE)
+  string(REPLACE " " "-" name "${name}")
+  set(target "${PROJECT_NAME}-${component}-${name}")
+  set(alias "${PROJECT_NAME}::${component}::${name}")
+  add_executable(${target})
+  add_executable(${alias} ALIAS ${target})
+  target_link_libraries(${target}
+    PRIVATE
+      $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${PROJECT_NAME}>
+      $<TARGET_NAME_IF_EXISTS:${PROJECT_NAME}::${component}>)
+  set(target "${target}" PARENT_SCOPE)
+  set(alias "${alias}" PARENT_SCOPE)
+endfunction()
+
+function (coven_component_files output entry)
+  if (IS_DIRECTORY "${entry}")
+    file(GLOB_RECURSE entry CONFIGURE_DEPENDS "${entry}/*")
+  endif()
+  set(${output} ${entry} PARENT_SCOPE)
+endfunction()
+
+macro (coven_component_check name)
+  coven_common_project_name(project)
+  add_library(${PROJECT_NAME}::${name} INTERFACE IMPORTED)
+  get_property(exists DIRECTORY PROPERTY coven::detect::${name})
+  string(TOUPPER "${project}_BUILD_${name}" option)
+  if (NOT exists OR NOT ${option})
+    return()
+  endif()
+endmacro()
