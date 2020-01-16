@@ -102,6 +102,12 @@ aspect(SET check:enum WITH ixm_check_enum)
 aspect(SET check:alignof WITH ixm_check_alignof)
 aspect(SET check:sizeof WITH ixm_check_size)
 
+# source extension aspects
+aspect(SET source:proto WITH "PROTOBUF")
+aspect(SET source:pyx WITH "CYTHON")
+aspect(SET source:rst WITH "SPHINX")
+aspect(SET source:md WITH "MARKDOWN")
+
 # fetch() aspects
 aspect(SET fetch:hub WITH ixm_fetch_hub)
 aspect(SET fetch:lab WITH ixm_fetch_lab)
@@ -132,28 +138,6 @@ aspect(SET log:color WITH ON)
 # message() aspects
 aspect(SET print:colors WITH ON)
 aspect(SET print:quiet WITH OFF)
-
-# target() aspects
-set_property(GLOBAL PROPERTY ixm::target::interface ixm_target_interface)
-set_property(GLOBAL PROPERTY ixm::target::program ixm_target_program)
-set_property(GLOBAL PROPERTY ixm::target::library ixm_target_library)
-set_property(GLOBAL PROPERTY ixm::target::archive ixm_target_archive)
-set_property(GLOBAL PROPERTY ixm::target::plugin ixm_target_plugin)
-set_property(GLOBAL PROPERTY ixm::target::test ixm_target_test)
-
-set_property(GLOBAL PROPERTY ixm::target::command ixm_target_command)
-set_property(GLOBAL PROPERTY ixm::target::import ixm_target_import)
-set_property(GLOBAL PROPERTY ixm::target::phony ixm_target_phony)
-set_property(GLOBAL PROPERTY ixm::target::unity ixm_target_unity)
-
-set_property(GLOBAL PROPERTY ixm::target::framework ixm_target_framework)
-set_property(GLOBAL PROPERTY ixm::target::service ixm_target_service)
-set_property(GLOBAL PROPERTY ixm::target::tool ixm_target_tool)
-set_property(GLOBAL PROPERTY ixm::target::app ixm_target_app)
-
-set_property(GLOBAL PROPERTY ixm::target::compile ixm_target_compile)
-set_property(GLOBAL PROPERTY ixm::target::link ixm_target_link)
-set_property(GLOBAL PROPERTY ixm::target::list ixm_target_list)
 
 if (CMAKE_HOST_WIN32 AND (NOT "$ENV{ConEmuANSI}") AND (NOT CMAKE_GENERATOR STREQUAL "Ninja"))
   return()

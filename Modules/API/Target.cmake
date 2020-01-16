@@ -1,48 +1,22 @@
 include_guard(GLOBAL)
 
+# TODO: This is being removed...
 import(IXM::Target::*)
 
+# TODO: Remove from IXM
 # Common arguments:
 # ALIAS <name>
 # COMPONENT <name>
 # ALL (flag)
 function (target subcommand)
-  if (subcommand STREQUAL "APP")
-    ixm_target_app(${ARGN})
-  elseif (subcommand STREQUAL "ARCHIVE")
-    ixm_target_archive(${ARGN})
-  elseif (subcommand STREQUAL "COMMAND")
-    ixm_target_command(${ARGN})
-  elseif (subcommand STREQUAL "COMPILE")
-    ixm_target_compile(${ARGN})
-  elseif (subcommand STREQUAL "FRAMEWORK")
-    ixm_target_framework(${ARGN})
-  elseif (subcommand STREQUAL "IMPORT")
-    ixm_target_import(${ARGN})
-  elseif (subcommand STREQUAL "INTERFACE")
-    ixm_target_interface(${ARGN})
-  elseif (subcommand STREQUAL "LIBRARY")
-    ixm_target_library(${ARGN})
-  elseif (subcommand STREQUAL "PHONY")
-    ixm_target_phony(${ARGN})
-  elseif (subcommand STREQUAL "PLUGIN")
-    ixm_target_plugin(${ARGN})
-  elseif (subcommand STREQUAL "PROGRAM")
-    ixm_target_program(${ARGN})
-  elseif (subcommand STREQUAL "SERVICE")
-    ixm_target_service(${ARGN})
-  elseif (subcommand STREQUAL "SOURCES")
+  if (subcommand STREQUAL "SOURCES")
     ixm_target_sources(${ARGN})
-  elseif (subcommand STREQUAL "TEST")
-    ixm_target_test(${ARGN})
-  elseif (subcommand STREQUAL "TOOL")
-    ixm_target_tool(${ARGN})
+  else()
     log(FATAL "target(${subcommand}) is not a valid subcommand")
   endif()
 endfunction ()
 
 # Like target_link_libraries, but copies all custom IXM properties
-# TODO: What is the "subcommand" we're going to name this?
 function(target_copy_properties target)
   get_property(interface-properties GLOBAL PROPERTY IXM_INTERFACE_PROPERTIES)
   get_property(private-properties GLOBAL PROPERTY IXM_PRIVATE_PROPERTIES)

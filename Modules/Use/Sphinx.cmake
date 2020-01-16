@@ -3,8 +3,8 @@ include_guard(GLOBAL)
 find_package(Sphinx)
 
 function (target_sources_rst target visibility)
-  set(interface PUBLIC;INTERFACE)
-  set(private PRIVATE;PUBLIC)
+  set(interface PUBLIC INTERFACE)
+  set(private PRIVATE PUBLIC)
   if (visibility IN_LIST interface)
     set_property(TARGET ${target} APPEND
       PROPERTY

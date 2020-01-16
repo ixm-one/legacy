@@ -71,6 +71,16 @@ function (locals out-var)
   set(${out-var} ${variables} PARENT_SCOPE)
 endfunction()
 
+#[[ Sets all enabled language source file extensions to a list]]
+function (source_file_extensions out-var)
+  get_property(languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+  foreach (language IN LISTS languages)
+    list(APPEND extensions ${CMAKE_${languauge}_SOURCE_FILE_EXTENSIONS})
+  endforeach()
+  ixm_introspection_filter(extensions ${ARGN} VALUES ${variables})
+  set(${out-var} ${variables} PARENT_SCOPE)
+endfunction()
+
 #[[ sets all targets in the current directory (and below) to a list ]]
 function (targets out-var)
   get_property(directories DIRECTORY PROPERTY SUBDIRECTORIES)
