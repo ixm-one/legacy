@@ -2,25 +2,6 @@ include_guard(GLOBAL)
 
 find_package(Sphinx)
 
-function (target_sources_rst target visibility)
-  set(interface PUBLIC INTERFACE)
-  set(private PRIVATE PUBLIC)
-  if (visibility IN_LIST interface)
-    set_property(TARGET ${target} APPEND
-      PROPERTY
-        INTERFACE_SPHINX_SOURCES "${ARGN}")
-  endif()
-  if (visibility IN_LIST private)
-    set_property(TARGET ${target} APPEND
-      PROPERTY
-        SPHINX_SOURCES "${ARGN}")
-  endif()
-endfunction()
-
-#[[
-TODO: Need to cleanup for 'modern' handling of sources, make sure targets are
-well named, etc.
-]]
 #[[TODO: Some verification of use is still needed]]
 function (add_documentation name type)
   set(possible HTML EPUB MAN LATEX JSON XML)

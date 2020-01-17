@@ -16,6 +16,18 @@ function (target subcommand)
   endif()
 endfunction ()
 
+# TODO: Move to CMake/Internal, rename to ixm_target_sources once the older one is replaced
+function (target_source_files target)
+  cmake_parse_arguments(ARG "RECURSE" "FILETYPE" "INTERFACE;PRIVATE;PUBLIC" ${ARGN})
+  set(property ${ARG_FILETYPE}_SOURCES)
+  foreach (visibility IN ITEMS INTERFACE PUBLIC)
+    set_property(TARGET ${target} APPEND PROPERTY INTERFACE_${property} ${visibility})
+  endforeach()
+  foreach (visibility IN ITEMS PUBLIC PRIVATE)
+    set_property(TARGET ${target} APPEND PROPERTY ${property} ${visibility})
+  endforeach()
+endfunction()
+
 # Like target_link_libraries, but copies all custom IXM properties
 function(target_copy_properties target)
   get_property(interface-properties GLOBAL PROPERTY IXM_INTERFACE_PROPERTIES)

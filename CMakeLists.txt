@@ -11,7 +11,6 @@ include("${IXM_ROOT}/Modules/API/Import.cmake")
 list(PREPEND CMAKE_MODULE_PATH "${IXM_MODULE_ROOT}/API")
 include(CMake)
 import(IXM::API::*)
-list(POP_FRONT CMAKE_MODULE_PATH)
 
 set(IXM_STDOUT_LOG "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/CMakeOutput.log" CACHE INTERNAL "")
 set(IXM_STDERR_LOG "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/CMakeError.log" CACHE INTERNAL "")
@@ -23,6 +22,7 @@ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 # These are used for bookkeeping and RAII
 variable_watch(CMAKE_FIND_PACKAGE_NAME cmake::package)
 variable_watch(CMAKE_CURRENT_LIST_DIR cmake::directory)
+# TODO: Enforce this only at the directory level
 # Not used for external customization
 set_property(GLOBAL PROPERTY ixm::blueprint::file)
 set_property(GLOBAL PROPERTY ixm::blueprint::name)
@@ -59,6 +59,15 @@ if (CMAKE_HOST_WIN32)
   endif()
 endif()
 
+# IXM will try generate the CMake File API
+set(CMAKE_API_QUERY_DIR "${CMAKE_BINARY_DIR}/.cmake/api/v1/query")
+if (NOT EXISTS "${CMAKE_API_QUERY_DIR}")
+  file(MAKE_DIRECTORY "${CMAKE_API_QUERY_DIR}")
+  file(TOUCH
+    "${CMAKE_API_QUERY_DIR}/codemodel-v2"
+    "${CMAKE_API_QUERY_DIR}/cache-v2"
+    "${CMAKE_API_QUERY_DIR}/cmakeFiles-v1")
+endif()
 
 # This is temporary. They SHOULD be set to a cache variable of some kind?
 set_property(GLOBAL PROPERTY ixm::lint::msvc::macro-redefined 4005)
@@ -88,6 +97,11 @@ if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   aspect(GET toolchain:${cmake-system-name} AS CMAKE_TOOLCHAIN_FILE)
   unset(cmake-system-name)
 endif()
+
+# TODO: Set CMAKE_USER_MAKE_RULES_OVERRIDE so that we can safely guarantee
+# that MSVC based projects can use
+# set_property(TARGET <name> PROPERTY ENABLE_EXCEPTIONS OFF), which is something
+# we're going to (hopefully) provide...
 
 # API Aspects
 # check()
