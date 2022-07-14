@@ -1,4 +1,17 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+
+message(WARNING [[
+This instance of IXM is deprecated, and will be archived and locked on
+  2022-09-01
+Please update your FetchContent_Declare calls to point to
+  https://legacy.ixm.one
+After this date, your projects will no longer work when reaching
+  https://get.ixm.one
+I am sorry that this was never properly released. IXM will eventually return, but massively reduced in scope.
+If you have somehow gotten this warning, I would like to thank you for trusting this project.
+IXM was an ambitious project. CMake has changed. The world has changed. IXM must also change.
+]])
+
 set(IXM_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE INTERNAL "IXM install root")
 set(IXM_MODULE_ROOT "${IXM_ROOT}/Modules" CACHE INTERNAL "IXM Module Root")
 set(CMake_MODULE_ROOT "${CMAKE_ROOT}/Modules" CACHE INTERNAL "CMake Module Root")
