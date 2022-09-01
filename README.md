@@ -9,28 +9,19 @@
 </p>
 <hr>
 
-IXM is a CMake library for writing Modern *flexible* CMake. This means:
+This is the original alpha release of IXM meant to work with CMake 3.14 and later. However, it never managed to release due to health issues, a pandemic, and burnout. It remains here for posterity. It is still available for use at:
+
+https://legacy.ixm.one
+
+However, this URL will be retired on January 1st, 2023. Attempts to reach this repository via the web afterwards will no longer work.
+
+A newer IXM library targeting CMake 3.24 and later will be available no later than November 1st, 2023 at https://github.com/ixm-one/ixm
+
+<hr>
+
+IXM was a CMake library for writing Modern *flexible* CMake. This means:
 
  * Reducing the amount of CMake written
  * Selecting reasonable defaults
  * Supporting hooks and customization points for overriding said defaults
  * Target and Generator Expression focused operations
-
-## Donations
-
-Donations are extremely appreciated. If you have gotten some use out of IXM,
-please consider donating to my ko-fi by clicking the donate link above.
-
-## Navigation
-
-See [Getting Started][1] to begin using
-IXM. When you're ready, feel free to read the
-[documentation][2] for detailed information on IXM's API
-and it's internals.
-
-Visit the [Roadmap][3] to see upcoming and
-in-progress features for the 1.0 release.
-
-[1]: https://docs.ixm.one/en/tutorial.html
-[2]: https://docs.ixm.one
-[3]: https://github.com/slurps-mad-rips/ixm/projects/1
